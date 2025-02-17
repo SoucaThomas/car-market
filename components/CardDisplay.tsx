@@ -5,9 +5,9 @@ import { Separator } from "./ui/separator";
 
 export function CardDisplay() {
     return (
-        <Card className="rounded-2xl overflow-hidden">
+        <Card className="rounded-2xl overflow-hidden shadow-lg">
             <CardContent className="flex flex-col p-0">
-                <div className="bg-blue-500 w-full h-full aspect-video rounded-md"></div>
+                <div className="bg-zinc-700/20 w-full h-full aspect-video rounded-xl"></div>
 
                 <div className="p-4">
                     <div className="flex flex-row justify-between items-center">
