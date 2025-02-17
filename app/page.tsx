@@ -1,13 +1,13 @@
-import { AlignJustify, Grid2x2 } from 'lucide-react';
+import { AlignJustify, Grid2x2 } from "lucide-react";
 import {
   Select,
   SelectTrigger,
   SelectValue,
   SelectContent,
   SelectItem,
-} from '@/components/ui/select';
-import { Button } from '@/components/ui/button';
-import { CardDisplay } from '@/components/CardDisplay';
+} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import { CardDisplay } from "@/components/CardDisplay";
 export default function Page() {
   return (
     <div className="flex h-full flex-row">
