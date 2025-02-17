@@ -1,0 +1,124 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            Int                 @id @default(autoincrement())
+  name          String?             @db.VarChar(100)
+  email         String              @unique @db.VarChar(100)
+  password      String?             @db.VarChar(255)
+  role          Role                @default(guest)
+  isActive      Boolean             @default(true)
+  createdAt     DateTime            @default(now())
+  cars          Car[]
+  ratings       Rating[]            @relation("UserRatings")
+  dealerRatings Rating[]            @relation("DealerRatings")
+  applications  DealerApplication[]
+
+  emailVerified Boolean
+  image         String?
+  updatedAt     DateTime
+  sessions      Session[]
+  accounts      Account[]
+
+  @@map("user")
+}
+
+enum Role {
+  guest
+  user
+  dealer
+  admin
+}
+
+model Car {
+  id          Int      @id @default(autoincrement())
+  title       String   @db.VarChar(255)
+  description String?
+  price       Decimal  @db.Decimal(10, 2)
+  make        String   @db.VarChar(100)
+  model       String   @db.VarChar(100)
+  year        Int
+  mileage     Int
+  imageUrl    String?
+  dealer      User     @relation(fields: [dealerId], references: [id], onDelete: Cascade)
+  dealerId    Int
+  createdAt   DateTime @default(now())
+}
+
+model DealerApplication {
+  id            Int               @id @default(autoincrement())
+  user          User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        Int
+  businessName  String            @db.VarChar(255)
+  businessEmail String            @db.VarChar(255)
+  status        ApplicationStatus @default(pending)
+  createdAt     DateTime          @default(now())
+}
+
+enum ApplicationStatus {
+  pending
+  approved
+  rejected
+}
+
+model Rating {
+  id        Int      @id @default(autoincrement())
+  dealer    User     @relation("DealerRatings", fields: [dealerId], references: [id], onDelete: Cascade)
+  dealerId  Int
+  user      User     @relation("UserRatings", fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+  rating    Int
+  review    String?
+  createdAt DateTime @default(now())
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime
+  updatedAt DateTime
+  ipAddress String?
+  userAgent String?
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                Int
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime
+  updatedAt             DateTime
+
+  @@map("account")
+}
+
+model Verification {
+  id         String    @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime?
+  updatedAt  DateTime?
+
+  @@map("verification")
+}
