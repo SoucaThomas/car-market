@@ -1,25 +1,25 @@
-import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
-import './globals.css';
-import { Navbar } from '@/components/Navbar';
-import { Toaster } from '@/components/ui/toaster';
+import type { Metadata } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
+import "./globals.css";
+import { Navbar } from "@/components/Navbar";
+import { Toaster } from "@/components/ui/toaster";
 // import { SidebarInset } from "@/components/ui/sidebar";
 // import { SidebarProvider } from "@/components/ui/sidebar";
 // import { AppSidebar } from "@/components/app-sidebar";
 
 const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
 });
 
 const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
-  title: 'Car Market',
-  description: 'Car Market',
+  title: "Car Market",
+  description: "Car Market",
 };
 
 export default function RootLayout({

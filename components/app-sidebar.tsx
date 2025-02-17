@@ -1,4 +1,4 @@
-import { Car, Home, Settings, Store, WalletIcon } from 'lucide-react';
+import { Car, Home, Settings, Store, WalletIcon } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -8,28 +8,28 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from '@/components/ui/sidebar';
-import Link from 'next/link';
+} from "@/components/ui/sidebar";
+import Link from "next/link";
 
 const items = [
   {
-    title: 'Home',
-    url: '/',
+    title: "Home",
+    url: "/",
     icon: Home,
   },
   {
-    title: 'Car Dealerships',
-    url: 'dealerships',
+    title: "Car Dealerships",
+    url: "dealerships",
     icon: Store,
   },
   {
-    title: 'Sell a Car',
-    url: 'sell',
+    title: "Sell a Car",
+    url: "sell",
     icon: WalletIcon,
   },
   {
-    title: 'Settings',
-    url: 'settings',
+    title: "Settings",
+    url: "settings",
     icon: Settings,
   },
 ];

@@ -1,7 +1,7 @@
-import { Car, Fuel, Gauge, MapPin } from 'lucide-react';
-import { Button } from './ui/button';
-import { Card, CardContent } from './ui/card';
-import { Separator } from './ui/separator';
+import { Car, Fuel, Gauge, MapPin } from "lucide-react";
+import { Button } from "./ui/button";
+import { Card, CardContent } from "./ui/card";
+import { Separator } from "./ui/separator";
 
 export function CardDisplay() {
   return (
