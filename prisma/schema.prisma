@@ -8,7 +8,7 @@ datasource db {
 }
 
 model User {
-  id            Int                 @id @default(autoincrement())
+  id            String              @id @default(uuid())
   name          String?             @db.VarChar(100)
   email         String              @unique @db.VarChar(100)
   password      String?             @db.VarChar(255)
@@ -47,14 +47,14 @@ model Car {
   mileage     Int
   imageUrl    String?
   dealer      User     @relation(fields: [dealerId], references: [id], onDelete: Cascade)
-  dealerId    Int
+  dealerId    String
   createdAt   DateTime @default(now())
 }
 
 model DealerApplication {
   id            Int               @id @default(autoincrement())
   user          User              @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId        Int
+  userId        String
   businessName  String            @db.VarChar(255)
   businessEmail String            @db.VarChar(255)
   status        ApplicationStatus @default(pending)
@@ -70,9 +70,9 @@ enum ApplicationStatus {
 model Rating {
   id        Int      @id @default(autoincrement())
   dealer    User     @relation("DealerRatings", fields: [dealerId], references: [id], onDelete: Cascade)
-  dealerId  Int
+  dealerId  String
   user      User     @relation("UserRatings", fields: [userId], references: [id], onDelete: Cascade)
-  userId    Int
+  userId    String
   rating    Int
   review    String?
   createdAt DateTime @default(now())
@@ -86,7 +86,7 @@ model Session {
   updatedAt DateTime
   ipAddress String?
   userAgent String?
-  userId    Int
+  userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([token])
@@ -97,7 +97,7 @@ model Account {
   id                    String    @id
   accountId             String
   providerId            String
-  userId                Int
+  userId                String
   user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   accessToken           String?
   refreshToken          String?
