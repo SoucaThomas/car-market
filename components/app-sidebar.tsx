@@ -40,10 +40,13 @@ export function AppSidebar() {
       <SidebarContent>
         <SidebarGroup className="pt-8">
           <SidebarGroupLabel className="mb-8">
-            <div className="flex w-full flex-row items-center justify-center gap-2 text-primary">
+            <Link
+              href="/"
+              className="flex w-full flex-row items-center justify-center gap-2 text-primary"
+            >
               <Car className="h-12 w-12" />
               <h1 className="text-4xl font-bold">CMP</h1>
-            </div>
+            </Link>
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu className="flex flex-col gap-2">
