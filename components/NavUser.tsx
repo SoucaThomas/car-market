@@ -53,11 +53,6 @@ export function NavUser() {
     fetchSession();
   }, []);
 
-  useEffect(() => {
-    console.log("session", session);
-    console.log("user", user);
-  }, [session, user]);
-
   return (
     <>
       {loading ? (

@@ -51,6 +51,26 @@ model Car {
   createdAt   DateTime @default(now())
 }
 
+model cars {
+  car_model_id      Int     @id @default(autoincrement())
+  make_id           Int
+  make_name         String
+  model_name        String?
+  transmission_type String?
+  vehicle_type      String?
+  drive             String?
+  fuel_type         String?
+
+  @@map("car_models")
+}
+
+model makes {
+  make_id   Int    @id @default(autoincrement())
+  make_name String
+
+  @@map("makes")
+}
+
 model DealerApplication {
   id            Int               @id @default(autoincrement())
   user          User              @relation(fields: [userId], references: [id], onDelete: Cascade)

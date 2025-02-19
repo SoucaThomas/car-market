@@ -1,4 +1,4 @@
-import { AlignJustify, Filter, Grid2x2 } from "lucide-react";
+import { AlignJustify, Grid2x2 } from "lucide-react";
 import {
   Select,
   SelectTrigger,
@@ -12,6 +12,7 @@ import { SidebarInset } from "@/components/ui/sidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { Navbar } from "@/components/Navbar";
+import { FiltersSheet } from "@/components/FiltersSheet";
 
 export default function Page() {
   return (
@@ -42,6 +43,8 @@ export default function Page() {
                   <Button variant="ghost" size="icon">
                     <Grid2x2 className="h-4 w-4" />
                   </Button>
+
+                  <FiltersSheet />
                 </div>
               </div>
             </section>
