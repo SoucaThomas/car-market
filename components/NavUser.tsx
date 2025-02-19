@@ -100,7 +100,7 @@ export function NavUser() {
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => redirect("/dashboard")}>
                     <BadgeCheck />
                     Account
                   </DropdownMenuItem>

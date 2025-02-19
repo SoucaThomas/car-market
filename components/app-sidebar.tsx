@@ -1,4 +1,11 @@
-import { Car, Home, Settings, Store, WalletIcon } from "lucide-react";
+import {
+  Car,
+  Home,
+  Settings,
+  Store,
+  WalletIcon,
+  LayoutDashboard,
+} from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -18,13 +25,19 @@ const items = [
     icon: Home,
   },
   {
+    title: "Dashboard",
+    url: "dashboard",
+    icon: LayoutDashboard,
+  },
+  {
     title: "Car Dealerships",
     url: "dealerships",
     icon: Store,
   },
+
   {
-    title: "Sell a Car",
-    url: "sell",
+    title: "List a Car",
+    url: "listacar",
     icon: WalletIcon,
   },
   {
