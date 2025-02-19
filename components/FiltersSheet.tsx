@@ -28,8 +28,8 @@ export function FiltersSheet() {
   const [engineTo, setEngineTo] = useState(null);
   const [country, setCountry] = useState(null);
   const [fuelType, setFuelType] = useState(null);
-  const [milageFrom, setMilageFrom] = useState(null);
-  const [milageTo, setMilageTo] = useState(null);
+  const [mileageFrom, setMileageFrom] = useState(null);
+  const [mileageTo, setMileageTo] = useState(null);
   const [color, setColor] = useState(null);
 
   const [carBrands, setCarBrands] = useState<{ id: number; label: string }[]>(
@@ -70,8 +70,8 @@ export function FiltersSheet() {
       engineTo,
       country,
       fuelType,
-      milageFrom,
-      milageTo,
+      mileageFrom,
+      mileageTo,
       color,
     });
   };
@@ -172,8 +172,8 @@ export function FiltersSheet() {
 
           <FilterRangeInput
             label="Milage"
-            setValueFrom={setMilageFrom}
-            setValueTo={setMilageTo}
+            setValueFrom={setMileageFrom}
+            setValueTo={setMileageTo}
           />
 
           <FilterInput

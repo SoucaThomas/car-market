@@ -18,12 +18,14 @@ import {
 } from "@/components/ui/table";
 import { authClient } from "@/lib/auth-client";
 import { Session, User } from "better-auth";
+import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 
 export default function Dashboard() {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<User>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchSession = async () => {
@@ -66,7 +68,12 @@ export default function Dashboard() {
                     potential buyers quickly and easily.
                   </p>
                 </CardDescription>
-                <Button className="mt-8">List a Car</Button>
+                <Button
+                  className="mt-8"
+                  onClick={() => router.push("/listacar")}
+                >
+                  List a Car
+                </Button>
               </CardContent>
             </Card>
 

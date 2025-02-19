@@ -260,55 +260,51 @@ export const fuel = [
     label: "Electricity",
   },
   {
-    id: 4,
-    label: "Fuel Type",
-  },
-  {
-    id: 5,
+    id: 6,
     label: "Gasoline or E85",
   },
   {
-    id: 6,
+    id: 7,
     label: "Gasoline or natural gas",
   },
   {
-    id: 7,
+    id: 8,
     label: "Gasoline or propane",
   },
   {
-    id: 8,
+    id: 9,
     label: "Hydrogen",
   },
   {
-    id: 9,
+    id: 10,
     label: "Midgrade",
   },
   {
-    id: 10,
+    id: 11,
     label: "Premium",
   },
   {
-    id: 11,
+    id: 12,
     label: "Premium and Electricity",
   },
   {
-    id: 12,
+    id: 13,
     label: "Premium Gas or Electricity",
   },
   {
-    id: 13,
+    id: 14,
     label: "Premium or E85",
   },
   {
-    id: 14,
+    id: 15,
     label: "Regular",
   },
   {
-    id: 15,
+    id: 16,
     label: "Regular Gas and Electricity",
   },
   {
-    id: 16,
+    id: 17,
     label: "Regular Gas or Electricity",
   },
 ];

@@ -1,6 +1,9 @@
 "use server";
 
 import { prisma } from "@/prisma/prisma";
+import { z } from "zod";
+import { auth } from "@/auth";
+import { headers } from "next/headers";
 
 export const getCarBrands = async (): Promise<
   { id: number; label: string }[]
@@ -33,4 +36,56 @@ export const getCarModels = async (carBrand: {
     };
   });
   return response;
+};
+
+const listingSchema = z.object({
+  carBrand: z.string(),
+  carModel: z.string(),
+  condition: z.string(),
+  year: z.number(),
+  title: z.string(),
+  price: z.number(),
+  engineSize: z.number(),
+  country: z.string(),
+  fuelType: z.string(),
+  mileage: z.number(),
+  color: z.string(),
+  description: z.string(),
+});
+
+export const createCarListing = async (
+  listingData: z.infer<typeof listingSchema>
+): Promise<void> => {
+  "use server";
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  try {
+    const data = listingSchema.parse(listingData);
+    await prisma.listing.create({
+      data: {
+        userId: session.user.id,
+        carBrand: data.carBrand,
+        carModel: data.carModel,
+        year: data.year,
+        title: data.title,
+        price: data.price,
+        engineSize: data.engineSize,
+        mileage: data.mileage,
+        country: data.country,
+        fuelType: data.fuelType,
+        color: data.color,
+        description: data.description,
+        condition: data.condition,
+        images: [],
+        drive: "FWD", //! Hardcoded TODO FIX
+        createdAt: new Date(),
+      },
+    });
+    return Promise.resolve();
+  } catch (error) {
+    console.error(error);
+    return Promise.reject();
+  }
 };

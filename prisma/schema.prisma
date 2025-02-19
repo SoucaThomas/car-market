@@ -15,7 +15,7 @@ model User {
   role          Role                @default(guest)
   isActive      Boolean             @default(true)
   createdAt     DateTime            @default(now())
-  cars          Car[]
+  Listings      Listing[]
   ratings       Rating[]            @relation("UserRatings")
   dealerRatings Rating[]            @relation("DealerRatings")
   applications  DealerApplication[]
@@ -36,19 +36,32 @@ enum Role {
   admin
 }
 
-model Car {
-  id          Int      @id @default(autoincrement())
-  title       String   @db.VarChar(255)
+model Listing {
+  id          Int           @id @default(autoincrement())
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+  carBrand    String?
+  carModel    String?
+  year        Int?
+  title       String?
+  price       Float?
+  engineSize  Float?
+  country     String?
+  fuelType    String?
+  drive       String?
+  color       String?
   description String?
-  price       Decimal  @db.Decimal(10, 2)
-  make        String   @db.VarChar(100)
-  model       String   @db.VarChar(100)
-  year        Int
-  mileage     Int
-  imageUrl    String?
-  dealer      User     @relation(fields: [dealerId], references: [id], onDelete: Cascade)
-  dealerId    String
-  createdAt   DateTime @default(now())
+  condition   String?
+  mileage     Float?
+  images      String[]
+  status      ListingStatus @default(pending)
+  createdAt   DateTime      @default(now())
+}
+
+enum ListingStatus {
+  pending
+  approved
+  rejected
 }
 
 model cars {
