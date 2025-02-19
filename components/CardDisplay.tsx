@@ -1,8 +1,10 @@
 import { Fuel, Gauge, MapPin } from "lucide-react";
+import Image from "next/image";
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
 import { Separator } from "./ui/separator";
 import { redirect } from "next/navigation";
+import { Skeleton } from "./ui/skeleton";
 
 interface CardDisplayProps {
   listing: {
@@ -25,7 +27,17 @@ export function CardDisplay({ listing }: CardDisplayProps) {
         className="flex flex-col p-0"
         onClick={() => redirect(`/listing/${listing.id}`)}
       >
-        <div className="aspect-video h-full w-full rounded-xl bg-zinc-700/20"></div>
+        {listing.image ? (
+          <Image
+            src={listing.image}
+            alt={listing.title}
+            width={500}
+            height={192}
+            className="h-48 w-full rounded-xl object-cover"
+          />
+        ) : (
+          <Skeleton className="h-48 w-full rounded-xl" />
+        )}
 
         <div className="p-4">
           <div className="flex flex-row items-center justify-between">
