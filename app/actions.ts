@@ -147,7 +147,6 @@ export const getHomeListings = async (): Promise<
       condition: true,
       country: true,
     },
-    orderBy: { createdAt: "asc" },
   });
 
   return result.map((item) => ({
