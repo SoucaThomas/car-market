@@ -118,3 +118,48 @@ export const getUserListings = async (
     price: item.price,
   }));
 };
+
+export const getHomeListings = async (): Promise<
+  {
+    id: number;
+    title: string;
+    status: string;
+    price: number;
+    mileage: number;
+    location?: string;
+    fuelType: string;
+    year: number;
+    image?: string;
+    condition: string;
+  }[]
+> => {
+  const result = await prisma.listing.findMany({
+    where: { status: "approved" },
+    select: {
+      id: true,
+      title: true,
+      status: true,
+      price: true,
+      mileage: true,
+      fuelType: true,
+      year: true,
+      images: true,
+      condition: true,
+      country: true,
+    },
+    orderBy: { createdAt: "asc" },
+  });
+
+  return result.map((item) => ({
+    id: item.id,
+    title: item.title,
+    status: item.status.toString(),
+    price: item.price,
+    mileage: item.mileage,
+    location: item.country,
+    fuelType: item.fuelType,
+    year: item.year,
+    image: item.images[0],
+    condition: item.condition,
+  }));
+};

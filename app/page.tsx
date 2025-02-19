@@ -1,3 +1,5 @@
+"use client";
+
 import { AlignJustify, Grid2x2 } from "lucide-react";
 import {
   Select,
@@ -9,8 +11,22 @@ import {
 import { Button } from "@/components/ui/button";
 import { CardDisplay } from "@/components/CardDisplay";
 import { FiltersSheet } from "@/components/FiltersSheet";
+import { useEffect, useState } from "react";
+import { getHomeListings } from "./actions";
 
 export default function Page() {
+  const [listings, setListings] = useState([]);
+
+  useEffect(() => {
+    const getListings = async () => {
+      const userListings = await getHomeListings();
+
+      setListings(userListings);
+    };
+
+    getListings();
+  }, []);
+
   return (
     <div className="flex h-full flex-row">
       <div className="h-full flex-1">
@@ -40,15 +56,14 @@ export default function Page() {
             </div>
           </div>
         </section>
-        <section className="mx-auto grid max-w-screen-2xl grid-cols-3 gap-6 p-10">
-          <CardDisplay />
-          <CardDisplay />
-          <CardDisplay />
-          <CardDisplay />
-          <CardDisplay />
-          <CardDisplay />
-          <CardDisplay />
-          <CardDisplay />
+        <section className="mx-auto grid max-w-screen-2xl grid-cols-2 gap-6 p-10 lg:grid-cols-3">
+          {listings.length > 0 ? (
+            listings.map((listing) => (
+              <CardDisplay listing={listing} key={listing.id} />
+            ))
+          ) : (
+            <div className="w-full text-center">No listings available</div>
+          )}
         </section>
       </div>
     </div>
