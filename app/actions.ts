@@ -51,6 +51,7 @@ const listingSchema = z.object({
   mileage: z.number(),
   color: z.string(),
   description: z.string(),
+  files: z.any(),
 });
 
 export const createCarListing = async (
@@ -78,9 +79,18 @@ export const createCarListing = async (
         color: data.color,
         description: data.description,
         condition: data.condition,
-        images: [],
         drive: "FWD", //! Hardcoded TODO FIX
         createdAt: new Date(),
+        images: {
+          create: data.files.map((file) => ({
+            url: file.url,
+            key: file.key,
+            name: file.name,
+            type: file.type,
+            size: file.size,
+            userId: session.user.id,
+          })),
+        },
       },
     });
     return Promise.resolve();
@@ -158,7 +168,7 @@ export const getHomeListings = async (): Promise<
     location: item.country,
     fuelType: item.fuelType,
     year: item.year,
-    image: item.images[0],
+    image: item.images[0]?.url,
     condition: item.condition,
   }));
 };

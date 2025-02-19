@@ -25,6 +25,7 @@ model User {
   updatedAt     DateTime
   sessions      Session[]
   accounts      Account[]
+  Upload        Upload[]
 
   @@map("user")
 }
@@ -34,6 +35,12 @@ enum Role {
   user
   dealer
   admin
+}
+
+enum ListingStatus {
+  pending
+  approved
+  rejected
 }
 
 model Listing {
@@ -53,15 +60,24 @@ model Listing {
   description String?
   condition   String?
   mileage     Float?
-  images      String[]
+  images      Upload[]
   status      ListingStatus @default(pending)
   createdAt   DateTime      @default(now())
 }
 
-enum ListingStatus {
-  pending
-  approved
-  rejected
+model Upload {
+  id        String   @id @default(uuid())
+  url       String   @unique
+  key       String   @unique
+  name      String
+  type      String
+  size      Int
+  createdAt DateTime @default(now())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  listingId Int
+  listing   Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
 }
 
 model cars {

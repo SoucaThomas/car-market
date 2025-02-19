@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { createCarListing, getCarBrands, getCarModels } from "../actions";
 import { toast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
+import { UploadPictures } from "@/components/UploadPictures";
 
 enum States {
   SELECTCAR,
@@ -35,6 +36,7 @@ export default function ListACar() {
   const [mileage, setMileage] = useState<number>(0);
   const [color, setColor] = useState<{ id: number; label: string }>(null);
   const [description, setDescription] = useState<string>("");
+  const [files, setFiles] = useState([]);
 
   useEffect(() => {
     const getData = async () => {
@@ -71,6 +73,7 @@ export default function ListACar() {
       mileage,
       color: color.label,
       description,
+      files,
     };
 
     try {
@@ -124,9 +127,7 @@ export default function ListACar() {
         />
       )}
       {state === States.UPLOADPICTURES && (
-        <div>
-          Upload Pictures<button onClick={next}>next</button>
-        </div>
+        <UploadPictures next={next} previous={previous} setFiles={setFiles} />
       )}
       {state === States.DESCRIPTION && (
         <DescriptionCar
