@@ -121,7 +121,7 @@ export function SignInForm({
                   )}
                 />
                 <Button type="submit" className="w-full">
-                  Sing In
+                  Sign In
                 </Button>
               </div>
               <div className="mt-4 text-center text-sm">
