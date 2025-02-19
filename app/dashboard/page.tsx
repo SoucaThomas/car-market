@@ -20,11 +20,15 @@ import { authClient } from "@/lib/auth-client";
 import { Session, User } from "better-auth";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import { getUserListings } from "../actions";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Dashboard() {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<User>(null);
+  const [userListings, setUserListings] = useState([]);
+
   const router = useRouter();
 
   useEffect(() => {
@@ -40,23 +44,42 @@ export default function Dashboard() {
       setSession(response.data.session);
       setUser(response.data.user);
 
+      setUserListings(await getUserListings(response.data.user.id));
+
       setLoading(false);
     };
 
     fetchSession();
   }, []);
 
+  useEffect(() => {
+    console.log(userListings);
+  }, [userListings]);
+
   return (
     <>
-      {!loading && !user ? (
-        <></>
+      {loading ? (
+        <main className="mx-auto flex w-full max-w-screen-2xl flex-col items-center justify-between gap-2 p-10">
+          <Skeleton className="mb-4 h-8 w-full animate-pulse rounded bg-gray-200"></Skeleton>
+          <div className="grid w-full grid-cols-2 gap-6 lg:grid-cols-3">
+            <Skeleton className="h-48 animate-pulse rounded bg-gray-200"></Skeleton>
+            <Skeleton className="h-48 animate-pulse rounded bg-gray-200"></Skeleton>
+            <Skeleton className="h-48 animate-pulse rounded bg-gray-200"></Skeleton>
+          </div>
+          <div className="mt-8 w-full">
+            <Skeleton className="mb-2 h-8 animate-pulse rounded bg-gray-200"></Skeleton>
+            <Skeleton className="mb-2 h-8 animate-pulse rounded bg-gray-200"></Skeleton>
+            <Skeleton className="mb-2 h-8 animate-pulse rounded bg-gray-200"></Skeleton>
+            <Skeleton className="mb-2 h-8 animate-pulse rounded bg-gray-200"></Skeleton>
+          </div>
+        </main>
       ) : (
         <main className="mx-auto flex w-full max-w-screen-2xl flex-col items-center justify-between gap-2 p-10">
           <h1 className="w-full text-2xl font-bold">
             Welcome back, {user?.name}!
           </h1>
 
-          <div className="grid w-full grid-cols-3 gap-6">
+          <div className="grid w-full grid-cols-2 gap-6 lg:grid-cols-3">
             <Card>
               <CardContent>
                 <CardHeader>
@@ -84,7 +107,9 @@ export default function Dashboard() {
                 </CardHeader>
                 <CardDescription>
                   <p>You have listed and sold</p>
-                  <h1 className="text-2xl font-bold">10 cars</h1>
+                  <h1 className="text-2xl font-bold">
+                    {userListings.length} cars
+                  </h1>
                 </CardDescription>
               </CardContent>
             </Card>
@@ -116,14 +141,26 @@ export default function Dashboard() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                <TableRow onClick={() => {}}>
-                  <TableCell className="font-medium">1</TableCell>
-                  <TableCell>2012 BMW 3 series</TableCell>
-                  <TableCell>
-                    <span className="text-green-500">Listed</span>
-                  </TableCell>
-                  <TableCell className="text-right">$2500.00</TableCell>
-                </TableRow>
+                {userListings.map((listing) => (
+                  <TableRow key={listing.id} onClick={() => {}}>
+                    <TableCell className="font-medium">{listing.id}</TableCell>
+                    <TableCell>{listing.title}</TableCell>
+                    <TableCell>
+                      <span
+                        className={
+                          (listing.status === "pending" && "text-red-600") ||
+                          (listing.status === "approved" && "text-green-600") ||
+                          (listing.status === "rejected" && "text-gray-600")
+                        }
+                      >
+                        {listing.status}
+                      </span>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      ${listing.price}
+                    </TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
           </div>

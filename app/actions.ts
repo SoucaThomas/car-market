@@ -89,3 +89,32 @@ export const createCarListing = async (
     return Promise.reject();
   }
 };
+
+export const getUserListings = async (
+  userId: number
+): Promise<
+  {
+    id: number;
+    title: string;
+    status: string;
+    price: number;
+  }[]
+> => {
+  const result = await prisma.listing.findMany({
+    where: { userId: userId.toString() },
+    select: {
+      id: true,
+      title: true,
+      status: true,
+      price: true,
+    },
+    orderBy: { createdAt: "asc" },
+  });
+
+  return result.map((item) => ({
+    id: item.id,
+    title: item.title,
+    status: item.status.toString(),
+    price: item.price,
+  }));
+};
