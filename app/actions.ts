@@ -2,8 +2,9 @@
 
 import { prisma } from "@/prisma/prisma";
 import { z } from "zod";
-import { auth } from "@/auth";
+import { auth, User } from "@/auth";
 import { headers } from "next/headers";
+import type { Upload } from "@prisma/client";
 
 export const getCarBrands = async (): Promise<
   { id: number; label: string }[]
@@ -32,7 +33,9 @@ export const getCarModels = async (carBrand: {
   const response = result.map((item) => {
     return {
       id: item.car_model_id,
-      label: item.model_name.charAt(0).toUpperCase() + item.model_name.slice(1),
+      label:
+        (item.model_name ?? "").charAt(0).toUpperCase() +
+        (item.model_name ?? "").slice(1),
     };
   });
   return response;
@@ -62,6 +65,10 @@ export const createCarListing = async (
     headers: await headers(),
   });
 
+  if (!session) {
+    return Promise.reject("User not authenticated");
+  }
+
   try {
     const data = listingSchema.parse(listingData);
     await prisma.listing.create({
@@ -82,7 +89,7 @@ export const createCarListing = async (
         drive: "FWD", //! Hardcoded TODO FIX
         createdAt: new Date(),
         images: {
-          create: data.files.map((file) => ({
+          create: data.files.map((file: Upload) => ({
             url: file.url,
             key: file.key,
             name: file.name,
@@ -101,7 +108,7 @@ export const createCarListing = async (
 };
 
 export const getUserListings = async (
-  userId: number
+  user: User
 ): Promise<
   {
     id: number;
@@ -111,7 +118,7 @@ export const getUserListings = async (
   }[]
 > => {
   const result = await prisma.listing.findMany({
-    where: { userId: userId.toString() },
+    where: { userId: user.id.toString() },
     select: {
       id: true,
       title: true,
@@ -123,9 +130,9 @@ export const getUserListings = async (
 
   return result.map((item) => ({
     id: item.id,
-    title: item.title,
+    title: item.title || "Untitled",
     status: item.status.toString(),
-    price: item.price,
+    price: item.price || 0,
   }));
 };
 
@@ -161,14 +168,14 @@ export const getHomeListings = async (): Promise<
 
   return result.map((item) => ({
     id: item.id,
-    title: item.title,
+    title: item.title || "Untitled",
     status: item.status.toString(),
-    price: item.price,
-    mileage: item.mileage,
-    location: item.country,
-    fuelType: item.fuelType,
-    year: item.year,
-    image: item.images[0]?.url,
-    condition: item.condition,
+    price: item.price || 0,
+    mileage: item.mileage || 0,
+    location: item.country || "Unknown",
+    fuelType: item.fuelType || "Unknown",
+    year: item.year || 0,
+    image: item.images[0]?.url || "",
+    condition: item.condition || "Unknown",
   }));
 };

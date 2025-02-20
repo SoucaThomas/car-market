@@ -4,8 +4,8 @@ import { Label } from "./label";
 interface FilterInputProps<T extends Record<number, string>> {
   label: string;
   data: T[];
-  value: T;
-  setValue: (v: T) => void;
+  value: T | null;
+  setValue: (value: T | null) => void;
 }
 
 export function FilterInput({

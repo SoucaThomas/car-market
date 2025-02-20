@@ -1,4 +1,3 @@
-"use client";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -16,49 +15,27 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { authClient } from "@/lib/auth-client";
-import { Session, User } from "better-auth";
-import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { User } from "better-auth";
+import { redirect } from "next/navigation";
 import { getUserListings } from "../actions";
 import { Skeleton } from "@/components/ui/skeleton";
+import { auth } from "@/auth";
+import { headers } from "next/headers";
 
-export default function Dashboard() {
-  const [session, setSession] = useState<Session | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState<User>(null);
-  const [userListings, setUserListings] = useState([]);
+export default async function Dashboard() {
+  const session = await auth.api.getSession({ headers: await headers() });
 
-  const router = useRouter();
+  if (!session) {
+    redirect("/sign-in");
+  }
 
-  useEffect(() => {
-    const fetchSession = async () => {
-      setLoading(true);
-      const response = await authClient.getSession();
+  const user = session?.user as User;
 
-      if (!response.data) {
-        setLoading(false);
-        return;
-      }
-
-      setSession(response.data.session);
-      setUser(response.data.user);
-
-      setUserListings(await getUserListings(response.data.user.id));
-
-      setLoading(false);
-    };
-
-    fetchSession();
-  }, []);
-
-  useEffect(() => {
-    console.log(userListings);
-  }, [userListings]);
+  const userListings = await getUserListings(user);
 
   return (
     <>
-      {loading ? (
+      {!user ? (
         <main className="mx-auto flex w-full max-w-screen-2xl flex-col items-center justify-between gap-2 p-10">
           <Skeleton className="mb-4 h-8 w-full animate-pulse rounded bg-gray-200"></Skeleton>
           <div className="grid w-full grid-cols-2 gap-6 lg:grid-cols-3">
@@ -91,10 +68,7 @@ export default function Dashboard() {
                     potential buyers quickly and easily.
                   </p>
                 </CardDescription>
-                <Button
-                  className="mt-8"
-                  onClick={() => router.push("/listacar")}
-                >
+                <Button className="mt-8" onClick={() => redirect("/listacar")}>
                   List a Car
                 </Button>
               </CardContent>
@@ -150,7 +124,8 @@ export default function Dashboard() {
                         className={
                           (listing.status === "pending" && "text-red-600") ||
                           (listing.status === "approved" && "text-green-600") ||
-                          (listing.status === "rejected" && "text-gray-600")
+                          (listing.status === "rejected" && "text-gray-600") ||
+                          "text-gray-600"
                         }
                       >
                         {listing.status}

@@ -15,7 +15,20 @@ import { useEffect, useState } from "react";
 import { getHomeListings } from "./actions";
 
 export default function Page() {
-  const [listings, setListings] = useState([]);
+  const [listings, setListings] = useState<
+    Array<{
+      id: number;
+      title: string;
+      status: string;
+      price: number;
+      mileage: number;
+      location?: string;
+      fuelType: string;
+      year: number;
+      image?: string;
+      condition: string;
+    }>
+  >([]);
 
   useEffect(() => {
     const getListings = async () => {

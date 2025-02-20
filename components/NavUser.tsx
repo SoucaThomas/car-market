@@ -1,4 +1,4 @@
-"use client";
+"use server";
 
 import { BadgeCheck, LogOut, Sparkles } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -13,49 +13,23 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "./ui/button";
 import { authClient } from "@/lib/auth-client";
-import { User } from "@/auth";
-
-interface Session {
-  id: string;
-  createdAt: Date;
-  updatedAt: Date;
-  userId: string;
-  expiresAt: Date;
-  token: string;
-  ipAddress?: string | null;
-  userAgent?: string | null;
-}
-import { useState, useEffect } from "react";
+import { auth, User } from "@/auth";
 import { redirect } from "next/navigation";
 import { Skeleton } from "./ui/skeleton";
+import { headers } from "next/headers";
 
-export function NavUser() {
-  const [session, setSession] = useState<Session | null>(null);
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+export async function NavUser() {
+  const session = await auth.api.getSession({ headers: await headers() });
 
-  useEffect(() => {
-    const fetchSession = async () => {
-      setLoading(true);
-      const response = await authClient.getSession();
+  if (!session) {
+    redirect("/sign-in");
+  }
 
-      if (!response.data) {
-        setLoading(false);
-        return;
-      }
-
-      setSession(response.data.session);
-      setUser(response.data.user);
-
-      setLoading(false);
-    };
-
-    fetchSession();
-  }, []);
+  const user = session?.user as User;
 
   return (
     <>
-      {loading ? (
+      {!user ? (
         <Skeleton className="h-10 w-24 rounded-xl" />
       ) : (
         <>

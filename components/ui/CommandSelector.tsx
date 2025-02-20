@@ -22,7 +22,7 @@ import {
 interface CommandSelectorProps<T extends Record<number, string>> {
   text: string;
   data: T[];
-  value: T;
+  value: T | null;
   setValue: (v: T) => void;
 }
 
@@ -63,11 +63,13 @@ export function CommandSelector({
                     const selectedItem = data.find(
                       (item) => item.label === currentValue
                     );
-                    setValue(
-                      value && currentValue === value.label
-                        ? { id: 0, label: "" }
-                        : selectedItem
-                    );
+                    if (selectedItem) {
+                      setValue(
+                        value && currentValue === value.label
+                          ? { id: 0, label: "" }
+                          : selectedItem
+                      );
+                    }
                     setOpen(false);
                   }}
                 >

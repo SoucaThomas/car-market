@@ -12,14 +12,14 @@ import { Input } from "./ui/input";
 
 interface SelectCarProps<T extends Record<number, string>> {
   next: () => void;
-  carBrand: T;
-  setCarBrand: (T) => void;
-  carModel: T;
-  setCarModel: (T) => void;
+  carBrand: T | null;
+  setCarBrand: (carBrand: T | null) => void;
+  carModel: T | null;
+  setCarModel: (carModel: T | null) => void;
   year: number;
-  setYear: (year) => void;
+  setYear: (year: number) => void;
   title: string;
-  setTitle: (title) => void;
+  setTitle: (title: string) => void;
   carBrands: T[];
   carModels: T[];
   carType: number;

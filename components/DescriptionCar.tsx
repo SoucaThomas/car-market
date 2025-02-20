@@ -18,14 +18,14 @@ interface DescriptionCarProps<T extends Record<number, string>> {
   setPrice: (price: number) => void;
   engineSize: number;
   setEngineSize: (engineSize: number) => void;
-  country: T;
-  setCountry: (T) => void;
-  fuelType: T;
-  setFuelType: (T) => void;
+  country: T | null;
+  setCountry: (country: T | null) => void;
+  fuelType: T | null;
+  setFuelType: (fuelType: T | null) => void;
   mileage: number;
   setMileage: (mileage: number) => void;
-  color: T;
-  setColor: (T) => void;
+  color: T | null;
+  setColor: (color: T | null) => void;
   description: string;
   setDescription: (description: string) => void;
 }

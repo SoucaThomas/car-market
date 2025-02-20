@@ -12,11 +12,12 @@ import {
 } from "./ui/card";
 import { UploadDropzone } from "@/lib/uploadthing";
 import { useState } from "react";
-
+import type {} from "@uploadthing/react";
 interface UploadPicturesProps {
   next: () => void;
   previous: () => void;
-  setFiles: (v) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  setFiles: (file: any) => void;
 }
 
 export function UploadPictures({

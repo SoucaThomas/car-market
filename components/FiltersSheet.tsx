@@ -17,25 +17,42 @@ import { getCarBrands, getCarModels } from "@/app/actions";
 import { countries, fuel, colors } from "@/constants";
 
 export function FiltersSheet() {
-  const [carType, setCarType] = useState(null);
-  const [carBrand, setCarBrand] = useState(null);
-  const [carModel, setCarModel] = useState(null);
-  const [priceFrom, setPriceFrom] = useState(null);
-  const [priceTo, setPriceTo] = useState(null);
-  const [yearFrom, setYearFrom] = useState(null);
-  const [yearTo, setYearTo] = useState(null);
-  const [engineFrom, setEngineFrom] = useState(null);
-  const [engineTo, setEngineTo] = useState(null);
-  const [country, setCountry] = useState(null);
-  const [fuelType, setFuelType] = useState(null);
-  const [mileageFrom, setMileageFrom] = useState(null);
-  const [mileageTo, setMileageTo] = useState(null);
-  const [color, setColor] = useState(null);
+  const [carType, setCarType] = useState<number | null>(null);
+  const [carBrand, setCarBrand] = useState<{
+    id: number;
+    label: string;
+  } | null>(null);
+  const [carModel, setCarModel] = useState<{
+    id: number;
+    label: string;
+  } | null>(null);
+  const [priceFrom, setPriceFrom] = useState<number | null>(null);
+  const [priceTo, setPriceTo] = useState<number | null>(null);
+  const [yearFrom, setYearFrom] = useState<number | null>(null);
+  const [yearTo, setYearTo] = useState<number | null>(null);
+  const [engineFrom, setEngineFrom] = useState<number | null>(null);
+  const [engineTo, setEngineTo] = useState<number | null>(null);
+  const [country, setCountry] = useState<{
+    id: number;
+    label: string;
+  } | null>(null);
+  const [fuelType, setFuelType] = useState<{
+    id: number;
+    label: string;
+  } | null>(null);
+  const [mileageFrom, setMileageFrom] = useState<number | null>(null);
+  const [mileageTo, setMileageTo] = useState<number | null>(null);
+  const [color, setColor] = useState<{
+    id: number;
+    label: string;
+  } | null>(null);
 
   const [carBrands, setCarBrands] = useState<{ id: number; label: string }[]>(
     []
   );
-  const [carModels, setCarModels] = useState([]);
+  const [carModels, setCarModels] = useState<{ id: number; label: string }[]>(
+    []
+  );
 
   useEffect(() => {
     const getData = async () => {
@@ -49,7 +66,7 @@ export function FiltersSheet() {
 
   useEffect(() => {
     const getData = async () => {
-      const models = await getCarModels(carBrand);
+      const models = carBrand ? await getCarModels(carBrand) : [];
 
       setCarModels(models);
     };
