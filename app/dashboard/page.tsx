@@ -16,20 +16,20 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { User } from "better-auth";
-import { redirect } from "next/navigation";
 import { getUserListings } from "../actions";
 import { Skeleton } from "@/components/ui/skeleton";
 import { auth } from "@/auth";
 import { headers } from "next/headers";
+import Link from "next/link";
 
 export default async function Dashboard() {
   const session = await auth.api.getSession({ headers: await headers() });
 
-  if (!session) {
-    redirect("/sign-in");
-  }
-
   const user = session?.user as User;
+
+  if (!user) {
+    return null;
+  }
 
   const userListings = await getUserListings(user);
 
@@ -51,7 +51,7 @@ export default async function Dashboard() {
           </div>
         </main>
       ) : (
-        <main className="mx-auto flex w-full max-w-screen-2xl flex-col items-center justify-between gap-2 p-10">
+        <main className="mx-auto flex h-full w-full flex-col items-center gap-4 border p-10">
           <h1 className="w-full text-2xl font-bold">
             Welcome back, {user?.name}!
           </h1>
@@ -68,9 +68,9 @@ export default async function Dashboard() {
                     potential buyers quickly and easily.
                   </p>
                 </CardDescription>
-                <Button className="mt-8" onClick={() => redirect("/listacar")}>
-                  List a Car
-                </Button>
+                <Link href="/listacar">
+                  <Button className="mt-8">List a Car</Button>
+                </Link>
               </CardContent>
             </Card>
 
