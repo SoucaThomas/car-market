@@ -39,8 +39,9 @@ import {
 import { Check, ChevronsUpDown } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
-import { UploadButton, UploadDropzone } from "@/lib/uploadthing";
+import { UploadDropzone } from "@/lib/uploadthing";
 import Image from "next/image";
+import { countries, fuelTypes, colors } from "@/constants";
 
 const formSchema = z.object({
   listingTitle: z.string().min(1),
@@ -64,7 +65,7 @@ const defaultValues: FormValues = {
   carCondtition: "",
   brand: "",
   model: "",
-  year: new Date().getFullYear(),
+  year: 0,
   price: 0,
   country: "",
   engineSize: 0,
@@ -75,45 +76,6 @@ const defaultValues: FormValues = {
 };
 
 export default function MyForm() {
-  const languages = [
-    {
-      label: "English",
-      value: "en",
-    },
-    {
-      label: "French",
-      value: "fr",
-    },
-    {
-      label: "German",
-      value: "de",
-    },
-    {
-      label: "Spanish",
-      value: "es",
-    },
-    {
-      label: "Portuguese",
-      value: "pt",
-    },
-    {
-      label: "Russian",
-      value: "ru",
-    },
-    {
-      label: "Japanese",
-      value: "ja",
-    },
-    {
-      label: "Korean",
-      value: "ko",
-    },
-    {
-      label: "Chinese",
-      value: "zh",
-    },
-  ] as const;
-
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues,
@@ -181,7 +143,8 @@ export default function MyForm() {
               </FormItem>
             )}
           />
-          <FormField
+
+          {/* <FormField
             control={form.control}
             name="brand"
             render={({ field }) => (
@@ -241,8 +204,9 @@ export default function MyForm() {
                 <FormMessage />
               </FormItem>
             )}
-          />
-          <FormField
+          /> */}
+
+          {/* <FormField
             control={form.control}
             name="model"
             render={({ field }) => (
@@ -302,7 +266,7 @@ export default function MyForm() {
                 <FormMessage />
               </FormItem>
             )}
-          />
+          /> */}
 
           <FormField
             control={form.control}
@@ -310,12 +274,18 @@ export default function MyForm() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Year</FormLabel>
-                <Input
-                  placeholder="2025"
-                  type="number"
-                  {...field}
-                  onChange={(e) => field.onChange(Number(e.target.value))}
-                />
+                <FormControl>
+                  <Input
+                    placeholder="2025"
+                    type="number"
+                    {...field}
+                    value={field.value === 0 ? "" : field.value} // Conditionally set value
+                    onChange={(e) => {
+                      const parsedValue = Number(e.target.value);
+                      field.onChange(isNaN(parsedValue) ? 0 : parsedValue); // Handle NaN
+                    }}
+                  />
+                </FormControl>
 
                 <FormMessage />
               </FormItem>
@@ -333,7 +303,11 @@ export default function MyForm() {
                     placeholder="$"
                     type="number"
                     {...field}
-                    onChange={(e) => field.onChange(Number(e.target.value))}
+                    value={field.value === 0 ? "" : field.value} // Conditionally set value
+                    onChange={(e) => {
+                      const parsedValue = Number(e.target.value);
+                      field.onChange(isNaN(parsedValue) ? 0 : parsedValue); // Handle NaN
+                    }}
                   />
                 </FormControl>
 
@@ -360,8 +334,8 @@ export default function MyForm() {
                         )}
                       >
                         {field.value
-                          ? languages.find(
-                              (language) => language.value === field.value
+                          ? countries.find(
+                              (country) => country.label === field.value
                             )?.label
                           : "Select language"}
                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -374,23 +348,23 @@ export default function MyForm() {
                       <CommandList>
                         <CommandEmpty>No language found.</CommandEmpty>
                         <CommandGroup>
-                          {languages.map((language) => (
+                          {countries.map((country) => (
                             <CommandItem
-                              value={language.label}
-                              key={language.value}
+                              value={country.label}
+                              key={country.id}
                               onSelect={() => {
-                                form.setValue("country", language.value);
+                                form.setValue("country", country.label);
                               }}
                             >
                               <Check
                                 className={cn(
                                   "mr-2 h-4 w-4",
-                                  language.value === field.value
+                                  country.label === field.value
                                     ? "opacity-100"
                                     : "opacity-0"
                                 )}
                               />
-                              {language.label}
+                              {country.label}
                             </CommandItem>
                           ))}
                         </CommandGroup>
@@ -417,7 +391,11 @@ export default function MyForm() {
                     placeholder="1997 cm3"
                     type="number"
                     {...field}
-                    onChange={(e) => field.onChange(Number(e.target.value))}
+                    value={field.value === 0 ? "" : field.value} // Conditionally set value
+                    onChange={(e) => {
+                      const parsedValue = Number(e.target.value);
+                      field.onChange(isNaN(parsedValue) ? 0 : parsedValue); // Handle NaN
+                    }}
                   />
                 </FormControl>
 
@@ -443,9 +421,8 @@ export default function MyForm() {
                         )}
                       >
                         {field.value
-                          ? languages.find(
-                              (language) => language.value === field.value
-                            )?.label
+                          ? fuelTypes.find((fuel) => fuel.label === field.value)
+                              ?.label
                           : "Select language"}
                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                       </Button>
@@ -457,23 +434,23 @@ export default function MyForm() {
                       <CommandList>
                         <CommandEmpty>No language found.</CommandEmpty>
                         <CommandGroup>
-                          {languages.map((language) => (
+                          {fuelTypes.map((fuel) => (
                             <CommandItem
-                              value={language.label}
-                              key={language.value}
+                              value={fuel.label}
+                              key={fuel.label}
                               onSelect={() => {
-                                form.setValue("fuelType", language.value);
+                                form.setValue("fuelType", fuel.label);
                               }}
                             >
                               <Check
                                 className={cn(
                                   "mr-2 h-4 w-4",
-                                  language.value === field.value
+                                  fuel.label === field.value
                                     ? "opacity-100"
                                     : "opacity-0"
                                 )}
                               />
-                              {language.label}
+                              {fuel.label}
                             </CommandItem>
                           ))}
                         </CommandGroup>
@@ -506,9 +483,8 @@ export default function MyForm() {
                         )}
                       >
                         {field.value
-                          ? languages.find(
-                              (language) => language.value === field.value
-                            )?.label
+                          ? colors.find((color) => color.label === field.value)
+                              ?.label
                           : "Select language"}
                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                       </Button>
@@ -520,23 +496,23 @@ export default function MyForm() {
                       <CommandList>
                         <CommandEmpty>No language found.</CommandEmpty>
                         <CommandGroup>
-                          {languages.map((language) => (
+                          {colors.map((color) => (
                             <CommandItem
-                              value={language.label}
-                              key={language.value}
+                              value={color.label}
+                              key={color.id}
                               onSelect={() => {
-                                form.setValue("color", language.value);
+                                form.setValue("color", color.label);
                               }}
                             >
                               <Check
                                 className={cn(
                                   "mr-2 h-4 w-4",
-                                  language.value === field.value
+                                  color.label === field.value
                                     ? "opacity-100"
                                     : "opacity-0"
                                 )}
                               />
-                              {language.label}
+                              {color.label}
                             </CommandItem>
                           ))}
                         </CommandGroup>
@@ -586,8 +562,8 @@ export default function MyForm() {
                         height={250}
                       />
                     ))}
-                    {form.watch("Pictures") && (
-                      <UploadButton
+                    {form.watch("Pictures")?.length < 0 && (
+                      <UploadDropzone
                         endpoint="imageUploader"
                         onUploadError={(error: Error) => {
                           toast.error(error.message);

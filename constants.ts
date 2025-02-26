@@ -246,7 +246,7 @@ export const countries = [
   },
 ];
 
-export const fuel = [
+export const fuelTypes = [
   {
     id: 1,
     label: "CNG",
