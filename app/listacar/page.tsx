@@ -1,154 +1,617 @@
 "use client";
 
-import { SelectCar } from "@/components/SelectCar";
-import { DescriptionCar } from "@/components/DescriptionCar";
-import { useEffect, useState } from "react";
-import { createCarListing, getCarBrands, getCarModels } from "../actions";
-import { toast } from "@/hooks/use-toast";
-import { useRouter } from "next/navigation";
-import { UploadPictures } from "@/components/UploadPictures";
+import { toast } from "sonner";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Check, ChevronsUpDown } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { Card } from "@/components/ui/card";
+import { UploadButton, UploadDropzone } from "@/lib/uploadthing";
+import Image from "next/image";
 
-enum States {
-  SELECTCAR,
-  UPLOADPICTURES,
-  DESCRIPTION,
-}
+const formSchema = z.object({
+  listingTitle: z.string().min(1),
+  carCondtition: z.string(),
+  brand: z.string(),
+  model: z.string(),
+  year: z.number(),
+  price: z.number().min(0),
+  country: z.string(),
+  engineSize: z.number().min(0),
+  fuelType: z.string(),
+  color: z.string(),
+  description: z.string(),
+  Pictures: z.array(z.any()).min(1),
+});
 
-export default function ListACar() {
-  const [state, setState] = useState<States>(States.SELECTCAR);
-  const router = useRouter();
+export type FormValues = z.infer<typeof formSchema>;
 
-  const [carBrand, setCarBrand] = useState<{ id: number; label: string }>(null);
-  const [carModel, setCarModel] = useState<{ id: number; label: string }>(null);
-  const [carType, setCarType] = useState<number>(2);
-  const [year, setYear] = useState<number>(2000);
-  const [title, setTitle] = useState<string>("");
-  const [carBrands, setCarBrands] = useState<{ id: number; label: string }[]>(
-    []
-  );
-  const [carModels, setCarModels] = useState<{ id: number; label: string }[]>(
-    []
-  );
-  const [price, setPrice] = useState<number>(0);
-  const [engineSize, setEngineSize] = useState<number>(0);
-  const [country, setCountry] = useState<{ id: number; label: string }>(null);
-  const [fuelType, setFuelType] = useState<{ id: number; label: string }>(null);
-  const [mileage, setMileage] = useState<number>(0);
-  const [color, setColor] = useState<{ id: number; label: string }>(null);
-  const [description, setDescription] = useState<string>("");
-  const [files, setFiles] = useState([]);
+const defaultValues: FormValues = {
+  listingTitle: "",
+  carCondtition: "",
+  brand: "",
+  model: "",
+  year: new Date().getFullYear(),
+  price: 0,
+  country: "",
+  engineSize: 0,
+  fuelType: "",
+  color: "",
+  description: "",
+  Pictures: [],
+};
 
-  useEffect(() => {
-    const getData = async () => {
-      const brands = await getCarBrands();
+export default function MyForm() {
+  const languages = [
+    {
+      label: "English",
+      value: "en",
+    },
+    {
+      label: "French",
+      value: "fr",
+    },
+    {
+      label: "German",
+      value: "de",
+    },
+    {
+      label: "Spanish",
+      value: "es",
+    },
+    {
+      label: "Portuguese",
+      value: "pt",
+    },
+    {
+      label: "Russian",
+      value: "ru",
+    },
+    {
+      label: "Japanese",
+      value: "ja",
+    },
+    {
+      label: "Korean",
+      value: "ko",
+    },
+    {
+      label: "Chinese",
+      value: "zh",
+    },
+  ] as const;
 
-      setCarBrands(brands);
-    };
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues,
+  });
 
-    getData();
-  }, []);
-
-  useEffect(() => {
-    const getData = async () => {
-      setCarModel(null);
-      const models = await getCarModels(carBrand);
-
-      setCarModels(models);
-    };
-
-    getData();
-  }, [carBrand]);
-
-  const createListing = async () => {
-    const listing = {
-      carBrand: carBrand.label,
-      carModel: carModel.label,
-      condition: carType === 1 ? "New" : "Used",
-      year,
-      title,
-      price,
-      engineSize,
-      country: country.label,
-      fuelType: fuelType.label,
-      mileage,
-      color: color.label,
-      description,
-      files,
-    };
-
+  function onSubmit(values: FormValues) {
     try {
-      await createCarListing(listing);
-
-      toast({
-        title: "Success",
-        description: "Listing created",
-        duration: 5000,
-      });
-
-      router.push("/dashboard");
-    } catch (e) {
-      console.log(e);
-      toast({
-        title: "Error",
-        description: "Failed to create listing",
-        duration: 5000,
-      });
+      console.log(values);
+      toast(
+        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+          <code className="text-white">{JSON.stringify(values, null, 2)}</code>
+        </pre>
+      );
+    } catch (error) {
+      console.error("Form submission error", error);
+      toast.error("Failed to submit the form. Please try again.");
     }
-  };
-
-  const next = () => {
-    if (state === States.SELECTCAR) setState(States.UPLOADPICTURES);
-    else if (state === States.UPLOADPICTURES) setState(States.DESCRIPTION);
-    else if (state === States.DESCRIPTION) createListing();
-  };
-
-  const previous = () => {
-    if (state === States.UPLOADPICTURES) setState(States.SELECTCAR);
-    else if (state === States.DESCRIPTION) setState(States.UPLOADPICTURES);
-  };
+  }
 
   return (
-    <main className="mx-auto flex h-screen w-full max-w-screen-2xl items-center justify-center gap-2 p-10">
-      {state === States.SELECTCAR && (
-        <SelectCar
-          next={next}
-          carBrand={carBrand}
-          setCarBrand={setCarBrand}
-          carModel={carModel}
-          setCarModel={setCarModel}
-          carType={carType}
-          setCarType={setCarType}
-          year={year}
-          setYear={setYear}
-          title={title}
-          setTitle={setTitle}
-          carBrands={carBrands}
-          carModels={carModels}
-        />
-      )}
-      {state === States.UPLOADPICTURES && (
-        <UploadPictures next={next} previous={previous} setFiles={setFiles} />
-      )}
-      {state === States.DESCRIPTION && (
-        <DescriptionCar
-          next={next}
-          previous={previous}
-          price={price}
-          setPrice={setPrice}
-          engineSize={engineSize}
-          setEngineSize={setEngineSize}
-          country={country}
-          setCountry={setCountry}
-          fuelType={fuelType}
-          setFuelType={setFuelType}
-          mileage={mileage}
-          setMileage={setMileage}
-          color={color}
-          setColor={setColor}
-          description={description}
-          setDescription={setDescription}
-        />
-      )}
-    </main>
+    <Card className="mx-auto w-full max-w-xl p-10">
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="w-full space-y-8 py-10"
+        >
+          <FormField
+            control={form.control}
+            name="listingTitle"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Title of your listing</FormLabel>
+                <FormControl>
+                  <Input placeholder="Toyota Prius" type="text" {...field} />
+                </FormControl>
+
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="carCondtition"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Car&apos;s condition </FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="New" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="m@example.com">m@example.com</SelectItem>
+                    <SelectItem value="m@google.com">m@google.com</SelectItem>
+                    <SelectItem value="m@support.com">m@support.com</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="brand"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel>Car brand</FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        className={cn(
+                          "w-[200px] justify-between",
+                          !field.value && "text-muted-foreground"
+                        )}
+                      >
+                        {field.value
+                          ? languages.find(
+                              (language) => language.value === field.value
+                            )?.label
+                          : "Select language"}
+                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-[200px] p-0">
+                    <Command>
+                      <CommandInput placeholder="Search language..." />
+                      <CommandList>
+                        <CommandEmpty>No language found.</CommandEmpty>
+                        <CommandGroup>
+                          {languages.map((language) => (
+                            <CommandItem
+                              value={language.label}
+                              key={language.value}
+                              onSelect={() => {
+                                form.setValue("brand", language.value);
+                              }}
+                            >
+                              <Check
+                                className={cn(
+                                  "mr-2 h-4 w-4",
+                                  language.value === field.value
+                                    ? "opacity-100"
+                                    : "opacity-0"
+                                )}
+                              />
+                              {language.label}
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
+
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="model"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel>Car model</FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        className={cn(
+                          "w-[200px] justify-between",
+                          !field.value && "text-muted-foreground"
+                        )}
+                      >
+                        {field.value
+                          ? languages.find(
+                              (language) => language.value === field.value
+                            )?.label
+                          : "Select language"}
+                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-[200px] p-0">
+                    <Command>
+                      <CommandInput placeholder="Search language..." />
+                      <CommandList>
+                        <CommandEmpty>No language found.</CommandEmpty>
+                        <CommandGroup>
+                          {languages.map((language) => (
+                            <CommandItem
+                              value={language.label}
+                              key={language.value}
+                              onSelect={() => {
+                                form.setValue("model", language.value);
+                              }}
+                            >
+                              <Check
+                                className={cn(
+                                  "mr-2 h-4 w-4",
+                                  language.value === field.value
+                                    ? "opacity-100"
+                                    : "opacity-0"
+                                )}
+                              />
+                              {language.label}
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
+
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="year"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Year</FormLabel>
+                <Input
+                  placeholder="2025"
+                  type="number"
+                  {...field}
+                  onChange={(e) => field.onChange(Number(e.target.value))}
+                />
+
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="price"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Price</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="$"
+                    type="number"
+                    {...field}
+                    onChange={(e) => field.onChange(Number(e.target.value))}
+                  />
+                </FormControl>
+
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="country"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel>Country</FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        className={cn(
+                          "w-[200px] justify-between",
+                          !field.value && "text-muted-foreground"
+                        )}
+                      >
+                        {field.value
+                          ? languages.find(
+                              (language) => language.value === field.value
+                            )?.label
+                          : "Select language"}
+                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-[200px] p-0">
+                    <Command>
+                      <CommandInput placeholder="Search language..." />
+                      <CommandList>
+                        <CommandEmpty>No language found.</CommandEmpty>
+                        <CommandGroup>
+                          {languages.map((language) => (
+                            <CommandItem
+                              value={language.label}
+                              key={language.value}
+                              onSelect={() => {
+                                form.setValue("country", language.value);
+                              }}
+                            >
+                              <Check
+                                className={cn(
+                                  "mr-2 h-4 w-4",
+                                  language.value === field.value
+                                    ? "opacity-100"
+                                    : "opacity-0"
+                                )}
+                              />
+                              {language.label}
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
+                <FormDescription>
+                  This is the language that will be used in the dashboard.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="engineSize"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Engine size</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="1997 cm3"
+                    type="number"
+                    {...field}
+                    onChange={(e) => field.onChange(Number(e.target.value))}
+                  />
+                </FormControl>
+
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="fuelType"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel>Fuel Type</FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        className={cn(
+                          "w-[200px] justify-between",
+                          !field.value && "text-muted-foreground"
+                        )}
+                      >
+                        {field.value
+                          ? languages.find(
+                              (language) => language.value === field.value
+                            )?.label
+                          : "Select language"}
+                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-[200px] p-0">
+                    <Command>
+                      <CommandInput placeholder="Search language..." />
+                      <CommandList>
+                        <CommandEmpty>No language found.</CommandEmpty>
+                        <CommandGroup>
+                          {languages.map((language) => (
+                            <CommandItem
+                              value={language.label}
+                              key={language.value}
+                              onSelect={() => {
+                                form.setValue("fuelType", language.value);
+                              }}
+                            >
+                              <Check
+                                className={cn(
+                                  "mr-2 h-4 w-4",
+                                  language.value === field.value
+                                    ? "opacity-100"
+                                    : "opacity-0"
+                                )}
+                              />
+                              {language.label}
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
+                <FormDescription>
+                  This is the language that will be used in the dashboard.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="color"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel>Color</FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        className={cn(
+                          "w-[200px] justify-between",
+                          !field.value && "text-muted-foreground"
+                        )}
+                      >
+                        {field.value
+                          ? languages.find(
+                              (language) => language.value === field.value
+                            )?.label
+                          : "Select language"}
+                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-[200px] p-0">
+                    <Command>
+                      <CommandInput placeholder="Search language..." />
+                      <CommandList>
+                        <CommandEmpty>No language found.</CommandEmpty>
+                        <CommandGroup>
+                          {languages.map((language) => (
+                            <CommandItem
+                              value={language.label}
+                              key={language.value}
+                              onSelect={() => {
+                                form.setValue("color", language.value);
+                              }}
+                            >
+                              <Check
+                                className={cn(
+                                  "mr-2 h-4 w-4",
+                                  language.value === field.value
+                                    ? "opacity-100"
+                                    : "opacity-0"
+                                )}
+                              />
+                              {language.label}
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
+                <FormDescription>
+                  This is the language that will be used in the dashboard.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Description</FormLabel>
+                <FormControl>
+                  <Textarea placeholder="" className="resize-none" {...field} />
+                </FormControl>
+                <FormDescription>
+                  A short description of the listed car
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="Pictures"
+            render={() => (
+              <FormItem>
+                <FormLabel>Upload Pictures</FormLabel>
+                <FormControl>
+                  <div>
+                    {form.watch("Pictures")?.map((file, index) => (
+                      <Image // ! TODO make it a component
+                        key={index}
+                        alt="Image uploaded by user"
+                        src={file.ufsUrl}
+                        width={250}
+                        height={250}
+                      />
+                    ))}
+                    {form.watch("Pictures") && (
+                      <UploadButton
+                        endpoint="imageUploader"
+                        onUploadError={(error: Error) => {
+                          toast.error(error.message);
+                        }}
+                        onClientUploadComplete={(files) => {
+                          files.map((file) => {
+                            form.setValue("Pictures", [
+                              ...(form.getValues("Pictures") || []),
+                              file,
+                            ]);
+                          });
+                        }}
+                      />
+                    )}
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <Button type="submit">Submit</Button>
+        </form>
+      </Form>
+    </Card>
   );
 }

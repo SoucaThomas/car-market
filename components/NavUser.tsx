@@ -1,4 +1,4 @@
-"use server";
+"use client";
 
 import { BadgeCheck, LogOut, Sparkles } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -12,25 +12,22 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "./ui/button";
-import { authClient } from "@/lib/auth-client";
-import { auth, User } from "@/auth";
-import { redirect } from "next/navigation";
 import { Skeleton } from "./ui/skeleton";
-import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
-export async function NavUser() {
-  const session = await auth.api.getSession({ headers: await headers() });
+import { User } from "@/auth";
+import { authClient } from "@/lib/auth-client";
+import { useSession } from "@/lib/auth-client";
 
-  if (!session) {
-    redirect("/sign-in");
-  }
+export function NavUser() {
+  const { data: session, isPending } = useSession();
 
   const user = session?.user as User;
 
   return (
     <>
-      {!user ? (
-        <Skeleton className="h-10 w-24 rounded-xl" />
+      {isPending ? (
+        <Skeleton className="h-10 w-24 rounded-xl bg-muted" />
       ) : (
         <>
           {user ? (
