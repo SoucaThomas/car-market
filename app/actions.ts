@@ -175,6 +175,8 @@ export const createListing = async (
         price: data.price,
         country: data.country,
         engineSize: data.engineSize,
+        mileage: data.mileage,
+        drive: data.drive,
         fuelType: data.fuelType,
         color: data.color,
         description: data.description,
