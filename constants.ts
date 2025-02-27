@@ -11,6 +11,8 @@ export const formSchema = z.object({
   model: z.string().min(1, { message: "Model must be selected." }),
   year: z.number().min(1900).max(new Date().getFullYear()),
   price: z.number().min(0).min(1, { message: "Price must be set." }),
+  mileage: z.number().min(0),
+  drive: z.string().min(1, { message: "Drive must be selected." }),
   country: z.string().min(1, { message: "Country must be selected." }),
   engineSize: z.number().min(0),
   fuelType: z.string().min(1, { message: "Fuel type must be selected." }),
@@ -404,5 +406,172 @@ export const colors = [
   {
     id: 16,
     label: "Navy",
+  },
+];
+
+export const driveType = [
+  {
+    id: 1,
+    label: "Automatic (AM-S6)",
+  },
+  {
+    id: 2,
+    label: "Automatic (variable gear ratios)",
+  },
+  {
+    id: 3,
+    label: "Automatic (AM-S9)",
+  },
+  {
+    id: 4,
+    label: "Manual 7-spd",
+  },
+  {
+    id: 6,
+    label: "Automatic (AM5)",
+  },
+  {
+    id: 7,
+    label: "Automatic (S8)",
+  },
+  {
+    id: 8,
+    label: "Automatic (A2)",
+  },
+  {
+    id: 9,
+    label: "Manual 4-spd",
+  },
+  {
+    id: 10,
+    label: "Automatic (L4)",
+  },
+  {
+    id: 11,
+    label: "Automatic 9-spd",
+  },
+  {
+    id: 12,
+    label: "Automatic 7-spd",
+  },
+  {
+    id: 13,
+    label: "Automatic 4-spd",
+  },
+  {
+    id: 14,
+    label: "Automatic (AM8)",
+  },
+  {
+    id: 15,
+    label: "Manual 3-spd",
+  },
+  {
+    id: 16,
+    label: "Manual 4-spd Doubled",
+  },
+  {
+    id: 17,
+    label: "Automatic (AM-S8)",
+  },
+  {
+    id: 18,
+    label: "Automatic (AV-S8)",
+  },
+  {
+    id: 19,
+    label: "Automatic (AM-S10)",
+  },
+  {
+    id: 20,
+    label: "Automatic 10-spd",
+  },
+  {
+    id: 21,
+    label: "Automatic (S6)",
+  },
+  {
+    id: 22,
+    label: "Automatic (AM7)",
+  },
+  {
+    id: 23,
+    label: "Automatic (L3)",
+  },
+  {
+    id: 24,
+    label: "Automatic 6-spd",
+  },
+  {
+    id: 25,
+    label: "Automatic (AV-S1)",
+  },
+  {
+    id: 26,
+    label: "Manual 6-spd",
+  },
+  {
+    id: 27,
+    label: "Automatic (AV-S6)",
+  },
+  {
+    id: 28,
+    label: "Automatic (AV-S7)",
+  },
+  {
+    id: 29,
+    label: "Automatic (AV-S10)",
+  },
+  {
+    id: 30,
+    label: "Transmission",
+  },
+  {
+    id: 31,
+    label: "Automatic (S10)",
+  },
+  {
+    id: 32,
+    label: "Automatic 8-spd",
+  },
+  {
+    id: 33,
+    label: "Manual 5-spd",
+  },
+  {
+    id: 34,
+    label: "Automatic 5-spd",
+  },
+  {
+    id: 35,
+    label: "Automatic (S4)",
+  },
+  {
+    id: 36,
+    label: "Automatic (S7)",
+  },
+  {
+    id: 37,
+    label: "Automatic 3-spd",
+  },
+  {
+    id: 38,
+    label: "Automatic (S5)",
+  },
+  {
+    id: 39,
+    label: "Automatic (AM-S7)",
+  },
+  {
+    id: 40,
+    label: "Automatic (A1)",
+  },
+  {
+    id: 41,
+    label: "Automatic (AM6)",
+  },
+  {
+    id: 42,
+    label: "Automatic (S9)",
   },
 ];

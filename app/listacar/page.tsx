@@ -40,7 +40,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { UploadButton } from "@/lib/uploadthing";
 import Image from "next/image";
-import { countries, fuelTypes, colors } from "@/constants";
+import { countries, fuelTypes, colors, driveType } from "@/constants";
 import { useToast } from "@/hooks/use-toast";
 import { useEffect, useState } from "react";
 import { createListing, getCarBrands, getCarModels } from "../actions";
@@ -61,6 +61,7 @@ export default function MyForm() {
       year: 0,
       price: 0,
       engineSize: 0,
+      mileage: 0,
       description: "",
       carCondtition: "New",
     },
@@ -68,9 +69,7 @@ export default function MyForm() {
 
   async function onSubmit(values: FormValues) {
     try {
-      const result = await createListing(values);
-
-      console.log(result);
+      await createListing(values);
 
       toast({
         title: "Form submitted",
@@ -319,6 +318,91 @@ export default function MyForm() {
                   />
                 </FormControl>
 
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="mileage"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Mileage</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="100 000 km"
+                    type="number"
+                    {...field}
+                    value={field.value === 0 ? "" : field.value} // Conditionally set value
+                    onChange={(e) => {
+                      const parsedValue = Number(e.target.value);
+                      field.onChange(isNaN(parsedValue) ? 0 : parsedValue); // Handle NaN
+                    }}
+                  />
+                </FormControl>
+
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="drive"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel>Transmission</FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        className={cn(
+                          "w-full justify-between",
+                          !field.value && "text-muted-foreground"
+                        )}
+                      >
+                        {field.value
+                          ? driveType.find(
+                              (drive) => drive.label === field.value
+                            )?.label
+                          : "Select transsmision"}
+                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-full p-0">
+                    <Command>
+                      <CommandInput placeholder="Search transsmision..." />
+                      <CommandList>
+                        <CommandEmpty>No transsmision found.</CommandEmpty>
+                        <CommandGroup>
+                          {driveType.map((drive) => (
+                            <CommandItem
+                              value={drive.label}
+                              key={drive.id}
+                              onSelect={() => {
+                                form.setValue("drive", drive.label);
+                              }}
+                            >
+                              <Check
+                                className={cn(
+                                  "mr-2 h-4 w-4",
+                                  drive.label === field.value
+                                    ? "opacity-100"
+                                    : "opacity-0"
+                                )}
+                              />
+                              {drive.label}
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
                 <FormMessage />
               </FormItem>
             )}
