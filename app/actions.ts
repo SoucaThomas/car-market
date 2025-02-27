@@ -138,47 +138,19 @@ export const getUserListings = async (
 };
 
 export const getHomeListings = async (): Promise<
-  {
-    id: number;
-    title: string;
-    status: string;
-    price: number;
-    mileage: number;
-    location?: string;
-    fuelType: string;
-    year: number;
-    image?: string;
-    condition: string;
-  }[]
+  (Listing & { images: Upload[] })[]
 > => {
   const result = await prisma.listing.findMany({
     where: { status: "approved" },
-    select: {
-      id: true,
-      title: true,
-      status: true,
-      price: true,
-      mileage: true,
-      fuelType: true,
-      year: true,
+    orderBy: { createdAt: "asc" },
+    include: {
       images: true,
-      condition: true,
-      country: true,
     },
   });
 
-  return result.map((item) => ({
-    id: item.id,
-    title: item.title || "Untitled",
-    status: item.status.toString(),
-    price: item.price || 0,
-    mileage: item.mileage || 0,
-    location: item.country || "Unknown",
-    fuelType: item.fuelType || "Unknown",
-    year: item.year || 0,
-    image: item.images[0]?.url || "",
-    condition: item.condition || "Unknown",
-  }));
+  console.log(result);
+
+  return result;
 };
 
 export const createListing = async (

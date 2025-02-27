@@ -32,12 +32,9 @@ export const ourFileRouter = {
 
       if (!user) throw new UploadThingError("Unauthorized");
 
-      return { userId: user.id }; // Pass userId to onUploadComplete
+      return { userId: user.id };
     })
     .onUploadComplete(async ({ metadata, file }) => {
-      console.log("Upload complete for userId:", metadata.userId);
-      console.log("file url", file.url);
-
       try {
         const upload = await prisma.upload.create({
           data: {
@@ -51,9 +48,9 @@ export const ourFileRouter = {
           },
         });
 
-        console.log("Upload record created:", upload);
+        console.log("Upload record created:", upload.key);
 
-        return { uploadedBy: metadata.userId, uploadId: upload.id };
+        return { uploadedBy: metadata.userId, uploadId: upload.key };
       } catch (error) {
         console.error("Error saving upload to database:", error);
         throw new UploadThingError("Failed to save upload to database"); // Important: Throw error to signal failure

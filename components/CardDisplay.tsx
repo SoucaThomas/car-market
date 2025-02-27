@@ -1,23 +1,16 @@
+"use client";
+
 import { Fuel, Gauge, MapPin } from "lucide-react";
 import Image from "next/image";
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
 import { Separator } from "./ui/separator";
-import { redirect } from "next/navigation";
 import { Skeleton } from "./ui/skeleton";
+import { Listing, Upload } from "@prisma/client";
+import { redirect } from "next/navigation";
 
 interface CardDisplayProps {
-  listing: {
-    id: number;
-    title: string;
-    price: number;
-    mileage: number;
-    location?: string;
-    fuelType: string;
-    year: number;
-    image?: string;
-    condition: string;
-  };
+  listing: Listing & { images: Upload[] };
 }
 
 export function CardDisplay({ listing }: CardDisplayProps) {
@@ -25,12 +18,14 @@ export function CardDisplay({ listing }: CardDisplayProps) {
     <Card className="overflow-hidden rounded-2xl shadow-lg">
       <CardContent
         className="flex flex-col p-0"
-        onClick={() => redirect(`/listing/${listing.id}`)}
+        onClick={() => {
+          redirect(`/listing/${listing.id}`);
+        }}
       >
-        {listing.image ? (
+        {listing.images ? (
           <Image
-            src={listing.image}
-            alt={listing.title}
+            src={listing.images[0].url || "/car-placeholder.jpg"}
+            alt={listing.title || "Car listing"}
             width={500}
             height={192}
             className="h-48 w-full rounded-xl object-cover"
@@ -57,7 +52,7 @@ export function CardDisplay({ listing }: CardDisplayProps) {
             </div>
             <div className="flex flex-row items-center gap-2">
               <MapPin size={18} />
-              <p className="text-sm">{listing.location}</p>
+              <p className="text-sm">{listing.country}</p>
             </div>
             <div className="flex flex-row items-center gap-2">
               <Fuel size={18} />
