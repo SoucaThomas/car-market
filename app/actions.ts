@@ -5,6 +5,8 @@ import { z } from "zod";
 import { auth, User } from "@/auth";
 import { headers } from "next/headers";
 import type { Upload } from "@prisma/client";
+import { formSchema } from "@/constants";
+import { redirect } from "next/navigation";
 
 export const getCarBrands = async (): Promise<
   { id: number; label: string }[]
@@ -178,4 +180,47 @@ export const getHomeListings = async (): Promise<
     image: item.images[0]?.url || "",
     condition: item.condition || "Unknown",
   }));
+};
+
+export const createListing = async (data: z.infer<typeof formSchema>) => {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session) {
+    return Promise.reject("User not authenticated");
+  }
+
+  const listing = await prisma.listing.create({
+    data: {
+      title: data.listingTitle,
+      condition: data.carCondtition,
+      carBrand: data.brand,
+      carModel: data.model,
+      year: data.year,
+      price: data.price,
+      country: data.country,
+      engineSize: data.engineSize,
+      fuelType: data.fuelType,
+      color: data.color,
+      description: data.description,
+      userId: session.user.id,
+      images: {},
+    },
+  });
+
+  const files = data.Pictures;
+
+  for (const file of files) {
+    await prisma.upload.update({
+      where: {
+        key: file.key,
+      },
+      data: {
+        listingId: listing.id,
+      },
+    });
+  }
+
+  redirect("/dashboard");
 };

@@ -1,3 +1,31 @@
+import { z } from "zod";
+
+export const formSchema = z.object({
+  listingTitle: z
+    .string()
+    .min(3, { message: "Title must be at least 3 characters." }),
+  carCondtition: z.string(),
+  brand: z.string(),
+  model: z.string(),
+  year: z.number().min(1900).max(new Date().getFullYear()),
+  price: z.number().min(0),
+  country: z.string(),
+  engineSize: z.number().min(0),
+  fuelType: z.string(),
+  color: z.string(),
+  description: z.string(),
+  Pictures: z.array(
+    z.object({
+      url: z.string(),
+      key: z.string(),
+      name: z.string(),
+      type: z.string(),
+      size: z.number(),
+      ufsUrl: z.string(),
+    })
+  ),
+});
+
 export const countries = [
   {
     label: "Andorra",

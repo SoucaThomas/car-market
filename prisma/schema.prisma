@@ -71,18 +71,19 @@ model Listing {
 }
 
 model Upload {
-  id        String   @id @default(uuid())
+  key       String   @id @unique
   url       String   @unique
-  key       String   @unique
   name      String
   type      String
   size      Int
   createdAt DateTime @default(now())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ufsUrl    String
 
-  listingId Int
-  listing   Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  listingId Int?
+  listing   Listing? @relation(fields: [listingId], references: [id], onDelete: Cascade)
 }
 
 model cars {

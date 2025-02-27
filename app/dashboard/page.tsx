@@ -116,7 +116,7 @@ export default async function Dashboard() {
               </TableHeader>
               <TableBody>
                 {userListings.map((listing) => (
-                  <TableRow key={listing.id} onClick={() => {}}>
+                  <TableRow key={listing.id}>
                     <TableCell className="font-medium">{listing.id}</TableCell>
                     <TableCell>{listing.title}</TableCell>
                     <TableCell>

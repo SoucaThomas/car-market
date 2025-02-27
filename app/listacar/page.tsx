@@ -43,22 +43,8 @@ import Image from "next/image";
 import { countries, fuelTypes, colors } from "@/constants";
 import { useToast } from "@/hooks/use-toast";
 import { useEffect, useState } from "react";
-import { getCarBrands, getCarModels } from "../actions";
-
-const formSchema = z.object({
-  listingTitle: z.string().min(1),
-  carCondtition: z.string(),
-  brand: z.string(),
-  model: z.string(),
-  year: z.number(),
-  price: z.number().min(0),
-  country: z.string(),
-  engineSize: z.number().min(0),
-  fuelType: z.string(),
-  color: z.string(),
-  description: z.string(),
-  Pictures: z.array(z.any()).min(1),
-});
+import { createListing, getCarBrands, getCarModels } from "../actions";
+import { formSchema } from "@/constants";
 
 export type FormValues = z.infer<typeof formSchema>;
 
@@ -86,9 +72,12 @@ export default function MyForm() {
     defaultValues,
   });
 
-  function onSubmit(values: FormValues) {
+  async function onSubmit(values: FormValues) {
     try {
-      console.log(values);
+      const result = await createListing(values);
+
+      console.log(result);
+
       toast({
         title: "Form submitted",
         description: "Form submitted successfully",
@@ -588,6 +577,7 @@ export default function MyForm() {
                       }}
                       onClientUploadComplete={(files) => {
                         files.map((file) => {
+                          console.log(file);
                           form.setValue("Pictures", [
                             ...(form.getValues("Pictures") || []),
                             file,
