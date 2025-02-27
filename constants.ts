@@ -4,16 +4,18 @@ export const formSchema = z.object({
   listingTitle: z
     .string()
     .min(3, { message: "Title must be at least 3 characters." }),
-  carCondtition: z.string(),
-  brand: z.string(),
-  model: z.string(),
+  carCondtition: z
+    .string()
+    .min(1, { message: "Car condtion must be selected." }),
+  brand: z.string().min(1, { message: "Brand must be selected." }),
+  model: z.string().min(1, { message: "Model must be selected." }),
   year: z.number().min(1900).max(new Date().getFullYear()),
-  price: z.number().min(0),
-  country: z.string(),
+  price: z.number().min(0).min(1, { message: "Price must be set." }),
+  country: z.string().min(1, { message: "Country must be selected." }),
   engineSize: z.number().min(0),
-  fuelType: z.string(),
-  color: z.string(),
-  description: z.string(),
+  fuelType: z.string().min(1, { message: "Fuel type must be selected." }),
+  color: z.string().min(1, { message: "Color must be selected." }),
+  description: z.string().min(10),
   Pictures: z.array(
     z.object({
       url: z.string(),
@@ -22,7 +24,8 @@ export const formSchema = z.object({
       type: z.string(),
       size: z.number(),
       ufsUrl: z.string(),
-    })
+    }),
+    { message: "At least one picture must be uploaded." }
   ),
 });
 

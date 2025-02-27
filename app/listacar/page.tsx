@@ -45,31 +45,25 @@ import { useToast } from "@/hooks/use-toast";
 import { useEffect, useState } from "react";
 import { createListing, getCarBrands, getCarModels } from "../actions";
 import { formSchema } from "@/constants";
+import { useRouter } from "next/navigation";
 
 export type FormValues = z.infer<typeof formSchema>;
-
-const defaultValues: FormValues = {
-  listingTitle: "",
-  carCondtition: "",
-  brand: "",
-  model: "",
-  year: 0,
-  price: 0,
-  country: "",
-  engineSize: 0,
-  fuelType: "",
-  color: "",
-  description: "",
-  Pictures: [],
-};
 
 export default function MyForm() {
   const [brands, setBrands] = useState<{ label: string; id: number }[]>([]);
   const [models, setModels] = useState<{ label: string; id: number }[]>([]);
   const { toast } = useToast();
+  const router = useRouter();
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues,
+    defaultValues: {
+      listingTitle: "",
+      year: 0,
+      price: 0,
+      engineSize: 0,
+      description: "",
+      carCondtition: "New",
+    },
   });
 
   async function onSubmit(values: FormValues) {
@@ -82,6 +76,8 @@ export default function MyForm() {
         title: "Form submitted",
         description: "Form submitted successfully",
       });
+
+      router.push("/dashboard");
     } catch (error) {
       console.error("Form submission error", error);
       toast({

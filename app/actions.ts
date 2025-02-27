@@ -4,9 +4,8 @@ import { prisma } from "@/prisma/prisma";
 import { z } from "zod";
 import { auth, User } from "@/auth";
 import { headers } from "next/headers";
-import type { Upload } from "@prisma/client";
+import type { Listing, Upload } from "@prisma/client";
 import { formSchema } from "@/constants";
-import { redirect } from "next/navigation";
 
 export const getCarBrands = async (): Promise<
   { id: number; label: string }[]
@@ -182,45 +181,51 @@ export const getHomeListings = async (): Promise<
   }));
 };
 
-export const createListing = async (data: z.infer<typeof formSchema>) => {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+export const createListing = async (
+  data: z.infer<typeof formSchema>
+): Promise<Listing> => {
+  try {
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
 
-  if (!session) {
-    return Promise.reject("User not authenticated");
-  }
+    if (!session) {
+      return Promise.reject("User not authenticated");
+    }
 
-  const listing = await prisma.listing.create({
-    data: {
-      title: data.listingTitle,
-      condition: data.carCondtition,
-      carBrand: data.brand,
-      carModel: data.model,
-      year: data.year,
-      price: data.price,
-      country: data.country,
-      engineSize: data.engineSize,
-      fuelType: data.fuelType,
-      color: data.color,
-      description: data.description,
-      userId: session.user.id,
-      images: {},
-    },
-  });
-
-  const files = data.Pictures;
-
-  for (const file of files) {
-    await prisma.upload.update({
-      where: {
-        key: file.key,
-      },
+    const listing = await prisma.listing.create({
       data: {
-        listingId: listing.id,
+        title: data.listingTitle,
+        condition: data.carCondtition,
+        carBrand: data.brand,
+        carModel: data.model,
+        year: data.year,
+        price: data.price,
+        country: data.country,
+        engineSize: data.engineSize,
+        fuelType: data.fuelType,
+        color: data.color,
+        description: data.description,
+        userId: session.user.id,
+        images: {},
       },
     });
-  }
 
-  redirect("/dashboard");
+    const files = data.Pictures;
+
+    for (const file of files) {
+      await prisma.upload.update({
+        where: {
+          key: file.key,
+        },
+        data: {
+          listingId: listing.id,
+        },
+      });
+    }
+
+    return Promise.resolve(listing);
+  } catch (error) {
+    return Promise.reject(error);
+  }
 };

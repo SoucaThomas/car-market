@@ -103,12 +103,12 @@ export default async function Dashboard() {
             </Card>
           </div>
 
-          <div className="mt-8 w-full">
+          <div className="mt-8 h-auto w-full overflow-x-auto">
             <Table>
               <TableCaption>A list of your listed cars.</TableCaption>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-[100px]">Number</TableHead>
+                  <TableHead className="w-[100px]">Id</TableHead>
                   <TableHead>Title</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead className="text-right">Price</TableHead>
