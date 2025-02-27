@@ -1,6 +1,5 @@
 "use client";
 
-import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -39,9 +38,12 @@ import {
 import { Check, ChevronsUpDown } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
-import { UploadDropzone } from "@/lib/uploadthing";
+import { UploadButton } from "@/lib/uploadthing";
 import Image from "next/image";
 import { countries, fuelTypes, colors } from "@/constants";
+import { useToast } from "@/hooks/use-toast";
+import { useEffect, useState } from "react";
+import { getCarBrands, getCarModels } from "../actions";
 
 const formSchema = z.object({
   listingTitle: z.string().min(1),
@@ -76,6 +78,9 @@ const defaultValues: FormValues = {
 };
 
 export default function MyForm() {
+  const [brands, setBrands] = useState<{ label: string; id: number }[]>([]);
+  const [models, setModels] = useState<{ label: string; id: number }[]>([]);
+  const { toast } = useToast();
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues,
@@ -84,16 +89,35 @@ export default function MyForm() {
   function onSubmit(values: FormValues) {
     try {
       console.log(values);
-      toast(
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(values, null, 2)}</code>
-        </pre>
-      );
+      toast({
+        title: "Form submitted",
+        description: "Form submitted successfully",
+      });
     } catch (error) {
       console.error("Form submission error", error);
-      toast.error("Failed to submit the form. Please try again.");
+      toast({
+        title: "Form submission error",
+        description: (error as Error).message,
+        variant: "destructive",
+      });
     }
   }
+
+  useEffect(() => {
+    const fetchCarBrands = async () => {
+      setBrands(await getCarBrands());
+    };
+
+    fetchCarBrands();
+  }, []);
+
+  const fetchCarModels = async (brand: { label: string; id: number }) => {
+    if (brand) {
+      setModels(await getCarModels(brand));
+    } else {
+      setModels([]);
+    }
+  };
 
   return (
     <Card className="mx-auto w-full max-w-xl p-10">
@@ -132,10 +156,9 @@ export default function MyForm() {
                       <SelectValue placeholder="New" />
                     </SelectTrigger>
                   </FormControl>
-                  <SelectContent>
-                    <SelectItem value="m@example.com">m@example.com</SelectItem>
-                    <SelectItem value="m@google.com">m@google.com</SelectItem>
-                    <SelectItem value="m@support.com">m@support.com</SelectItem>
+                  <SelectContent defaultValue={"New"}>
+                    <SelectItem value="New">New</SelectItem>
+                    <SelectItem value="Used">Used</SelectItem>
                   </SelectContent>
                 </Select>
 
@@ -144,7 +167,7 @@ export default function MyForm() {
             )}
           />
 
-          {/* <FormField
+          <FormField
             control={form.control}
             name="brand"
             render={({ field }) => (
@@ -157,42 +180,43 @@ export default function MyForm() {
                         variant="outline"
                         role="combobox"
                         className={cn(
-                          "w-[200px] justify-between",
+                          "w-full justify-between",
                           !field.value && "text-muted-foreground"
                         )}
                       >
                         {field.value
-                          ? languages.find(
-                              (language) => language.value === field.value
-                            )?.label
-                          : "Select language"}
+                          ? brands.find((brand) => brand.label === field.value)
+                              ?.label
+                          : "Select brand"}
                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                       </Button>
                     </FormControl>
                   </PopoverTrigger>
-                  <PopoverContent className="w-[200px] p-0">
+                  <PopoverContent className="w-full p-0">
                     <Command>
-                      <CommandInput placeholder="Search language..." />
+                      <CommandInput placeholder="Search brands..." />
                       <CommandList>
-                        <CommandEmpty>No language found.</CommandEmpty>
+                        <CommandEmpty>No brand found.</CommandEmpty>
                         <CommandGroup>
-                          {languages.map((language) => (
+                          {brands.map((brand) => (
                             <CommandItem
-                              value={language.label}
-                              key={language.value}
+                              value={brand.label}
+                              key={brand.label}
                               onSelect={() => {
-                                form.setValue("brand", language.value);
+                                form.setValue("brand", brand.label);
+
+                                fetchCarModels(brand);
                               }}
                             >
                               <Check
                                 className={cn(
                                   "mr-2 h-4 w-4",
-                                  language.value === field.value
+                                  brand.label === field.value
                                     ? "opacity-100"
                                     : "opacity-0"
                                 )}
                               />
-                              {language.label}
+                              {brand.label}
                             </CommandItem>
                           ))}
                         </CommandGroup>
@@ -204,9 +228,9 @@ export default function MyForm() {
                 <FormMessage />
               </FormItem>
             )}
-          /> */}
+          />
 
-          {/* <FormField
+          <FormField
             control={form.control}
             name="model"
             render={({ field }) => (
@@ -219,42 +243,41 @@ export default function MyForm() {
                         variant="outline"
                         role="combobox"
                         className={cn(
-                          "w-[200px] justify-between",
+                          "w-full justify-between",
                           !field.value && "text-muted-foreground"
                         )}
                       >
                         {field.value
-                          ? languages.find(
-                              (language) => language.value === field.value
-                            )?.label
-                          : "Select language"}
+                          ? models.find((model) => model.label === field.value)
+                              ?.label
+                          : "Select Model"}
                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                       </Button>
                     </FormControl>
                   </PopoverTrigger>
-                  <PopoverContent className="w-[200px] p-0">
+                  <PopoverContent className="w-full p-0">
                     <Command>
-                      <CommandInput placeholder="Search language..." />
+                      <CommandInput placeholder="Search Models..." />
                       <CommandList>
-                        <CommandEmpty>No language found.</CommandEmpty>
+                        <CommandEmpty>No model found.</CommandEmpty>
                         <CommandGroup>
-                          {languages.map((language) => (
+                          {models.map((model) => (
                             <CommandItem
-                              value={language.label}
-                              key={language.value}
+                              value={model.label}
+                              key={model.label}
                               onSelect={() => {
-                                form.setValue("model", language.value);
+                                form.setValue("model", model.label);
                               }}
                             >
                               <Check
                                 className={cn(
                                   "mr-2 h-4 w-4",
-                                  language.value === field.value
+                                  model.label === field.value
                                     ? "opacity-100"
                                     : "opacity-0"
                                 )}
                               />
-                              {language.label}
+                              {model.label}
                             </CommandItem>
                           ))}
                         </CommandGroup>
@@ -266,7 +289,7 @@ export default function MyForm() {
                 <FormMessage />
               </FormItem>
             )}
-          /> */}
+          />
 
           <FormField
             control={form.control}
@@ -329,7 +352,7 @@ export default function MyForm() {
                         variant="outline"
                         role="combobox"
                         className={cn(
-                          "w-[200px] justify-between",
+                          "w-full justify-between",
                           !field.value && "text-muted-foreground"
                         )}
                       >
@@ -337,16 +360,16 @@ export default function MyForm() {
                           ? countries.find(
                               (country) => country.label === field.value
                             )?.label
-                          : "Select language"}
+                          : "Select country"}
                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                       </Button>
                     </FormControl>
                   </PopoverTrigger>
-                  <PopoverContent className="w-[200px] p-0">
+                  <PopoverContent className="w-full p-0">
                     <Command>
-                      <CommandInput placeholder="Search language..." />
+                      <CommandInput placeholder="Search country..." />
                       <CommandList>
-                        <CommandEmpty>No language found.</CommandEmpty>
+                        <CommandEmpty>No contry found.</CommandEmpty>
                         <CommandGroup>
                           {countries.map((country) => (
                             <CommandItem
@@ -372,9 +395,6 @@ export default function MyForm() {
                     </Command>
                   </PopoverContent>
                 </Popover>
-                <FormDescription>
-                  This is the language that will be used in the dashboard.
-                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -416,23 +436,23 @@ export default function MyForm() {
                         variant="outline"
                         role="combobox"
                         className={cn(
-                          "w-[200px] justify-between",
+                          "w-full justify-between",
                           !field.value && "text-muted-foreground"
                         )}
                       >
                         {field.value
                           ? fuelTypes.find((fuel) => fuel.label === field.value)
                               ?.label
-                          : "Select language"}
+                          : "Select fuel type"}
                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                       </Button>
                     </FormControl>
                   </PopoverTrigger>
-                  <PopoverContent className="w-[200px] p-0">
+                  <PopoverContent className="w-full p-0">
                     <Command>
-                      <CommandInput placeholder="Search language..." />
+                      <CommandInput placeholder="Search fuel types..." />
                       <CommandList>
-                        <CommandEmpty>No language found.</CommandEmpty>
+                        <CommandEmpty>No fuel type found.</CommandEmpty>
                         <CommandGroup>
                           {fuelTypes.map((fuel) => (
                             <CommandItem
@@ -458,9 +478,6 @@ export default function MyForm() {
                     </Command>
                   </PopoverContent>
                 </Popover>
-                <FormDescription>
-                  This is the language that will be used in the dashboard.
-                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -478,23 +495,23 @@ export default function MyForm() {
                         variant="outline"
                         role="combobox"
                         className={cn(
-                          "w-[200px] justify-between",
+                          "w-full justify-between",
                           !field.value && "text-muted-foreground"
                         )}
                       >
                         {field.value
                           ? colors.find((color) => color.label === field.value)
                               ?.label
-                          : "Select language"}
+                          : "Select color"}
                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                       </Button>
                     </FormControl>
                   </PopoverTrigger>
-                  <PopoverContent className="w-[200px] p-0">
+                  <PopoverContent className="w-full p-0">
                     <Command>
-                      <CommandInput placeholder="Search language..." />
+                      <CommandInput placeholder="Search colors..." />
                       <CommandList>
-                        <CommandEmpty>No language found.</CommandEmpty>
+                        <CommandEmpty>No color found.</CommandEmpty>
                         <CommandGroup>
                           {colors.map((color) => (
                             <CommandItem
@@ -520,9 +537,6 @@ export default function MyForm() {
                     </Command>
                   </PopoverContent>
                 </Popover>
-                <FormDescription>
-                  This is the language that will be used in the dashboard.
-                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -562,22 +576,25 @@ export default function MyForm() {
                         height={250}
                       />
                     ))}
-                    {form.watch("Pictures")?.length < 0 && (
-                      <UploadDropzone
-                        endpoint="imageUploader"
-                        onUploadError={(error: Error) => {
-                          toast.error(error.message);
-                        }}
-                        onClientUploadComplete={(files) => {
-                          files.map((file) => {
-                            form.setValue("Pictures", [
-                              ...(form.getValues("Pictures") || []),
-                              file,
-                            ]);
-                          });
-                        }}
-                      />
-                    )}
+
+                    <UploadButton
+                      endpoint="imageUploader"
+                      onUploadError={(error: Error) => {
+                        toast({
+                          title: "Upload errrr",
+                          description: error.message,
+                          variant: "destructive",
+                        });
+                      }}
+                      onClientUploadComplete={(files) => {
+                        files.map((file) => {
+                          form.setValue("Pictures", [
+                            ...(form.getValues("Pictures") || []),
+                            file,
+                          ]);
+                        });
+                      }}
+                    />
                   </div>
                 </FormControl>
                 <FormMessage />
@@ -585,7 +602,9 @@ export default function MyForm() {
             )}
           />
 
-          <Button type="submit">Submit</Button>
+          <Button type="submit" className="w-full">
+            Submit
+          </Button>
         </form>
       </Form>
     </Card>

@@ -14,7 +14,7 @@ import { Separator } from "./ui/separator";
 import { FilterInput } from "./ui/filterInput";
 import { FilterRangeInput } from "./ui/filterRangeInput";
 import { getCarBrands, getCarModels } from "@/app/actions";
-import { countries, fuel, colors } from "@/constants";
+import { countries, fuelTypes as fuel, colors } from "@/constants";
 
 export function FiltersSheet() {
   const [carType, setCarType] = useState<number | null>(null);
