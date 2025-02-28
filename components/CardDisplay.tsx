@@ -15,7 +15,10 @@ interface CardDisplayProps {
 
 export function CardDisplay({ listing }: CardDisplayProps) {
   return (
-    <Card className="overflow-hidden rounded-2xl shadow-lg">
+    <Card
+      className="overflow-hidden rounded-2xl shadow-lg"
+      onClick={() => redirect(`/listing/${listing.id}`)}
+    >
       <CardContent
         className="flex flex-col p-0"
         onClick={() => {
@@ -36,7 +39,7 @@ export function CardDisplay({ listing }: CardDisplayProps) {
 
         <div className="p-4">
           <div className="flex flex-row items-center justify-between">
-            <h1 className="text-xl">{listing.title}</h1>
+            <h1 className="text-xl">{`${listing.carBrand} ${listing.carModel}`}</h1>
             <Button variant="outline" className="rounded-xl">
               {listing.condition}
             </Button>

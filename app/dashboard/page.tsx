@@ -16,7 +16,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { User } from "better-auth";
-import { getUserListings } from "../actions";
+import { getUserListings } from "../../actions";
 import { Skeleton } from "@/components/ui/skeleton";
 import { auth } from "@/auth";
 import { headers } from "next/headers";

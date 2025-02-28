@@ -203,3 +203,20 @@ export const createListing = async (
     return Promise.reject(error);
   }
 };
+
+export const getListing = async (
+  id: string
+): Promise<Listing & { images: Upload[] }> => {
+  const listing = await prisma.listing.findUnique({
+    where: { id: parseInt(id) },
+    include: {
+      images: true,
+    },
+  });
+
+  if (!listing) {
+    return Promise.reject();
+  }
+
+  return Promise.resolve(listing);
+};
