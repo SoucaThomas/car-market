@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 
 export default function Page() {
   return (
-    <div className="h-full w-full flex-1">
+    <div className="container mx-auto px-4 py-8">
       <SearchFilters />
       <Listings />
     </div>

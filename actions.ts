@@ -4,7 +4,7 @@ import { prisma } from "@/prisma/prisma";
 import { z } from "zod";
 import { auth, User } from "@/auth";
 import { headers } from "next/headers";
-import type { Listing, Upload } from "@prisma/client";
+import type { Listing, Upload, User as PrismaUser } from "@prisma/client";
 import { formSchema } from "@/constants";
 
 export const getCarBrands = async (): Promise<
@@ -138,17 +138,16 @@ export const getUserListings = async (
 };
 
 export const getHomeListings = async (): Promise<
-  (Listing & { images: Upload[] })[]
+  (Listing & { images: Upload[]; user: PrismaUser })[]
 > => {
   const result = await prisma.listing.findMany({
     where: { status: "approved" },
     orderBy: { createdAt: "asc" },
     include: {
       images: true,
+      user: true,
     },
   });
-
-  console.log(result);
 
   return result;
 };
@@ -183,6 +182,9 @@ export const createListing = async (
         userId: session.user.id,
         images: {},
       },
+      include: {
+        user: true,
+      },
     });
 
     const files = data.Pictures;
@@ -206,11 +208,12 @@ export const createListing = async (
 
 export const getListing = async (
   id: string
-): Promise<Listing & { images: Upload[] }> => {
+): Promise<Listing & { user: PrismaUser; images: Upload[] }> => {
   const listing = await prisma.listing.findUnique({
     where: { id: parseInt(id) },
     include: {
       images: true,
+      user: true,
     },
   });
 

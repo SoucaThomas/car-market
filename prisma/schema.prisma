@@ -9,14 +9,13 @@ datasource db {
 
 model User {
   id       String  @id @default(uuid())
-  name     String? @db.VarChar(100)
+  name     String  @db.VarChar(100) @default("John Doe")
   email    String  @unique @db.VarChar(100)
-  password String? @db.VarChar(255)
   role     Role    @default(guest)
   isActive Boolean @default(true)
 
   emailVerified Boolean
-  image         String?
+  image         String    @default("https://ui-avatars.com/api/?name=John+Doe&background=random")
   updatedAt     DateTime
   sessions      Session[]
   accounts      Account[]
@@ -48,8 +47,8 @@ enum ListingStatus {
 model Listing {
   id Int @id @default(autoincrement())
 
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   carBrand    String?
   carModel    String?
