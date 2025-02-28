@@ -30,37 +30,27 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import Image from "next/image";
-
-type User = {
-  id: string;
-  name: string;
-  email: string;
-  role: "guest" | "user" | "dealer" | "admin";
-  isActive: boolean;
-  image: string;
-  createdAt: string;
-};
+import { User } from "@prisma/client";
+import { UserAvatar } from "./ui/userAvatar";
 
 const columns: ColumnDef<User>[] = [
-  {
-    accessorKey: "id",
-    header: "ID",
-  },
   {
     accessorKey: "image",
     header: "Avatar",
     cell: ({ row }) => {
       return (
         <div className="relative h-10 w-10 overflow-hidden rounded-full">
-          <Image
-            src={row.getValue("image") || "/placeholder.svg"}
-            alt={row.getValue("name")}
-            fill
-            className="object-cover"
-          />
+          <UserAvatar user={row.original} size={10} />
         </div>
       );
+    },
+  },
+  {
+    accessorKey: "id",
+    header: "ID",
+    cell: ({ row }) => {
+      const id = row.getValue("id") as string;
+      return `${id.slice(0, 8)}...`;
     },
   },
   {
@@ -79,11 +69,31 @@ const columns: ColumnDef<User>[] = [
   },
   {
     accessorKey: "email",
-    header: "Email",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Email
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
   },
   {
     accessorKey: "role",
-    header: "Role",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Role
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
     cell: ({ row }) => {
       const role = row.getValue("role") as string;
       return (
@@ -122,6 +132,7 @@ const columns: ColumnDef<User>[] = [
   },
   {
     id: "actions",
+    header: "Actions",
     cell: ({ row }) => {
       const user = row.original;
 
@@ -165,15 +176,16 @@ async function handleViewUser(id: string) {
   console.log(`View user ${id}`);
 }
 
-export function UsersTable() {
+interface UsersTableProps {
+  users: User[];
+}
+
+export function UsersTable({ users }: UsersTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
-  // This would come from your database
-  const data: User[] = [];
-
   const table = useReactTable({
-    data,
+    data: users,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,

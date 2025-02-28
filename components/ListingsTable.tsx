@@ -30,22 +30,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-
-// This would come from your database
-type Listing = {
-  id: number;
-  title: string;
-  price: number;
-  status: "pending" | "approved" | "rejected";
-  carBrand: string;
-  carModel: string;
-  year: number;
-  createdAt: string;
-  user: {
-    name: string;
-    email: string;
-  };
-};
+import { Listing } from "@prisma/client";
+import { redirect } from "next/navigation";
 
 const columns: ColumnDef<Listing>[] = [
   {
@@ -85,14 +71,24 @@ const columns: ColumnDef<Listing>[] = [
       const price = Number.parseFloat(row.getValue("price"));
       const formatted = new Intl.NumberFormat("en-US", {
         style: "currency",
-        currency: "USD",
+        currency: "EUR",
       }).format(price);
       return formatted;
     },
   },
   {
     accessorKey: "status",
-    header: "Status",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Status
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
     cell: ({ row }) => {
       const status = row.getValue("status") as string;
       return (
@@ -112,10 +108,21 @@ const columns: ColumnDef<Listing>[] = [
   },
   {
     accessorKey: "user.name",
-    header: "Seller",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Seller
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
   },
   {
     id: "actions",
+    header: "Actions",
     cell: ({ row }) => {
       const listing = row.original;
 
@@ -140,7 +147,7 @@ const columns: ColumnDef<Listing>[] = [
             >
               Reject
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleView(listing.id)}>
+            <DropdownMenuItem onClick={() => handleView(listing)}>
               View Details
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -160,20 +167,22 @@ async function handleReject(id: number) {
   console.log(`Reject listing ${id}`);
 }
 
-async function handleView(id: number) {
-  // Implement your view logic here
-  console.log(`View listing ${id}`);
+async function handleView(listing: Listing) {
+  const listingDetails = listing;
+
+  redirect(`/admin/listings/${listingDetails.id}`);
 }
 
-export function ListingsTable() {
+interface ListingsTableProps {
+  listings: Listing[];
+}
+
+export function ListingsTable({ listings }: ListingsTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
-  // This would come from your database
-  const data: Listing[] = [];
-
   const table = useReactTable({
-    data,
+    data: listings || [],
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,

@@ -16,9 +16,8 @@ import {
 } from "lucide-react";
 import { prisma } from "@/prisma/prisma";
 import { ListingsTable } from "@/components/ListingsTable";
-import { ApprovedTable } from "@/components/ApprovedTable";
-import { ApplicationsTable } from "@/components/ApplicationsTable";
 import { UsersTable } from "@/components/UserListings";
+import { getAdminPendingListings, getAdminUsers } from "@/app/server/admin";
 
 async function getAdminStats() {
   const [
@@ -80,10 +79,9 @@ async function getAdminStats() {
 }
 
 export default async function AdminPage() {
-  // In a real app, you'd want to check if the user is an admin here
-  // and redirect if they're not
-
   const stats = await getAdminStats();
+  const pendingListings = await getAdminPendingListings();
+  const users = await getAdminUsers();
 
   return (
     <div className="container mx-auto py-10">
@@ -191,14 +189,6 @@ export default async function AdminPage() {
             <Clock className="h-4 w-4" />
             Pending Listings
           </TabsTrigger>
-          <TabsTrigger value="approved" className="flex items-center gap-2">
-            <CheckCircle2 className="h-4 w-4" />
-            Approved Listings
-          </TabsTrigger>
-          <TabsTrigger value="applications" className="flex items-center gap-2">
-            <Store className="h-4 w-4" />
-            Dealer Applications
-          </TabsTrigger>
           <TabsTrigger value="users" className="flex items-center gap-2">
             <Users className="h-4 w-4" />
             Users
@@ -220,44 +210,7 @@ export default async function AdminPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <ListingsTable />
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* Approved Listings Tab */}
-        <TabsContent value="approved">
-          <Card>
-            <CardHeader>
-              <CardTitle>Approved Listings</CardTitle>
-              <CardDescription>
-                View and manage all approved vehicle listings. Currently showing{" "}
-                {stats.listings.approved} approved listings.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ApprovedTable />
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* Dealer Applications Tab */}
-        <TabsContent value="applications">
-          <Card>
-            <CardHeader>
-              <CardTitle>Dealer Applications</CardTitle>
-              <CardDescription>
-                Review and manage dealer applications.
-                {stats.applications.pending > 0 && (
-                  <span className="ml-2 text-orange-500">
-                    {stats.applications.pending} applications require your
-                    attention.
-                  </span>
-                )}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ApplicationsTable />
+              <ListingsTable listings={pendingListings} />
             </CardContent>
           </Card>
         </TabsContent>
@@ -274,7 +227,7 @@ export default async function AdminPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <UsersTable />
+              <UsersTable users={users} />
             </CardContent>
           </Card>
         </TabsContent>
