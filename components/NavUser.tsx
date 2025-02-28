@@ -18,6 +18,7 @@ import { redirect } from "next/navigation";
 import { User } from "@/auth";
 import { authClient } from "@/lib/auth-client";
 import { useSession } from "@/lib/auth-client";
+import { UserAvatar } from "./ui/userAvatar";
 
 export function NavUser() {
   const { data: session, isPending } = useSession();
@@ -33,12 +34,7 @@ export function NavUser() {
           {user ? (
             <DropdownMenu modal={false}>
               <DropdownMenuTrigger asChild>
-                <Avatar className="h-12 w-12 rounded-full">
-                  <AvatarImage src={user.image || ""} alt={user.name} />
-                  <AvatarFallback className="rounded-lg">
-                    {user.name.slice(0, 2)}
-                  </AvatarFallback>
-                </Avatar>
+                <UserAvatar user={user} />
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"

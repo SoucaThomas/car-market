@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Listing, Upload, User } from "@prisma/client";
+import { UserAvatar } from "./userAvatar";
 
 interface CarDetailsProps {
   listing: Listing & { images: Upload[]; user: User };
@@ -83,10 +84,12 @@ export function CarDetails({ listing }: CarDetailsProps) {
         </div>
 
         <div className="mt-8">
-          <h1 className="text-3xl font-bold">{listing.title}</h1>
-          <p className="mt-2 text-2xl font-bold text-primary">
-            ${listing.price?.toLocaleString()}
-          </p>
+          <div className="flex flex-row justify-between">
+            <h1 className="text-3xl font-bold">{listing.title}</h1>
+            <p className="mt-2 text-2xl font-bold text-primary">
+              ${listing.price?.toLocaleString()}
+            </p>
+          </div>
 
           <Separator className="my-6" />
 
@@ -105,12 +108,7 @@ export function CarDetails({ listing }: CarDetailsProps) {
           <CardContent>
             <div className="mb-6 flex items-center gap-4">
               <div className="relative h-16 w-16 overflow-hidden rounded-full">
-                <Image
-                  src={listing.user.image || "/placeholder.svg"}
-                  alt={listing.user.name}
-                  fill
-                  className="object-cover"
-                />
+                <UserAvatar user={listing.user} size={16} />
               </div>
               <div>
                 <h3 className="text-lg font-medium">{listing.user.name}</h3>

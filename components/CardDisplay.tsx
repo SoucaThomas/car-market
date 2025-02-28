@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { Listing, Upload, User } from "@prisma/client";
 import Link from "next/link";
+import { UserAvatar } from "./ui/userAvatar";
 
 interface CardDisplayProps {
   listing: Listing & { images: Upload[]; user: User };
@@ -31,12 +32,7 @@ export function CardDisplay({ listing }: CardDisplayProps) {
           </div>
           <div className="mt-3 flex items-center">
             <div className="relative h-8 w-8 overflow-hidden rounded-full">
-              <Image
-                src={listing.user.image || "/placeholder.svg"}
-                alt={listing.user.name}
-                fill
-                className="object-cover"
-              />
+              <UserAvatar user={listing.user} size={8} />
             </div>
             <span className="ml-2 text-sm text-muted-foreground">
               {listing.user.name}

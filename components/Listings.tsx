@@ -13,21 +13,6 @@ export async function Listings() {
           {listings.map((listing) => (
             <CardDisplay listing={listing} key={listing.id} />
           ))}
-          {listings.map((listing) => (
-            <CardDisplay listing={listing} key={listing.id} />
-          ))}
-          {listings.map((listing) => (
-            <CardDisplay listing={listing} key={listing.id} />
-          ))}
-          {listings.map((listing) => (
-            <CardDisplay listing={listing} key={listing.id} />
-          ))}
-          {listings.map((listing) => (
-            <CardDisplay listing={listing} key={listing.id} />
-          ))}
-          {listings.map((listing) => (
-            <CardDisplay listing={listing} key={listing.id} />
-          ))}
         </section>
       ) : (
         <section className="w-full text-center">No listings available</section>

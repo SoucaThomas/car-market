@@ -650,19 +650,16 @@ export default function MyForm() {
                       endpoint="imageUploader"
                       onUploadError={(error: Error) => {
                         toast({
-                          title: "Upload errrr",
+                          title: "Upload error",
                           description: error.message,
                           variant: "destructive",
                         });
                       }}
                       onClientUploadComplete={(files) => {
-                        files.map((file) => {
-                          console.log(file);
-                          form.setValue("Pictures", [
-                            ...(form.getValues("Pictures") || []),
-                            file,
-                          ]);
-                        });
+                        form.setValue("Pictures", [
+                          ...(form.getValues("Pictures") || []),
+                          ...files,
+                        ]);
                       }}
                     />
                   </div>

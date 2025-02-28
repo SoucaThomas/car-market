@@ -9,12 +9,12 @@ const uploadThing = createUploadthing();
 const MAX_SIZE = 1024 * 1024 * 4; // 4MB
 
 export const ourFileRouter = {
-  imageUploader: uploadThing([
-    "image/jpeg",
-    "image/png",
-    "image/avif",
-    "image/webp",
-  ])
+  imageUploader: uploadThing({
+    image: {
+      maxFileSize: "4MB",
+      maxFileCount: 40,
+    },
+  })
     .middleware(async ({ files }) => {
       // Validate file size
       files.forEach((file) => {
