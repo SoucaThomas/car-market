@@ -1,14 +1,34 @@
+import type { auth } from "@/auth";
 import { NextRequest, NextResponse } from "next/server";
-import { getSessionCookie } from "better-auth";
+import { betterFetch } from "@better-fetch/fetch";
+
+type Session = typeof auth.$Infer.Session;
 
 export async function middleware(request: NextRequest) {
-  const sessionCookie = getSessionCookie(request);
-  if (!sessionCookie) {
+  const { data: session } = await betterFetch<Session>(
+    "/api/auth/get-session",
+    {
+      baseURL: request.nextUrl.origin,
+      headers: {
+        cookie: request.headers.get("cookie") || "",
+      },
+    }
+  );
+
+  if (!session) {
     return NextResponse.redirect(new URL("/sign-in", request.url));
   }
+
+  if (
+    request.nextUrl.pathname.startsWith("/admin") &&
+    !(session.user.role === "admin")
+  ) {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
+
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/dashboard", "/listacar", "/api:uploadthing"],
+  matcher: ["/dashboard", "/listacar", "/api:uploadthing", "/admin"],
 };
