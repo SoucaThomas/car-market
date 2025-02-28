@@ -1,11 +1,19 @@
+"use client";
+
 import { Button } from "./ui/button";
 import { NavUser } from "./NavUser";
 import Link from "next/link";
 import { Car } from "lucide-react";
+import { useSession } from "@/lib/auth-client";
+import { User } from "@/auth";
 
 export function Navbar() {
+  const { data: session, isPending } = useSession();
+
+  const user = session?.user as User;
+
   return (
-    <nav className="z-20 flex h-20 w-full items-center justify-between border border-b px-10 py-4">
+    <nav className="sticky top-0 z-20 flex h-20 w-full items-center justify-between border border-b bg-white px-10 py-4">
       <div className="flex h-full w-full flex-row items-center justify-between gap-6">
         <Link
           href="/"
@@ -16,12 +24,7 @@ export function Navbar() {
         </Link>
 
         <div className="flex flex-row items-center gap-6">
-          <Link
-            href="/dashboard"
-            className="flex w-full flex-row items-center justify-center gap-2 text-primary"
-          >
-            Dashboard
-          </Link>
+          {}
 
           <Link
             href="/listacar"
@@ -32,7 +35,7 @@ export function Navbar() {
             </Button>
           </Link>
 
-          <NavUser />
+          <NavUser user={user} isPending={isPending} />
         </div>
       </div>
     </nav>

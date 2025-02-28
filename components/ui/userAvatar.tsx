@@ -1,3 +1,5 @@
+"use client";
+
 import { User } from "@/auth";
 import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
 import clsx from "clsx";

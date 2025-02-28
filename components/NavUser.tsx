@@ -15,16 +15,17 @@ import { Button } from "./ui/button";
 import { Skeleton } from "./ui/skeleton";
 import { redirect } from "next/navigation";
 
-import { User } from "@/auth";
 import { authClient } from "@/lib/auth-client";
-import { useSession } from "@/lib/auth-client";
 import { UserAvatar } from "./ui/userAvatar";
+import { User } from "@/auth";
 
-export function NavUser() {
-  const { data: session, isPending } = useSession();
-
-  const user = session?.user as User;
-
+export function NavUser({
+  user,
+  isPending,
+}: {
+  user: User;
+  isPending: boolean;
+}) {
   return (
     <>
       {isPending ? (
@@ -34,7 +35,9 @@ export function NavUser() {
           {user ? (
             <DropdownMenu modal={false}>
               <DropdownMenuTrigger asChild>
-                <UserAvatar user={user} />
+                <Button variant="ghost" className="p-0">
+                  <UserAvatar user={user} />
+                </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"

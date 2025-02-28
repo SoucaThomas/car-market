@@ -1,12 +1,10 @@
 import { getListing } from "@/actions";
 import { CarDetails } from "@/components/ui/CarDetails";
+import { Suspense } from "react";
+import ListingLoadingSkeleton from "./loading";
 
-export default async function ListingPage({
-  params,
-}: {
-  params: { id: string };
-}) {
-  const listing = await getListing(params.id);
+async function ListingPageContent({ id }: { id: string }) {
+  const listing = await getListing(id);
 
   if (!listing) {
     return (
@@ -24,5 +22,18 @@ export default async function ListingPage({
     <main className="container mx-auto px-4 py-8">
       <CarDetails listing={listing} />
     </main>
+  );
+}
+
+export default async function ListingPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  return (
+    <Suspense fallback={<ListingLoadingSkeleton />}>
+      <ListingPageContent id={id} />
+    </Suspense>
   );
 }

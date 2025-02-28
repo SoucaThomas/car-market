@@ -78,7 +78,15 @@ export function CarDetails({ listing }: CarDetailsProps) {
                 alt={`${listing.title} - Thumbnail ${index + 1}`}
                 fill
                 className="object-cover"
+                onError={(e) => {
+                  e.currentTarget.src = "/placeholder.svg";
+                }}
               />
+              {!image.ufsUrl && (
+                <div className="absolute inset-0 flex items-center justify-center bg-gray-200">
+                  <div className="h-4 w-4 animate-pulse rounded-full bg-gray-400"></div>
+                </div>
+              )}
             </button>
           ))}
         </div>
