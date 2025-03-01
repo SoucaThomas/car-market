@@ -21,6 +21,7 @@ import { UsersTable } from "@/components/UserListings";
 import {
   adminChangeRole,
   adminChangeStatus,
+  adminToggleUserStatus,
   getAdminListings,
   getAdminUsers,
 } from "@/app/server/admin";
@@ -112,6 +113,16 @@ export default async function AdminPage() {
     "use server";
     try {
       const response = await adminChangeRole(id, action);
+      return response;
+    } catch (error) {
+      return Promise.reject(error);
+    }
+  }
+
+  async function handleToggleUserStatus(id: string): Promise<User[] | Error> {
+    "use server";
+    try {
+      const response = await adminToggleUserStatus(id);
       return response;
     } catch (error) {
       return Promise.reject(error);
@@ -297,6 +308,7 @@ export default async function AdminPage() {
               <UsersTable
                 users={users}
                 handleUserChangeRole={handleUserChangeRole}
+                handleToggleUserStatus={handleToggleUserStatus}
               />
             </CardContent>
           </Card>

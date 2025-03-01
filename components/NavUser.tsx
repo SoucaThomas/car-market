@@ -17,7 +17,7 @@ import { redirect } from "next/navigation";
 
 import { authClient } from "@/lib/auth-client";
 import { UserAvatar } from "./ui/userAvatar";
-import { User } from "@/auth";
+import { User } from "@prisma/client";
 
 export function NavUser({
   user,

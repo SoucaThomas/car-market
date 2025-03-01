@@ -1,7 +1,7 @@
-import { betterAuth } from "better-auth";
+import { betterAuth, boolean } from "better-auth";
 import { username } from "better-auth/plugins";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Role } from "@prisma/client";
 import { nextCookies } from "better-auth/next-js";
 
 const prisma = new PrismaClient();
@@ -13,7 +13,14 @@ export const auth = betterAuth({
     additionalFields: {
       role: {
         type: "string",
+        enum: Object.values(Role),
         default: "guest",
+      },
+      isActive: {
+        type: "boolean",
+      },
+      image: {
+        type: "string",
       },
     },
   },

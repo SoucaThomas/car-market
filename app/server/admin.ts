@@ -87,3 +87,36 @@ export const adminChangeRole = async (
     return Promise.reject(error);
   }
 };
+
+export const adminToggleUserStatus = async (
+  id: string
+): Promise<User[] | Error> => {
+  checkAdmin();
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!user) {
+      return Promise.reject(new Error("User not found"));
+    }
+
+    await prisma.user.update({
+      where: {
+        id,
+      },
+      data: {
+        isActive: !user.isActive,
+      },
+    });
+
+    const users = await prisma.user.findMany({});
+
+    return Promise.resolve(users);
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};

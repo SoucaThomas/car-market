@@ -1,6 +1,6 @@
 "use client";
 
-import { User } from "@/auth";
+import { User } from "@prisma/client";
 import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
 import clsx from "clsx";
 

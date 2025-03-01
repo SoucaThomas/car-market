@@ -33,6 +33,7 @@ import { Badge } from "@/components/ui/badge";
 import { Listing, ListingStatus } from "@prisma/client";
 import { redirect } from "next/navigation";
 import { ListingWithUser } from "@/app/shared/types";
+import { toast } from "@/hooks/use-toast";
 
 async function handleView(listing: Listing) {
   const listingDetails = listing;
@@ -169,8 +170,18 @@ export function ListingsTable({
                     pending
                   ).then((response) => {
                     if (response instanceof Error) {
+                      toast({
+                        title: "Error",
+                        description:
+                          "An error occurred while approving the listing.",
+                        variant: "destructive",
+                      });
                       console.error(response.message);
                     } else {
+                      toast({
+                        title: "Listing approved",
+                        description: "The listing is now approved.",
+                      });
                       setListings(response);
                     }
                   })
@@ -187,8 +198,18 @@ export function ListingsTable({
                     pending
                   ).then((response) => {
                     if (response instanceof Error) {
+                      toast({
+                        title: "Error",
+                        description:
+                          "An error occurred while moving the listing to pending.",
+                        variant: "destructive",
+                      });
                       console.error(response.message);
                     } else {
+                      toast({
+                        title: "Listing moved to pending",
+                        description: "The listing is now pending approval.",
+                      });
                       setListings(response);
                     }
                   })
@@ -204,8 +225,18 @@ export function ListingsTable({
                     pending
                   ).then((response) => {
                     if (response instanceof Error) {
+                      toast({
+                        title: "Error",
+                        description:
+                          "An error occurred while rejecting the listing.",
+                        variant: "destructive",
+                      });
                       console.error(response.message);
                     } else {
+                      toast({
+                        title: "Listing rejected",
+                        description: "The listing has been rejected.",
+                      });
                       setListings(response);
                     }
                   })

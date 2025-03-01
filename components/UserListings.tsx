@@ -39,6 +39,7 @@ import {
   DialogTrigger,
 } from "./ui/dialog";
 import { DialogTitle } from "@radix-ui/react-dialog";
+import { toast } from "@/hooks/use-toast";
 
 async function handleViewUser(id: string) {
   // Implement your view logic here
@@ -52,11 +53,13 @@ interface UsersTableProps {
     action: Role,
     pending?: boolean
   ) => Promise<User[] | Error>;
+  handleToggleUserStatus: (id: string) => Promise<User[] | Error>;
 }
 
 export function UsersTable({
   users: propUsers,
   handleUserChangeRole,
+  handleToggleUserStatus,
 }: UsersTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -142,7 +145,17 @@ export function UsersTable({
     },
     {
       accessorKey: "isActive",
-      header: "Status",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Status
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
       cell: ({ row }) => {
         const isActive = row.getValue("isActive") as boolean;
         return (
@@ -174,7 +187,29 @@ export function UsersTable({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() =>
+                  handleToggleUserStatus(user.id).then((response) => {
+                    if (response instanceof Error) {
+                      toast({
+                        title: "Error",
+                        description:
+                          "An error occurred while toggling user status",
+                        variant: "destructive",
+                      });
+                      console.error(response);
+                    } else {
+                      toast({
+                        title: `User ${user.isActive ? "deactivated" : "activated"}`,
+                        description: `User ${user.name} has been ${
+                          user.isActive ? "deactivated" : "activated"
+                        }`,
+                      });
+                      setUsers(response);
+                    }
+                  })
+                }
+              >
                 {user.isActive ? "Deactivate" : "Activate"}
               </DropdownMenuItem>
               <DropdownMenuItem>
@@ -193,8 +228,20 @@ export function UsersTable({
                           handleUserChangeRole(user.id, Role.admin).then(
                             (response) => {
                               if (response instanceof Error) {
+                                toast({
+                                  title: "Error",
+                                  description:
+                                    "An error occurred while changing user role",
+                                  variant: "destructive",
+                                });
                                 console.error(response);
-                              } else setUsers(response);
+                              } else {
+                                toast({
+                                  title: `User role changed to admin`,
+                                  description: `User ${user.name} has been changed to admin`,
+                                });
+                                setUsers(response);
+                              }
                             }
                           );
                         }}
@@ -207,8 +254,20 @@ export function UsersTable({
                           handleUserChangeRole(user.id, Role.dealer).then(
                             (response) => {
                               if (response instanceof Error) {
+                                toast({
+                                  title: "Error",
+                                  description:
+                                    "An error occurred while changing user role",
+                                  variant: "destructive",
+                                });
                                 console.error(response);
-                              } else setUsers(response);
+                              } else {
+                                toast({
+                                  title: `User role changed to dealer`,
+                                  description: `User ${user.name} has been changed to dealer`,
+                                });
+                                setUsers(response);
+                              }
                             }
                           );
                         }}

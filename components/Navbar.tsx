@@ -5,7 +5,7 @@ import { NavUser } from "./NavUser";
 import Link from "next/link";
 import { Car } from "lucide-react";
 import { useSession } from "@/lib/auth-client";
-import { User } from "@/auth";
+import { User } from "@prisma/client";
 
 export function Navbar() {
   const { data: session, isPending } = useSession();
