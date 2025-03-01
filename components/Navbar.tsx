@@ -13,7 +13,10 @@ export function Navbar() {
   const user = session?.user as User;
 
   return (
-    <nav className="sticky top-0 z-20 flex h-20 w-full items-center justify-between border border-b bg-white px-10 py-4">
+    <nav
+      className="sticky top-0 z-20 flex h-20 w-full items-center justify-between border border-b bg-white px-10 py-4"
+      suppressContentEditableWarning
+    >
       <div className="flex h-full w-full flex-row items-center justify-between gap-6">
         <Link
           href="/"

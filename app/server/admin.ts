@@ -1,7 +1,7 @@
 "use server";
 
 import { prisma } from "@/prisma/prisma";
-import { ListingStatus, Role } from "@prisma/client";
+import { ListingStatus, Role, User } from "@prisma/client";
 import { ListingWithUser } from "../shared/types";
 import { auth } from "@/auth";
 import { headers } from "next/headers";
@@ -10,7 +10,6 @@ const checkAdmin = async () => {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
-
   if (!session || !session.user || session.user.role !== Role.admin) {
     return new Error("Unauthorized");
   }
@@ -36,7 +35,7 @@ export const getAdminUsers = async () => {
   return users;
 };
 
-export const adminRespondToListing = async (
+export const adminChangeStatus = async (
   id: number,
   status: ListingStatus,
   pending?: boolean
@@ -60,6 +59,30 @@ export const adminRespondToListing = async (
     });
 
     return Promise.resolve(listings);
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
+
+export const adminChangeRole = async (
+  id: string,
+  role: Role
+): Promise<User[] | Error> => {
+  checkAdmin();
+
+  try {
+    await prisma.user.update({
+      where: {
+        id,
+      },
+      data: {
+        role,
+      },
+    });
+
+    const users = await prisma.user.findMany({});
+
+    return Promise.resolve(users);
   } catch (error) {
     return Promise.reject(error);
   }

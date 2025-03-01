@@ -19,11 +19,12 @@ import { prisma } from "@/prisma/prisma";
 import { ListingsTable } from "@/components/ListingsTable";
 import { UsersTable } from "@/components/UserListings";
 import {
-  adminRespondToListing,
+  adminChangeRole,
+  adminChangeStatus,
   getAdminListings,
   getAdminUsers,
 } from "@/app/server/admin";
-import { ListingStatus } from "@prisma/client";
+import { ListingStatus, Role, User } from "@prisma/client";
 import { ListingWithUser } from "../shared/types";
 
 async function getAdminStats() {
@@ -90,14 +91,27 @@ export default async function AdminPage() {
   const stats = await getAdminStats();
   const users = await getAdminUsers();
 
-  async function handleAction(
+  async function handleListingAction(
     id: number,
     action: ListingStatus,
     pending?: boolean
   ): Promise<ListingWithUser[] | Error> {
     "use server";
     try {
-      const response = await adminRespondToListing(id, action, pending);
+      const response = await adminChangeStatus(id, action, pending);
+      return response;
+    } catch (error) {
+      return Promise.reject(error);
+    }
+  }
+
+  async function handleUserChangeRole(
+    id: string,
+    action: Role
+  ): Promise<User[] | Error> {
+    "use server";
+    try {
+      const response = await adminChangeRole(id, action);
       return response;
     } catch (error) {
       return Promise.reject(error);
@@ -241,7 +255,7 @@ export default async function AdminPage() {
                 listings={listings.filter(
                   (listing) => listing.status === "pending"
                 )}
-                handleAction={handleAction}
+                handleAction={handleListingAction}
                 pending={true}
               />
             </CardContent>
@@ -260,7 +274,10 @@ export default async function AdminPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <ListingsTable listings={listings} handleAction={handleAction} />
+              <ListingsTable
+                listings={listings}
+                handleAction={handleListingAction}
+              />
             </CardContent>
           </Card>
         </TabsContent>
@@ -277,7 +294,10 @@ export default async function AdminPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <UsersTable users={users} />
+              <UsersTable
+                users={users}
+                handleUserChangeRole={handleUserChangeRole}
+              />
             </CardContent>
           </Card>
         </TabsContent>
