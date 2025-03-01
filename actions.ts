@@ -6,6 +6,7 @@ import { auth, User } from "@/auth";
 import { headers } from "next/headers";
 import type { Listing, Upload, User as PrismaUser } from "@prisma/client";
 import { formSchema } from "@/constants";
+import { ListingWithUserAndImages } from "./app/shared/types";
 
 export const getCarBrands = async (): Promise<
   { id: number; label: string }[]
@@ -138,18 +139,22 @@ export const getUserListings = async (
 };
 
 export const getHomeListings = async (): Promise<
-  (Listing & { images: Upload[]; user: PrismaUser })[]
+  ListingWithUserAndImages[] | Error
 > => {
-  const result = await prisma.listing.findMany({
-    where: { status: "approved" },
-    orderBy: { createdAt: "asc" },
-    include: {
-      images: true,
-      user: true,
-    },
-  });
+  try {
+    const result = await prisma.listing.findMany({
+      where: { status: "approved" },
+      orderBy: { createdAt: "asc" },
+      include: {
+        images: true,
+        user: true,
+      },
+    });
 
-  return result;
+    return Promise.resolve(result);
+  } catch (error) {
+    return Promise.reject(error);
+  }
 };
 
 export const createListing = async (

@@ -1,12 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { Listing, Upload, User } from "@prisma/client";
 import Link from "next/link";
 import { UserAvatar } from "./ui/userAvatar";
+import { ListingWithUserAndImages } from "@/app/shared/types";
 
 interface CardDisplayProps {
-  listing: Listing & { images: Upload[]; user: User };
+  listing: ListingWithUserAndImages;
 }
 
 export function CardDisplay({ listing }: CardDisplayProps) {

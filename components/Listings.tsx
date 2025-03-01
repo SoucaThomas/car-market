@@ -6,6 +6,12 @@ import { CardDisplay } from "./CardDisplay";
 export async function Listings() {
   const listings = await getHomeListings();
 
+  if (listings instanceof Error) {
+    console.error(listings.message);
+    return (
+      <section className="w-full text-center">Error loading listings</section>
+    );
+  }
   return (
     <>
       {listings.length > 0 ? (

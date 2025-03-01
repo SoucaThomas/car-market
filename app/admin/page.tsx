@@ -13,11 +13,18 @@ import {
   CheckCircle2,
   Clock,
   Store,
+  NotebookTabs,
 } from "lucide-react";
 import { prisma } from "@/prisma/prisma";
 import { ListingsTable } from "@/components/ListingsTable";
 import { UsersTable } from "@/components/UserListings";
-import { getAdminPendingListings, getAdminUsers } from "@/app/server/admin";
+import {
+  adminRespondToListing,
+  getAdminListings,
+  getAdminUsers,
+} from "@/app/server/admin";
+import { ListingStatus } from "@prisma/client";
+import { ListingWithUser } from "../shared/types";
 
 async function getAdminStats() {
   const [
@@ -79,9 +86,23 @@ async function getAdminStats() {
 }
 
 export default async function AdminPage() {
+  const listings = await getAdminListings();
   const stats = await getAdminStats();
-  const pendingListings = await getAdminPendingListings();
   const users = await getAdminUsers();
+
+  async function handleAction(
+    id: number,
+    action: ListingStatus,
+    pending?: boolean
+  ): Promise<ListingWithUser[] | Error> {
+    "use server";
+    try {
+      const response = await adminRespondToListing(id, action, pending);
+      return response;
+    } catch (error) {
+      return Promise.reject(error);
+    }
+  }
 
   return (
     <div className="container mx-auto py-10">
@@ -184,11 +205,17 @@ export default async function AdminPage() {
 
       {/* Main Content Tabs */}
       <Tabs defaultValue="listings" className="space-y-4">
-        <TabsList className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+        <TabsList className="grid grid-cols-3 gap-4 lg:grid-cols-3">
           <TabsTrigger value="listings" className="flex items-center gap-2">
             <Clock className="h-4 w-4" />
             Pending Listings
           </TabsTrigger>
+
+          <TabsTrigger value="allListings" className="flex items-center gap-2">
+            <NotebookTabs className="h-4 w-4" />
+            Listings
+          </TabsTrigger>
+
           <TabsTrigger value="users" className="flex items-center gap-2">
             <Users className="h-4 w-4" />
             Users
@@ -210,7 +237,29 @@ export default async function AdminPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <ListingsTable listings={pendingListings} />
+              <ListingsTable
+                listings={listings.filter(
+                  (listing) => listing.status === "pending"
+                )}
+                handleAction={handleAction}
+              />
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* All Listings Tab */}
+        <TabsContent value="allListings">
+          <Card>
+            <CardHeader>
+              <CardTitle>All listings</CardTitle>
+              <CardDescription>
+                Manage user accounts and roles. Currently managing{" "}
+                {stats.users.total} users, including {stats.users.dealers}{" "}
+                dealers.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ListingsTable listings={listings} handleAction={handleAction} />
             </CardContent>
           </Card>
         </TabsContent>

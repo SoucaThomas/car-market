@@ -6,11 +6,11 @@ import { ChevronLeft, ChevronRight, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Listing, Upload, User } from "@prisma/client";
 import { UserAvatar } from "./userAvatar";
+import { ListingWithUserAndImages } from "@/app/shared/types";
 
 interface CarDetailsProps {
-  listing: Listing & { images: Upload[]; user: User };
+  listing: ListingWithUserAndImages;
 }
 
 export function CarDetails({ listing }: CarDetailsProps) {

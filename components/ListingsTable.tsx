@@ -30,142 +30,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Listing } from "@prisma/client";
+import { Listing, ListingStatus } from "@prisma/client";
 import { redirect } from "next/navigation";
-
-const columns: ColumnDef<Listing>[] = [
-  {
-    accessorKey: "id",
-    header: "ID",
-  },
-  {
-    accessorKey: "title",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Title
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-  },
-  {
-    accessorKey: "carBrand",
-    header: "Brand",
-  },
-  {
-    accessorKey: "carModel",
-    header: "Model",
-  },
-  {
-    accessorKey: "year",
-    header: "Year",
-  },
-  {
-    accessorKey: "price",
-    header: "Price",
-    cell: ({ row }) => {
-      const price = Number.parseFloat(row.getValue("price"));
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "EUR",
-      }).format(price);
-      return formatted;
-    },
-  },
-  {
-    accessorKey: "status",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Status
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => {
-      const status = row.getValue("status") as string;
-      return (
-        <Badge
-          variant={
-            status === "approved"
-              ? "outline"
-              : status === "rejected"
-                ? "destructive"
-                : "default"
-          }
-        >
-          {status}
-        </Badge>
-      );
-    },
-  },
-  {
-    accessorKey: "user.name",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Seller
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-  },
-  {
-    id: "actions",
-    header: "Actions",
-    cell: ({ row }) => {
-      const listing = row.original;
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem
-              onClick={() => handleApprove(listing.id)}
-              className="text-green-600"
-            >
-              Approve
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => handleReject(listing.id)}
-              className="text-red-600"
-            >
-              Reject
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleView(listing)}>
-              View Details
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
-  },
-];
-
-async function handleApprove(id: number) {
-  // Implement your approve logic here
-  console.log(`Approve listing ${id}`);
-}
-
-async function handleReject(id: number) {
-  // Implement your reject logic here
-  console.log(`Reject listing ${id}`);
-}
+import { ListingWithUser } from "@/app/shared/types";
 
 async function handleView(listing: Listing) {
   const listingDetails = listing;
@@ -174,12 +41,180 @@ async function handleView(listing: Listing) {
 }
 
 interface ListingsTableProps {
-  listings: Listing[];
+  listings: ListingWithUser[];
+  handleAction: (
+    id: number,
+    action: ListingStatus,
+    pending?: boolean
+  ) => Promise<ListingWithUser[] | Error>;
 }
 
-export function ListingsTable({ listings }: ListingsTableProps) {
+export function ListingsTable({
+  listings: propListings,
+  handleAction,
+}: ListingsTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [listings, setListings] = useState<ListingWithUser[]>(propListings);
+
+  const columns: ColumnDef<Listing>[] = [
+    {
+      accessorKey: "id",
+      header: "ID",
+    },
+    {
+      accessorKey: "title",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Title
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+    },
+    {
+      accessorKey: "carBrand",
+      header: "Brand",
+    },
+    {
+      accessorKey: "carModel",
+      header: "Model",
+    },
+    {
+      accessorKey: "year",
+      header: "Year",
+    },
+    {
+      accessorKey: "price",
+      header: "Price",
+      cell: ({ row }) => {
+        const price = Number.parseFloat(row.getValue("price"));
+        const formatted = new Intl.NumberFormat("en-US", {
+          style: "currency",
+          currency: "EUR",
+        }).format(price);
+        return formatted;
+      },
+    },
+    {
+      accessorKey: "status",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Status
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+      cell: ({ row }) => {
+        const status = row.getValue("status") as string;
+        return (
+          <Badge
+            variant={
+              status === "approved"
+                ? "outline"
+                : status === "rejected"
+                  ? "destructive"
+                  : "default"
+            }
+          >
+            {status}
+          </Badge>
+        );
+      },
+    },
+    {
+      accessorKey: "user.name",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Seller
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+    },
+    {
+      id: "actions",
+      header: "Actions",
+      cell: ({ row }) => {
+        const listing = row.original;
+
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem
+                onClick={async () =>
+                  await handleAction(listing.id, ListingStatus.approved).then(
+                    (response) => {
+                      if (response instanceof Error) {
+                        console.error(response.message);
+                      } else {
+                        setListings(response);
+                      }
+                    }
+                  )
+                }
+                className="text-green-600"
+              >
+                Approve
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={async () =>
+                  await handleAction(listing.id, ListingStatus.pending).then(
+                    (response) => {
+                      if (response instanceof Error) {
+                        console.error(response.message);
+                      } else {
+                        setListings(response);
+                      }
+                    }
+                  )
+                }
+              >
+                Pending
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={async () =>
+                  await handleAction(listing.id, ListingStatus.rejected).then(
+                    (response) => {
+                      if (response instanceof Error) {
+                        console.error(response.message);
+                      } else {
+                        setListings(response);
+                      }
+                    }
+                  )
+                }
+                className="text-red-600"
+              >
+                Reject
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleView(listing)}>
+                View Details
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        );
+      },
+    },
+  ];
 
   const table = useReactTable({
     data: listings || [],

@@ -15,12 +15,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { User } from "better-auth";
 import { getUserListings } from "../../actions";
 import { Skeleton } from "@/components/ui/skeleton";
 import { auth } from "@/auth";
 import { headers } from "next/headers";
 import Link from "next/link";
+import { User } from "@prisma/client";
 
 export default async function Dashboard() {
   const session = await auth.api.getSession({ headers: await headers() });
