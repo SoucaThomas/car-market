@@ -42,6 +42,7 @@ async function handleView(listing: Listing) {
 
 interface ListingsTableProps {
   listings: ListingWithUser[];
+  pending?: boolean;
   handleAction: (
     id: number,
     action: ListingStatus,
@@ -51,6 +52,7 @@ interface ListingsTableProps {
 
 export function ListingsTable({
   listings: propListings,
+  pending,
   handleAction,
 }: ListingsTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -161,15 +163,17 @@ export function ListingsTable({
             <DropdownMenuContent align="end">
               <DropdownMenuItem
                 onClick={async () =>
-                  await handleAction(listing.id, ListingStatus.approved).then(
-                    (response) => {
-                      if (response instanceof Error) {
-                        console.error(response.message);
-                      } else {
-                        setListings(response);
-                      }
+                  await handleAction(
+                    listing.id,
+                    ListingStatus.approved,
+                    pending
+                  ).then((response) => {
+                    if (response instanceof Error) {
+                      console.error(response.message);
+                    } else {
+                      setListings(response);
                     }
-                  )
+                  })
                 }
                 className="text-green-600"
               >
@@ -177,30 +181,34 @@ export function ListingsTable({
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={async () =>
-                  await handleAction(listing.id, ListingStatus.pending).then(
-                    (response) => {
-                      if (response instanceof Error) {
-                        console.error(response.message);
-                      } else {
-                        setListings(response);
-                      }
+                  await handleAction(
+                    listing.id,
+                    ListingStatus.pending,
+                    pending
+                  ).then((response) => {
+                    if (response instanceof Error) {
+                      console.error(response.message);
+                    } else {
+                      setListings(response);
                     }
-                  )
+                  })
                 }
               >
                 Pending
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={async () =>
-                  await handleAction(listing.id, ListingStatus.rejected).then(
-                    (response) => {
-                      if (response instanceof Error) {
-                        console.error(response.message);
-                      } else {
-                        setListings(response);
-                      }
+                  await handleAction(
+                    listing.id,
+                    ListingStatus.rejected,
+                    pending
+                  ).then((response) => {
+                    if (response instanceof Error) {
+                      console.error(response.message);
+                    } else {
+                      setListings(response);
                     }
-                  )
+                  })
                 }
                 className="text-red-600"
               >

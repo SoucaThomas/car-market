@@ -242,6 +242,7 @@ export default async function AdminPage() {
                   (listing) => listing.status === "pending"
                 )}
                 handleAction={handleAction}
+                pending={true}
               />
             </CardContent>
           </Card>

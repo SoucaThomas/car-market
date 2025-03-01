@@ -1,6 +1,7 @@
 import type { auth } from "@/auth";
 import { NextRequest, NextResponse } from "next/server";
 import { betterFetch } from "@better-fetch/fetch";
+import { Role } from "@prisma/client";
 
 type Session = typeof auth.$Infer.Session;
 
@@ -21,7 +22,7 @@ export async function middleware(request: NextRequest) {
 
   if (
     request.nextUrl.pathname.startsWith("/admin") &&
-    !(session.user.role === "admin")
+    !(session.user.role === Role.admin)
   ) {
     return NextResponse.redirect(new URL("/", request.url));
   }
