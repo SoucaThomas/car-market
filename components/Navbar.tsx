@@ -5,7 +5,7 @@ import { NavUser } from "./NavUser";
 import Link from "next/link";
 import { Car } from "lucide-react";
 import { useSession } from "@/lib/auth-client";
-import { User } from "@prisma/client";
+import { Role, User } from "@prisma/client";
 
 export function Navbar() {
   const { data: session, isPending } = useSession();
@@ -27,16 +27,25 @@ export function Navbar() {
         </Link>
 
         <div className="flex flex-row items-center gap-6">
-          {}
-
-          <Link
-            href="/listacar"
-            className="flex w-full flex-row items-center justify-center gap-2 text-primary"
-          >
-            <Button className="rounded-xl bg-primary px-8 text-white">
-              Sell a Car
-            </Button>
-          </Link>
+          {user?.role === Role.admin ? (
+            <Link
+              href="/admin"
+              className="flex w-full flex-row items-center justify-center gap-2 text-primary"
+            >
+              <Button className="rounded-xl bg-primary px-8 text-white">
+                Admin Panel
+              </Button>
+            </Link>
+          ) : (
+            <Link
+              href="/listacar"
+              className="flex w-full flex-row items-center justify-center gap-2 text-primary"
+            >
+              <Button className="rounded-xl bg-primary px-8 text-white">
+                Sell a Car
+              </Button>
+            </Link>
+          )}
 
           <NavUser user={user} isPending={isPending} />
         </div>

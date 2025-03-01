@@ -1,6 +1,6 @@
 "use client";
 
-import { BadgeCheck, LogOut, Sparkles } from "lucide-react";
+import { BadgeCheck, LogOut, Sparkles, Wrench } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -61,6 +61,13 @@ export function NavUser({
                     </div>
                   </div>
                 </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuGroup>
+                  <DropdownMenuItem onClick={() => redirect("/admin")}>
+                    <Wrench />
+                    Admin Panel
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
                   <DropdownMenuItem>
