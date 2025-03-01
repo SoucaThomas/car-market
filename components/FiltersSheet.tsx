@@ -13,7 +13,7 @@ import { useEffect, useState } from "react";
 import { Separator } from "./ui/separator";
 import { FilterInput } from "./ui/filterInput";
 import { FilterRangeInput } from "./ui/filterRangeInput";
-import { getCarBrands, getCarModels } from "@/actions";
+import { getCarBrands, getCarModels } from "@/app/server/listings";
 import { countries, fuelTypes as fuel, colors } from "@/constants";
 
 export function FiltersSheet() {

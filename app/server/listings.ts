@@ -1,12 +1,15 @@
 "use server";
 
 import { prisma } from "@/prisma/prisma";
-import { z } from "zod";
-import { auth, User } from "@/auth";
+import {
+  formSchema,
+  listingSchema,
+  ListingWithUserAndImages,
+} from "../shared/types";
+import { auth } from "@/auth";
 import { headers } from "next/headers";
-import type { Listing, Upload, User as PrismaUser } from "@prisma/client";
-import { formSchema } from "@/constants";
-import { ListingWithUserAndImages } from "./app/shared/types";
+import { z } from "zod";
+import { Listing, Upload, User } from "@prisma/client";
 
 export const getCarBrands = async (): Promise<
   { id: number; label: string }[]
@@ -42,22 +45,6 @@ export const getCarModels = async (carBrand: {
   });
   return response;
 };
-
-const listingSchema = z.object({
-  carBrand: z.string(),
-  carModel: z.string(),
-  condition: z.string(),
-  year: z.number(),
-  title: z.string(),
-  price: z.number(),
-  engineSize: z.number(),
-  country: z.string(),
-  fuelType: z.string(),
-  mileage: z.number(),
-  color: z.string(),
-  description: z.string(),
-  files: z.any(),
-});
 
 export const createCarListing = async (
   listingData: z.infer<typeof listingSchema>
@@ -107,35 +94,6 @@ export const createCarListing = async (
     console.error(error);
     return Promise.reject();
   }
-};
-
-export const getUserListings = async (
-  user: User
-): Promise<
-  {
-    id: number;
-    title: string;
-    status: string;
-    price: number;
-  }[]
-> => {
-  const result = await prisma.listing.findMany({
-    where: { userId: user.id.toString() },
-    select: {
-      id: true,
-      title: true,
-      status: true,
-      price: true,
-    },
-    orderBy: { createdAt: "asc" },
-  });
-
-  return result.map((item) => ({
-    id: item.id,
-    title: item.title || "Untitled",
-    status: item.status.toString(),
-    price: item.price || 0,
-  }));
 };
 
 export const getHomeListings = async (): Promise<
@@ -213,7 +171,7 @@ export const createListing = async (
 
 export const getListing = async (
   id: string
-): Promise<Listing & { user: PrismaUser; images: Upload[] }> => {
+): Promise<Listing & { user: User; images: Upload[] }> => {
   const listing = await prisma.listing.findUnique({
     where: { id: parseInt(id) },
     include: {

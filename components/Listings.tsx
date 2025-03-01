@@ -1,6 +1,6 @@
 "use server";
 
-import { getHomeListings } from "@/actions";
+import { getHomeListings } from "@/app/server/listings";
 import { CardDisplay } from "./CardDisplay";
 
 export async function Listings() {

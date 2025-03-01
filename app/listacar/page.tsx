@@ -39,12 +39,15 @@ import { Check, ChevronsUpDown } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { UploadButton } from "@/lib/uploadthing";
-import Image from "next/image";
 import { countries, fuelTypes, colors, driveType } from "@/constants";
 import { useToast } from "@/hooks/use-toast";
 import { useEffect, useState } from "react";
-import { createListing, getCarBrands, getCarModels } from "../../actions";
-import { formSchema } from "@/constants";
+import {
+  createListing,
+  getCarBrands,
+  getCarModels,
+} from "@/app/server/listings";
+import { formSchema } from "@/app/shared/types";
 import { useRouter } from "next/navigation";
 import { ListACarImage } from "@/components/ListACarImage";
 

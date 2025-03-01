@@ -15,7 +15,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { getUserListings } from "../../actions";
+import { getUserListings } from "@/app/server/user";
 import { Skeleton } from "@/components/ui/skeleton";
 import { auth, User } from "@/auth";
 import { headers } from "next/headers";

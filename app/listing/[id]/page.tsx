@@ -1,4 +1,4 @@
-import { getListing } from "@/actions";
+import { getListing } from "@/app/server/listings";
 import { CarDetails } from "@/components/ui/CarDetails";
 import { Suspense } from "react";
 import ListingLoadingSkeleton from "./loading";

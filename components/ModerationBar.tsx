@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import { Check, Ban, Loader2 } from "lucide-react";
+import { Check, Ban } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Listing, ListingStatus } from "@prisma/client";
 import { adminChangeStatus } from "@/app/server/admin";
