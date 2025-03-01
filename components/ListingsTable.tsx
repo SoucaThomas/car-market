@@ -38,7 +38,7 @@ import { toast } from "@/hooks/use-toast";
 async function handleView(listing: Listing) {
   const listingDetails = listing;
 
-  redirect(`/admin/listings/${listingDetails.id}`);
+  redirect(`/listing/${listingDetails.id}`);
 }
 
 interface ListingsTableProps {
