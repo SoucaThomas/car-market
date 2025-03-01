@@ -46,6 +46,7 @@ import { useEffect, useState } from "react";
 import { createListing, getCarBrands, getCarModels } from "../../actions";
 import { formSchema } from "@/constants";
 import { useRouter } from "next/navigation";
+import { ListACarImage } from "@/components/ListACarImage";
 
 export type FormValues = z.infer<typeof formSchema>;
 
@@ -636,15 +637,15 @@ export default function MyForm() {
                 <FormLabel>Upload Pictures</FormLabel>
                 <FormControl>
                   <div>
-                    {form.watch("Pictures")?.map((file, index) => (
-                      <Image // ! TODO make it a component
-                        key={index}
-                        alt="Image uploaded by user"
-                        src={file.ufsUrl}
-                        width={250}
-                        height={250}
-                      />
-                    ))}
+                    {form
+                      .watch("Pictures")
+                      ?.map((file, index) => (
+                        <ListACarImage
+                          key={index}
+                          fileUrl={file.ufsUrl}
+                          fileName={file.name}
+                        />
+                      ))}
 
                     <UploadButton
                       endpoint="imageUploader"

@@ -11,7 +11,7 @@ const MAX_SIZE = 1024 * 1024 * 4; // 4MB
 export const ourFileRouter = {
   imageUploader: uploadThing({
     image: {
-      maxFileSize: "4MB",
+      maxFileSize: "32MB",
       maxFileCount: 40,
     },
   })
