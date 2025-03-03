@@ -18,8 +18,9 @@ import { updateSearch } from "@/app/server/searchAction";
 
 export function SearchFilters() {
   const [search, setSearch] = useQueryState("search", { defaultValue: "" });
-  const [isPending, startTransition] = useTransition();
-  const [inputValue, setInputValue] = useState(search || "");
+  const [sort, setSort] = useQueryState("sort", { defaultValue: "" });
+  const [, startTransition] = useTransition();
+  const [, setInputValue] = useState(search || "");
 
   const debouncedUpdateSearch = useCallback(
     debounce((query: string) => {
@@ -51,7 +52,7 @@ export function SearchFilters() {
           <h2 className="whitespace-nowrap text-sm text-muted-foreground">
             Sort by
           </h2>
-          <Select>
+          <Select onValueChange={(value) => setSort(value)} value={sort}>
             <SelectTrigger className="w-32 rounded-xl">
               <SelectValue placeholder="Sort by" />
             </SelectTrigger>

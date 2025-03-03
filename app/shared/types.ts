@@ -55,3 +55,8 @@ export const listingSchema = z.object({
   description: z.string(),
   files: z.any(),
 });
+
+export interface searchParams {
+  search?: string;
+  sort?: "price" | "mileage" | "year";
+}

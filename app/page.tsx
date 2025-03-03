@@ -1,9 +1,10 @@
 import { Listings } from "@/components/Listings";
 import React from "react";
 import { SearchFilters } from "@/components/SearchFilters";
+import { searchParams } from "./shared/types";
 
 interface PageProps {
-  searchParams: Promise<{ search?: string }>;
+  searchParams: Promise<searchParams>;
 }
 
 export default async function Page({ searchParams }: PageProps) {

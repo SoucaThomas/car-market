@@ -2,14 +2,15 @@
 
 import { getHomeListings } from "@/app/server/listings";
 import { CardDisplay } from "./CardDisplay";
+import { searchParams } from "@/app/shared/types";
 
 interface ListingsProps {
-  searchParams: Promise<{ search?: string }>;
+  searchParams: Promise<searchParams>;
 }
 
 export async function Listings({ searchParams }: ListingsProps) {
   const awaitSearchParams = await searchParams;
-  const listings = await getHomeListings(awaitSearchParams.search || "");
+  const listings = await getHomeListings(awaitSearchParams);
 
   console.log("listings", listings);
   console.log("searchParams", awaitSearchParams);

@@ -5,6 +5,7 @@ import {
   formSchema,
   listingSchema,
   ListingWithUserAndImages,
+  searchParams,
 } from "../shared/types";
 import { auth } from "@/auth";
 import { headers } from "next/headers";
@@ -97,20 +98,22 @@ export const createCarListing = async (
 };
 
 export const getHomeListings = async (
-  searchParams: string
+  params: searchParams
 ): Promise<ListingWithUserAndImages[] | Error> => {
   try {
     const result = await prisma.listing.findMany({
       where: {
         status: "approved",
         OR: [
-          { title: { contains: searchParams, mode: "insensitive" } },
-          { carBrand: { contains: searchParams, mode: "insensitive" } },
-          { carModel: { contains: searchParams, mode: "insensitive" } },
-          { description: { contains: searchParams, mode: "insensitive" } },
+          { title: { contains: params.search || "", mode: "insensitive" } },
+          { carBrand: { contains: params.search || "", mode: "insensitive" } },
+          { carModel: { contains: params.search || "", mode: "insensitive" } },
+          {
+            description: { contains: params.search || "", mode: "insensitive" },
+          },
         ],
       },
-      orderBy: { createdAt: "asc" },
+      orderBy: params.sort ? [{ [params.sort]: "asc" }] : [],
       include: {
         images: true,
         user: true,
