@@ -1,6 +1,5 @@
 import { Input } from "./input";
 import { Label } from "./label";
-import { useDebounce } from "use-debounce";
 import { useState } from "react";
 
 interface FilterRangeInputProps {
@@ -14,9 +13,7 @@ export function FilterRangeInput({
   setValueTo,
 }: FilterRangeInputProps) {
   const [valueFrom, setValueFromState] = useState(0);
-  const [debouncedValueFrom] = useDebounce(valueFrom, 300);
   const [valueTo, setValueToState] = useState(0);
-  const [debouncedValueTo] = useDebounce(valueTo, 300);
 
   return (
     <div className="flex flex-col gap-2">
@@ -29,7 +26,7 @@ export function FilterRangeInput({
             onChange={(e) => {
               const value = parseInt(e.target.value);
               setValueFromState(value);
-              setValueFrom(debouncedValueFrom);
+              setValueFrom(value);
             }}
           />
         </div>
@@ -41,7 +38,7 @@ export function FilterRangeInput({
             onChange={(e) => {
               const value = parseInt(e.target.value);
               setValueToState(value);
-              setValueTo(debouncedValueTo);
+              setValueTo(value);
             }}
           />
         </div>

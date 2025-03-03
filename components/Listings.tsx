@@ -3,8 +3,16 @@
 import { getHomeListings } from "@/app/server/listings";
 import { CardDisplay } from "./CardDisplay";
 
-export async function Listings() {
-  const listings = await getHomeListings();
+interface ListingsProps {
+  searchParams: Promise<{ search?: string }>;
+}
+
+export async function Listings({ searchParams }: ListingsProps) {
+  const awaitSearchParams = await searchParams;
+  const listings = await getHomeListings(awaitSearchParams.search || "");
+
+  console.log("listings", listings);
+  console.log("searchParams", awaitSearchParams);
 
   if (listings instanceof Error) {
     console.error(listings.message);

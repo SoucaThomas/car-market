@@ -96,12 +96,20 @@ export const createCarListing = async (
   }
 };
 
-export const getHomeListings = async (): Promise<
-  ListingWithUserAndImages[] | Error
-> => {
+export const getHomeListings = async (
+  searchParams: string
+): Promise<ListingWithUserAndImages[] | Error> => {
   try {
     const result = await prisma.listing.findMany({
-      where: { status: "approved" },
+      where: {
+        status: "approved",
+        OR: [
+          { title: { contains: searchParams, mode: "insensitive" } },
+          { carBrand: { contains: searchParams, mode: "insensitive" } },
+          { carModel: { contains: searchParams, mode: "insensitive" } },
+          { description: { contains: searchParams, mode: "insensitive" } },
+        ],
+      },
       orderBy: { createdAt: "asc" },
       include: {
         images: true,

@@ -15,8 +15,10 @@ import { FilterInput } from "./ui/filterInput";
 import { FilterRangeInput } from "./ui/filterRangeInput";
 import { getCarBrands, getCarModels } from "@/app/server/listings";
 import { countries, fuelTypes as fuel, colors } from "@/constants";
+import { useSearchParams, useRouter } from "next/navigation";
 
 export function FiltersSheet() {
+  // Local state for form inputs
   const [carType, setCarType] = useState<number | null>(null);
   const [carBrand, setCarBrand] = useState<{
     id: number;
@@ -54,6 +56,9 @@ export function FiltersSheet() {
     []
   );
 
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
   useEffect(() => {
     const getData = async () => {
       const brands = await getCarBrands();
@@ -74,7 +79,79 @@ export function FiltersSheet() {
     getData();
   }, [carBrand]);
 
+  const createQueryString = (name: string, value: any) => {
+    const params = new URLSearchParams(searchParams.toString()); // Use existing params
+    if (value === null || value === undefined || value === "") {
+      params.delete(name);
+    } else {
+      params.set(name, value);
+    }
+
+    return params.toString();
+  };
+
   const onSubmit = () => {
+    let newQuery = "";
+
+    newQuery = createQueryString(
+      "carType",
+      carType !== null ? carType.toString() : null
+    );
+    newQuery = createQueryString(
+      "carBrand",
+      carBrand !== null ? carBrand.id.toString() : null
+    );
+    newQuery = createQueryString(
+      "carModel",
+      carModel !== null ? carModel.id.toString() : null
+    );
+    newQuery = createQueryString(
+      "priceFrom",
+      priceFrom !== null ? priceFrom.toString() : null
+    );
+    newQuery = createQueryString(
+      "priceTo",
+      priceTo !== null ? priceTo.toString() : null
+    );
+    newQuery = createQueryString(
+      "yearFrom",
+      yearFrom !== null ? yearFrom.toString() : null
+    );
+    newQuery = createQueryString(
+      "yearTo",
+      yearTo !== null ? yearTo.toString() : null
+    );
+    newQuery = createQueryString(
+      "engineFrom",
+      engineFrom !== null ? engineFrom.toString() : null
+    );
+    newQuery = createQueryString(
+      "engineTo",
+      engineTo !== null ? engineTo.toString() : null
+    );
+    newQuery = createQueryString(
+      "country",
+      country !== null ? country.id.toString() : null
+    );
+    newQuery = createQueryString(
+      "fuelType",
+      fuelType !== null ? fuelType.id.toString() : null
+    );
+    newQuery = createQueryString(
+      "mileageFrom",
+      mileageFrom !== null ? mileageFrom.toString() : null
+    );
+    newQuery = createQueryString(
+      "mileageTo",
+      mileageTo !== null ? mileageTo.toString() : null
+    );
+    newQuery = createQueryString(
+      "color",
+      color !== null ? color.id.toString() : null
+    );
+
+    router.push("?" + newQuery);
+
     console.log({
       carType,
       carBrand,

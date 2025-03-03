@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { Toaster } from "@/components/ui/toaster";
 import { Navbar } from "@/components/Navbar";
 
@@ -33,11 +34,13 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Navbar />
-        <main className="mx-auto mt-20 flex h-full max-w-screen-2xl flex-row items-start justify-between gap-2 p-10">
-          {children}
-        </main>
-        <Toaster />
+        <NuqsAdapter>
+          <Navbar />
+          <main className="mx-auto mt-20 flex h-full max-w-screen-2xl flex-row items-start justify-between gap-2 p-10">
+            {children}
+          </main>
+          <Toaster />
+        </NuqsAdapter>
       </body>
     </html>
   );
