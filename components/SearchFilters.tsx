@@ -52,7 +52,13 @@ export function SearchFilters() {
           <h2 className="whitespace-nowrap text-sm text-muted-foreground">
             Sort by
           </h2>
-          <Select onValueChange={(value) => setSort(value)} value={sort}>
+          <Select
+            onValueChange={(value) => {
+              setSort(value);
+              debouncedUpdateSearch(value);
+            }}
+            value={sort}
+          >
             <SelectTrigger className="w-32 rounded-xl">
               <SelectValue placeholder="Sort by" />
             </SelectTrigger>

@@ -59,4 +59,20 @@ export const listingSchema = z.object({
 export interface searchParams {
   search?: string;
   sort?: "price" | "mileage" | "year";
+  carType?: string;
+  carBrand?: string;
+  carModel?: string;
+  priceFrom?: number;
+  priceTo?: number;
+  yearFrom?: number;
+  yearTo?: number;
+  engineFrom?: number;
+  engineTo?: number;
+  country?: string;
+  fuelType?: string;
+  mileageFrom?: number;
+  mileageTo?: number;
+  color?: string;
+  drive?: string;
+  condition?: string;
 }

@@ -112,6 +112,29 @@ export const getHomeListings = async (
             description: { contains: params.search || "", mode: "insensitive" },
           },
         ],
+        AND: [
+          params.carBrand ? { carBrand: params.carBrand } : {},
+          params.carModel ? { carModel: params.carModel } : {},
+          params.priceFrom ? { price: { gte: Number(params.priceFrom) } } : {},
+          params.priceTo ? { price: { lte: Number(params.priceTo) } } : {},
+          params.yearFrom ? { year: { gte: Number(params.yearFrom) } } : {},
+          params.yearTo ? { year: { lte: Number(params.yearTo) } } : {},
+          params.engineFrom
+            ? { engineSize: { gte: Number(params.engineFrom) } }
+            : {},
+          params.engineTo
+            ? { engineSize: { lte: Number(params.engineTo) } }
+            : {},
+          params.country ? { country: params.country } : {},
+          params.fuelType ? { fuelType: params.fuelType } : {},
+          params.mileageFrom
+            ? { mileage: { gte: Number(params.mileageFrom) } }
+            : {},
+          params.mileageTo
+            ? { mileage: { lte: Number(params.mileageTo) } }
+            : {},
+          params.color ? { color: params.color } : {},
+        ],
       },
       orderBy: params.sort ? [{ [params.sort]: "asc" }] : [],
       include: {
