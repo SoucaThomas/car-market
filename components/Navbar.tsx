@@ -1,55 +1,36 @@
-"use client";
-
-import { Button } from "./ui/button";
-import { NavUser } from "./NavUser";
 import Link from "next/link";
-import { Car } from "lucide-react";
-import { useSession } from "@/lib/auth-client";
-import { Role, User } from "@prisma/client";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Car, Heart, User } from "lucide-react";
+import { NavSearch } from "./NavSearch";
 
 export function Navbar() {
-  const { data: session, isPending } = useSession();
-
-  const user = session?.user as User;
-
   return (
-    <nav
-      className="fixed top-0 z-20 flex h-20 w-full items-center justify-between border border-b bg-white px-10 py-4"
-      suppressContentEditableWarning
-    >
-      <div className="flex h-full w-full flex-row items-center justify-between gap-6">
-        <Link
-          href="/"
-          className="flex flex-row items-center justify-center gap-2"
-        >
-          <Car className="h-12 w-12" />
-          <h1 className="text-4xl font-bold">CMP</h1>
-        </Link>
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container flex h-16 items-center justify-between px-4">
+        <div className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-2">
+            <Car className="h-6 w-6" />
+            <span className="hidden text-xl font-bold sm:inline-block">
+              CarMarket
+            </span>
+          </Link>
+        </div>
 
-        <div className="flex flex-row items-center gap-6">
-          {user?.role === Role.admin ? (
-            <Link
-              href="/admin"
-              className="flex w-full flex-row items-center justify-center gap-2 text-primary"
-            >
-              <Button className="rounded-xl bg-primary px-8 text-white">
-                Admin Panel
-              </Button>
-            </Link>
-          ) : (
-            <Link
-              href="/listacar"
-              className="flex w-full flex-row items-center justify-center gap-2 text-primary"
-            >
-              <Button className="rounded-xl bg-primary px-8 text-white">
-                Sell a Car
-              </Button>
-            </Link>
-          )}
+        <div className="hidden md:flex md:w-1/3 lg:w-1/2">
+          <NavSearch />
+        </div>
 
-          <NavUser user={user} isPending={isPending} />
+        <div className="flex items-center gap-4">
+          <Button variant="ghost" size="icon" className="hidden sm:flex">
+            <Heart className="h-5 w-5" />
+          </Button>
+          <Button variant="ghost" size="icon">
+            <User className="h-5 w-5" />
+          </Button>
+          <Button>Sell your car</Button>
         </div>
       </div>
-    </nav>
+    </header>
   );
 }

@@ -261,7 +261,7 @@ export function FiltersSheet({ searchParams }: FiltersSheetProps) {
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
-        <Button variant="ghost" className="relative">
+        <Button variant="outline" className="relative">
           <Filter className="mr-2" />
           Filter
           {activeFilterCount > 0 && (
