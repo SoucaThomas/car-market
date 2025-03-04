@@ -1,45 +1,57 @@
-import { Input } from "./input";
-import { Label } from "./label";
-import { useState } from "react";
+"use client";
+
+import type React from "react";
+
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 interface FilterRangeInputProps {
   label: string;
-  setValueFrom: (v: number) => void;
-  setValueTo: (v: number) => void;
+  valueFrom?: number | null;
+  valueTo?: number | null;
+  setValueFrom: (value: number | null) => void;
+  setValueTo: (value: number | null) => void;
+  placeholder?: string;
 }
+
 export function FilterRangeInput({
   label,
+  valueFrom,
+  valueTo,
   setValueFrom,
   setValueTo,
+  placeholder = "",
 }: FilterRangeInputProps) {
-  const [valueFrom, setValueFromState] = useState(0);
-  const [valueTo, setValueToState] = useState(0);
+  const handleFromChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value =
+      e.target.value === "" ? null : Number.parseFloat(e.target.value);
+    setValueFrom(value);
+  };
+
+  const handleToChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value =
+      e.target.value === "" ? null : Number.parseFloat(e.target.value);
+    setValueTo(value);
+  };
 
   return (
     <div className="flex flex-col gap-2">
-      <div className="felx-row flex gap-2">
-        <div>
-          <Label>{label} from</Label>
+      <Label>{label}</Label>
+      <div className="flex flex-row gap-2">
+        <div className="flex-1">
           <Input
             type="number"
-            placeholder={`${label} from`}
-            onChange={(e) => {
-              const value = parseInt(e.target.value);
-              setValueFromState(value);
-              setValueFrom(value);
-            }}
+            placeholder={`Min ${placeholder}`}
+            value={valueFrom === null ? "" : valueFrom}
+            onChange={handleFromChange}
           />
         </div>
-        <div>
-          <Label>{label} to</Label>
+        <div className="flex-1">
           <Input
             type="number"
-            placeholder={`${label} to`}
-            onChange={(e) => {
-              const value = parseInt(e.target.value);
-              setValueToState(value);
-              setValueTo(value);
-            }}
+            placeholder={`Max ${placeholder}`}
+            value={valueTo === null ? "" : valueTo}
+            onChange={handleToChange}
           />
         </div>
       </div>
