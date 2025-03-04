@@ -15,8 +15,13 @@ import { Input } from "./ui/input";
 import { useCallback, useState, useTransition } from "react";
 import debounce from "lodash.debounce";
 import { updateSearch } from "@/app/server/searchAction";
+import { searchParams } from "@/app/shared/types";
 
-export function SearchFilters() {
+interface ListingsProps {
+  searchParams: Promise<searchParams>;
+}
+
+export function SearchFilters({ searchParams }: ListingsProps) {
   const [search, setSearch] = useQueryState("search", { defaultValue: "" });
   const [sort, setSort] = useQueryState("sort", { defaultValue: "" });
   const [, startTransition] = useTransition();
@@ -75,7 +80,7 @@ export function SearchFilters() {
             <Grid2x2 className="h-4 w-4" />
           </Button>
 
-          <FiltersSheet />
+          <FiltersSheet searchParams={searchParams} />
         </div>
       </div>
     </section>

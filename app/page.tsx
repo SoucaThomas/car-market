@@ -10,7 +10,7 @@ interface PageProps {
 export default async function Page({ searchParams }: PageProps) {
   return (
     <div className="container mx-auto px-4 py-8">
-      <SearchFilters />
+      <SearchFilters searchParams={searchParams} />
       <Listings searchParams={searchParams} />
     </div>
   );

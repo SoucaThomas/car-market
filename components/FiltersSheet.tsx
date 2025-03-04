@@ -21,9 +21,17 @@ import {
   parseAsInteger,
   parseAsString,
 } from "nuqs";
+import { searchParams } from "@/app/shared/types";
+import { updateSearch } from "@/app/server/searchAction";
 
-export function FiltersSheet() {
-  // Local state for form inputs
+interface ListingsProps {
+  searchParams: Promise<searchParams>;
+}
+
+export function FiltersSheet(searchParams: ListingsProps) {
+  const [avaitedSearchParams, setAvaitedSearchParams] = useState<
+    searchParams | undefined
+  >(undefined);
   const [carType, setCarType] = useState<number | null>(null);
   const [carBrand, setCarBrand] = useState<{
     id: number;
@@ -83,6 +91,36 @@ export function FiltersSheet() {
       const brands = await getCarBrands();
 
       setCarBrands(brands);
+
+      setAvaitedSearchParams(await searchParams.searchParams);
+
+      if (!avaitedSearchParams) return;
+
+      avaitedSearchParams.carType && setCarType(avaitedSearchParams.carType);
+      avaitedSearchParams.carBrand &&
+        setCarBrand({ label: avaitedSearchParams.carBrand, id: -1 });
+      avaitedSearchParams.carModel &&
+        setCarModel({ label: avaitedSearchParams.carModel, id: 0 });
+      avaitedSearchParams.priceFrom &&
+        setPriceFrom(avaitedSearchParams.priceFrom);
+      avaitedSearchParams.priceTo && setPriceTo(avaitedSearchParams.priceTo);
+      avaitedSearchParams.yearFrom && setYearFrom(avaitedSearchParams.yearFrom);
+      avaitedSearchParams.yearTo && setYearTo(avaitedSearchParams.yearTo);
+      avaitedSearchParams.engineFrom &&
+        setEngineFrom(avaitedSearchParams.engineFrom);
+      avaitedSearchParams.engineTo && setEngineTo(avaitedSearchParams.engineTo);
+      avaitedSearchParams.country &&
+        setCountry({ label: avaitedSearchParams.country, id: 0 });
+      avaitedSearchParams.fuelType &&
+        setFuelType({ label: avaitedSearchParams.fuelType, id: 0 });
+      avaitedSearchParams.mileageFrom &&
+        setMileageFrom(avaitedSearchParams.mileageFrom);
+      avaitedSearchParams.mileageTo &&
+        setMileageTo(avaitedSearchParams.mileageTo);
+      avaitedSearchParams.color &&
+        setColor({ label: avaitedSearchParams.color, id: 0 });
+
+      console.log("avaited", avaitedSearchParams);
     };
 
     getData();
@@ -99,22 +137,6 @@ export function FiltersSheet() {
   }, [carBrand]);
 
   const onSubmit = async () => {
-    console.log(
-      carType,
-      carBrand,
-      carModel,
-      priceFrom,
-      priceTo,
-      yearFrom,
-      yearTo,
-      engineFrom,
-      engineTo,
-      country,
-      fuelType,
-      mileageFrom,
-      mileageTo,
-      color
-    );
     const params = {
       carType,
       carBrand: carBrand?.label,
@@ -132,15 +154,13 @@ export function FiltersSheet() {
       color: color?.id,
     };
 
-    console.log(params);
-
     const filteredParams = Object.fromEntries(
       Object.entries(params).filter(
         ([_, value]) => value !== undefined && value !== null
       )
     );
 
-    console.log(filteredParams);
+    await updateSearch();
 
     await setFilters(filteredParams);
   };
@@ -155,7 +175,17 @@ export function FiltersSheet() {
       </SheetTrigger>
       <SheetContent className="max-h-screen overflow-y-scroll">
         <SheetHeader className="text-lg font-bold">
-          <SheetTitle>Filters 4</SheetTitle>
+          <SheetTitle>
+            Filters{" "}
+            {avaitedSearchParams
+              ? Object.keys(avaitedSearchParams).filter(
+                  (key) =>
+                    avaitedSearchParams[key as keyof searchParams] !==
+                      undefined &&
+                    avaitedSearchParams[key as keyof searchParams] !== null
+                ).length
+              : ""}
+          </SheetTitle>
         </SheetHeader>
 
         <div className="mt-5 flex flex-col gap-5">

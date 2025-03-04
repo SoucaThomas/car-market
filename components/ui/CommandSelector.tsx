@@ -19,11 +19,11 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-interface CommandSelectorProps<T extends Record<number, string>> {
+interface CommandSelectorProps<T extends { id: number; label: string }> {
   text: string;
   data: T[];
   value: T | null;
-  setValue: (v: T) => void;
+  setValue: (v: T | null) => void; // Allow null
 }
 
 export function CommandSelector({
@@ -43,7 +43,7 @@ export function CommandSelector({
           aria-expanded={open}
           className="w-full justify-between"
         >
-          {value && value.id !== 0
+          {value
             ? data.find((data) => data.id === value.id)?.label
             : `Select ${text}...`}
           <ChevronDown className="opacity-50" />
@@ -64,9 +64,10 @@ export function CommandSelector({
                       (item) => item.label === currentValue
                     );
                     if (selectedItem) {
+                      // Modified logic to handle null
                       setValue(
-                        value && currentValue === value.label
-                          ? { id: 0, label: "" }
+                        value && selectedItem.id === value.id
+                          ? null // Set to null if deselecting
                           : selectedItem
                       );
                     }
