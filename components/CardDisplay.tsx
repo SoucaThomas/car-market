@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Heart, MapPin } from "lucide-react";
 import type { ListingWithUserAndImages } from "@/app/shared/types";
+import { redirect } from "next/navigation";
+import Link from "next/link";
 
 interface CardDisplay {
   listing: ListingWithUserAndImages;
@@ -108,10 +110,11 @@ export function CardDisplay({ listing }: CardDisplay) {
         </CardContent>
 
         <CardFooter className="flex justify-between p-4 pt-0">
-          <Button variant="outline" className="w-1/2">
-            Contact
-          </Button>
-          <Button className="ml-2 w-1/2">View Details</Button>
+          <Link href={`/listing/${listing.id}`} className="w-full">
+            <Button variant="outline" className="w-full">
+              See listing
+            </Button>
+          </Link>
         </CardFooter>
       </div>
     </Card>

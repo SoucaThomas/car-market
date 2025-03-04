@@ -1,10 +1,22 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Car, Heart, User } from "lucide-react";
+import { Car, Heart } from "lucide-react";
 import { NavSearch } from "./NavSearch";
+import { useSession } from "@/lib/auth-client";
+import { NavUser } from "./NavUser";
+import { auth } from "@/auth";
+import { User } from "@prisma/client";
+import { headers } from "next/headers";
 
-export function Navbar() {
+export async function Navbar() {
+  const session = await auth.api.getSession({ headers: await headers() });
+
+  const user = session?.user as User;
+
+  if (!user) {
+    return;
+  }
+
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between px-4">
@@ -25,9 +37,7 @@ export function Navbar() {
           <Button variant="ghost" size="icon" className="hidden sm:flex">
             <Heart className="h-5 w-5" />
           </Button>
-          <Button variant="ghost" size="icon">
-            <User className="h-5 w-5" />
-          </Button>
+          <NavUser user={user} size={9} />
           <Button>Sell your car</Button>
         </div>
       </div>

@@ -34,7 +34,7 @@ export function SearchFilters({ searchParams }: ListingsProps) {
   return (
     <section>
       <div className="mx-auto flex flex-row items-center justify-between gap-2 p-10">
-        <h1 className="text-2xl font-bold">Car market</h1>
+        <h1 className="text-2xl font-bold">Search filters</h1>
 
         <div className="flex flex-row items-center gap-2">
           <h2 className="whitespace-nowrap text-sm text-muted-foreground">

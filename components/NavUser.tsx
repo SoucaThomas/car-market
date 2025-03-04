@@ -22,9 +22,11 @@ import { User } from "@prisma/client";
 export function NavUser({
   user,
   isPending,
+  size,
 }: {
   user: User;
-  isPending: boolean;
+  isPending?: boolean;
+  size?: number;
 }) {
   return (
     <>
@@ -36,7 +38,7 @@ export function NavUser({
             <DropdownMenu modal={false}>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="p-0">
-                  <UserAvatar user={user} />
+                  <UserAvatar user={user} size={size} />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent

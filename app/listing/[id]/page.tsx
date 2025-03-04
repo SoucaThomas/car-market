@@ -6,6 +6,35 @@ import { auth } from "@/auth";
 import { headers } from "next/headers";
 import { ListingStatus, Role } from "@prisma/client";
 import { ModerationBar } from "@/components/ModerationBar";
+import type { Metadata } from "next";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { id: string };
+}): Promise<Metadata> {
+  const listing = await getListing(params.id);
+
+  if (!listing) {
+    return {
+      title: "Listing Not Found",
+      description:
+        "The car listing you're looking for doesn't exist or has been removed.",
+    };
+  }
+
+  return {
+    title:
+      listing.title ||
+      `${listing.year} ${listing.carBrand} ${listing.carModel}`,
+    description:
+      listing.description?.substring(0, 160) ||
+      `${listing.year} ${listing.carBrand} ${listing.carModel} for sale`,
+    openGraph: {
+      images: listing.images.length > 0 ? [listing.images[0].ufsUrl] : [],
+    },
+  };
+}
 
 async function ListingPageContent({ id }: { id: string }) {
   const session = await auth.api.getSession({
@@ -40,12 +69,11 @@ async function ListingPageContent({ id }: { id: string }) {
 export default async function ListingPage({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: { id: string };
 }) {
-  const { id } = await params;
   return (
     <Suspense fallback={<ListingLoadingSkeleton />}>
-      <ListingPageContent id={id} />
+      <ListingPageContent id={params.id} />
     </Suspense>
   );
 }

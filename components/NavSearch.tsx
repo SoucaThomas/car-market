@@ -33,7 +33,6 @@ export function NavSearch() {
         onChange={handleChange}
         placeholder="Search..."
       />
-      ;
     </>
   );
 }
