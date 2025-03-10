@@ -2,6 +2,7 @@
 
 import { User } from "@/auth";
 import { prisma } from "@/prisma/prisma";
+import { ListingStatus } from "@prisma/client";
 
 export const getUserListings = async (
   user: User
@@ -30,4 +31,15 @@ export const getUserListings = async (
     status: item.status.toString(),
     price: item.price || 0,
   }));
+};
+
+export const getUserListingCount = async (user: User): Promise<number> => {
+  const reuslt = await prisma.listing.findMany({
+    where: {
+      userId: user.id.toString(),
+      status: ListingStatus.approved,
+    },
+  });
+
+  return reuslt.length;
 };

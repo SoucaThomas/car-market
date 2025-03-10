@@ -50,6 +50,9 @@ import {
 import { formSchema } from "@/app/shared/types";
 import { useRouter } from "next/navigation";
 import { ListACarImage } from "@/components/ListACarImage";
+import { getUserListingCount } from "../server/user";
+import { authClient } from "@/lib/auth-client";
+import { Role, User } from "@prisma/client";
 
 export type FormValues = z.infer<typeof formSchema>;
 
@@ -92,6 +95,28 @@ export default function MyForm() {
   }
 
   useEffect(() => {
+    const fetchUserListingCount = async () => {
+      const session = authClient.getSession();
+
+      if (((await session).data?.user as User).role === Role.user) {
+        const listingsCount = await getUserListingCount(
+          (await session).data?.user as User
+        );
+
+        if (listingsCount >= 3) {
+          router.push("/");
+          toast({
+            title: "Error!",
+            variant: "destructive",
+            description:
+              "Cant list more than 3 listings as a normal user, apply to become a dealership to list more cars!",
+          });
+        }
+      }
+    };
+
+    fetchUserListingCount();
+
     const fetchCarBrands = async () => {
       setBrands(await getCarBrands());
     };
