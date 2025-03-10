@@ -38,7 +38,9 @@ export async function Navbar() {
             <Heart className="h-5 w-5" />
           </Button>
           <NavUser user={user} size={9} />
-          <Button>Sell your car</Button>
+          <Link href="/listacar">
+            <Button>Sell your car</Button>
+          </Link>
         </div>
       </div>
     </header>
