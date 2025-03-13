@@ -36,6 +36,6 @@ export const config = {
     "/listacar",
     "/api:uploadthing",
     "/admin",
-    "/dealerships/application",
+    "/dealerships/:path*",
   ],
 };

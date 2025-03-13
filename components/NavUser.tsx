@@ -76,7 +76,7 @@ export function NavUser({
                 <DropdownMenuSeparator />
                 {user.role != Role.dealer && (
                   <DropdownMenuGroup>
-                    <Link href={"/dealerships/application"}>
+                    <Link href={"/dealerships/apply"}>
                       <DropdownMenuItem>
                         <Sparkles />
                         Become a Dealer

@@ -18,6 +18,8 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { PlusCircle, Search } from "lucide-react";
 import { getApplications } from "../server/dealer";
+import { DealerApplications } from "@prisma/client";
+import { ViewApplicationButton } from "@/components/ui/viewDealershipApplicationButton";
 
 export default async function ApplicationsPage() {
   const applications = await getApplications();
@@ -34,7 +36,7 @@ export default async function ApplicationsPage() {
           </p>
         </div>
         <Button asChild>
-          <Link href="/dealerships/application">
+          <Link href="/dealerships/apply">
             <PlusCircle className="mr-2 h-4 w-4" />
             Apply Again
           </Link>
@@ -99,11 +101,7 @@ export default async function ApplicationsPage() {
                       {application.businessEmail}
                     </TableCell>
                     <TableCell className="text-right">
-                      <Button variant="outline" size="sm" asChild>
-                        <Link href={`/applications/${application.id}`}>
-                          View
-                        </Link>
-                      </Button>
+                      <ViewApplicationButton application={application} />
                     </TableCell>
                   </TableRow>
                 ))}
