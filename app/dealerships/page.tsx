@@ -23,8 +23,8 @@ export default async function ApplicationsPage() {
   const applications = await getApplications();
 
   return (
-    <div className="container mx-auto py-10">
-      <div className="mb-6 flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
+    <div className="container mx-auto pt-10">
+      <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">
             Dealership Applications
@@ -41,7 +41,7 @@ export default async function ApplicationsPage() {
         </Button>
       </div>
 
-      <Card>
+      <Card className="mt-4">
         <CardHeader>
           <CardTitle>Applications</CardTitle>
           <CardDescription>
@@ -59,7 +59,9 @@ export default async function ApplicationsPage() {
                     Dealership Name
                   </TableHead>
                   <TableHead>Status</TableHead>
-                  <TableHead className="hidden md:table-cell">Notes</TableHead>
+                  <TableHead className="hidden md:table-cell">
+                    Busniess Email
+                  </TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -70,10 +72,14 @@ export default async function ApplicationsPage() {
                       {application.id}
                     </TableCell>
                     <TableCell>
-                      {new Date(application.date).toLocaleDateString()}
+                      {application.yearEstablished
+                        ? new Date(
+                            application.yearEstablished
+                          ).toLocaleDateString()
+                        : "N/A"}
                     </TableCell>
                     <TableCell className="hidden md:table-cell">
-                      {application.dealershipName}
+                      {application.businessName}
                     </TableCell>
                     <TableCell>
                       <Badge
@@ -90,7 +96,7 @@ export default async function ApplicationsPage() {
                       </Badge>
                     </TableCell>
                     <TableCell className="hidden max-w-[200px] truncate md:table-cell">
-                      {application.notes}
+                      {application.businessEmail}
                     </TableCell>
                     <TableCell className="text-right">
                       <Button variant="outline" size="sm" asChild>

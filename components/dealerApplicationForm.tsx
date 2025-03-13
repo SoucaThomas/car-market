@@ -138,7 +138,7 @@ export function DealerApplicationForm() {
       });
 
       form.reset();
-      window.location.href = "/";
+      window.location.href = "/dealerships";
     } catch (error) {
       console.log(error);
       toast({
