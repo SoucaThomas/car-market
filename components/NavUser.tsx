@@ -17,7 +17,8 @@ import { redirect } from "next/navigation";
 
 import { authClient } from "@/lib/auth-client";
 import { UserAvatar } from "./ui/userAvatar";
-import { User } from "@prisma/client";
+import { Role, User } from "@prisma/client";
+import Link from "next/link";
 
 export function NavUser({
   user,
@@ -64,19 +65,25 @@ export function NavUser({
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuGroup>
-                  <DropdownMenuItem onClick={() => redirect("/admin")}>
-                    <Wrench />
-                    Admin Panel
-                  </DropdownMenuItem>
-                </DropdownMenuGroup>
+                {user.role === Role.admin && (
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem onClick={() => redirect("/admin")}>
+                      <Wrench />
+                      Admin Panel
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                )}
                 <DropdownMenuSeparator />
-                <DropdownMenuGroup>
-                  <DropdownMenuItem>
-                    <Sparkles />
-                    Become a Dealer
-                  </DropdownMenuItem>
-                </DropdownMenuGroup>
+                {user.role != Role.dealer && (
+                  <DropdownMenuGroup>
+                    <Link href={"/dealerships/application"}>
+                      <DropdownMenuItem>
+                        <Sparkles />
+                        Become a Dealer
+                      </DropdownMenuItem>
+                    </Link>
+                  </DropdownMenuGroup>
+                )}
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
                   <DropdownMenuItem onClick={() => redirect("/dashboard")}>

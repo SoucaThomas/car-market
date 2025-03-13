@@ -31,5 +31,11 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard", "/listacar", "/api:uploadthing", "/admin"],
+  matcher: [
+    "/dashboard",
+    "/listacar",
+    "/api:uploadthing",
+    "/admin",
+    "/dealerships/application",
+  ],
 };
