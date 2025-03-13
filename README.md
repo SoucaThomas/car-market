@@ -64,19 +64,19 @@ The application is a car marketplace with a modern user interface. It allows use
 
 #### **Frontend (Next.js):**
 
-- `pages/index.js`: Homepage with filtered search.
-- `pages/cars/[id].js`: Car details page.
-- `pages/auth/login.js`: Login form.
-- `pages/auth/register.js`: Registration form.
-- `pages/dealer/apply.js`: Dealer application form.
-- `pages/admin/index.js`: Admin dashboard.
+- `app/dealerships/page.tsx`: Homepage with filtered search.
+- `app/cars/[id]/page.tsx`: Car details page.
+- `app/auth/login/page.tsx`: Login form.
+- `app/auth/register/page.tsx`: Registration form.
+- `app/dealerships/apply/page.tsx`: Dealer application form.
+- `app/admin/page.tsx`: Admin dashboard.
 
 #### **Components:**
 
-- `CarCard.js`: Reusable car listing card.
-- `SearchForm.js`: Search filters.
-- `Layout.js`: Header, footer, and global layout.
-- `Pagination.js`: Pagination for car listings.
+- `components/CarCard.tsx`: Reusable car listing card.
+- `components/SearchForm.tsx`: Search filters.
+- `components/Layout.tsx`: Header, footer, and global layout.
+- `components/Pagination.tsx`: Pagination for car listings.
 
 #### **UI Design:**
 
@@ -89,102 +89,80 @@ The application is a car marketplace with a modern user interface. It allows use
 
 #### **Users Table**
 
-```sql
-CREATE TABLE users (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(100),
-    email VARCHAR(100) UNIQUE NOT NULL,
-    password VARCHAR(255),
-    role ENUM('guest', 'user', 'dealer', 'admin') DEFAULT 'guest',
-    is_active BOOLEAN DEFAULT TRUE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-```
+| Column Name   | Data Type | Description                               |
+| ------------- | --------- | ----------------------------------------- |
+| id            | String    | Unique identifier for each user           |
+| name          | String    | Full name of the user                     |
+| email         | String    | Email address (unique)                    |
+| password      | String    | Hashed password for authentication        |
+| role          | Enum      | User role (e.g., admin, dealer)           |
+| isActive      | Boolean   | Indicates if the user is active           |
+| emailVerified | Boolean   | Indicates if the user's email is verified |
+| image         | String    | URL of the user's avatar                  |
+| createdAt     | DateTime  | Timestamp of user registration            |
+| updatedAt     | DateTime  | Timestamp of last profile update          |
 
-#### **Cars Table**
+#### **Dealers Table**
 
-```sql
-CREATE TABLE cars (
-    id SERIAL PRIMARY KEY,
-    title VARCHAR(255),
-    description TEXT,
-    price DECIMAL(10, 2),
-    make VARCHAR(100),
-    model VARCHAR(100),
-    year INT,
-    mileage INT,
-    image_url TEXT,
-    dealer_id INT REFERENCES users(id) ON DELETE CASCADE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-```
+| Column Name     | Data Type | Description                                                           |
+| --------------- | --------- | --------------------------------------------------------------------- |
+| id              | Int       | Unique identifier for each dealer                                     |
+| userId          | String    | Reference to the user who is a dealer                                 |
+| businessName    | String    | Name of the dealership                                                |
+| businessEmail   | String    | Contact email for the dealership                                      |
+| businessType    | String    | Type of business                                                      |
+| taxId           | String    | Tax identification number                                             |
+| yearEstablished | DateTime? | Year the dealership was established                                   |
+| website         | String?   | Website URL of the dealership                                         |
+| streetAddress   | String    | Street address of the dealership                                      |
+| city            | String    | City where the dealership is located                                  |
+| state           | String    | State where the dealership is located                                 |
+| zipCode         | String    | Zip code of the dealership                                            |
+| inventorySize   | String    | Number of vehicles in inventory                                       |
+| specialties     | String?   | Specialties of the dealership                                         |
+| termsAgreed     | Boolean   | Indicates if terms were agreed                                        |
+| status          | Enum      | Current status of the application (e.g., approved, pending, rejected) |
+| createdAt       | DateTime  | Timestamp of dealer application                                       |
 
-#### **Dealer applications Table**
+#### **Application Status Enum**
 
-```sql
-CREATE TABLE dealer_applications (
-    id SERIAL PRIMARY KEY,
-    user_id INT REFERENCES users(id) ON DELETE CASCADE,
-    business_name VARCHAR(255),
-    business_email VARCHAR(255),
-    status ENUM('pending', 'approved', 'rejected') DEFAULT 'pending',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-```
+| Value    | Description                   |
+| -------- | ----------------------------- |
+| pending  | Application is under review   |
+| approved | Application has been approved |
+| rejected | Application has been rejected |
 
-#### **Ratings Table**
+#### **Listing Table**
 
-```sql
-CREATE TABLE ratings (
-    id SERIAL PRIMARY KEY,
-    dealer_id INT REFERENCES users(id) ON DELETE CASCADE,
-    user_id INT REFERENCES users(id) ON DELETE CASCADE,
-    rating INT CHECK(rating >= 1 AND rating <= 5),
-    review TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-```
+| Column Name | Data Type | Description                                                       |
+| ----------- | --------- | ----------------------------------------------------------------- |
+| id          | Int       | Unique identifier for each listing                                |
+| userId      | String    | Reference to the user who created the listing                     |
+| carBrand    | String?   | Brand of the car                                                  |
+| carModel    | String?   | Model of the car                                                  |
+| year        | Int?      | Year of manufacture                                               |
+| title       | String?   | Title of the listing                                              |
+| price       | Float?    | Price of the car                                                  |
+| engineSize  | Float?    | Size of the engine                                                |
+| country     | String?   | Country of the car                                                |
+| fuelType    | String?   | Type of fuel used                                                 |
+| drive       | String?   | Drive type (e.g., FWD, RWD)                                       |
+| color       | String?   | Color of the car                                                  |
+| description | String?   | Description of the car                                            |
+| condition   | String?   | Condition of the car                                              |
+| mileage     | Float?    | Mileage of the car                                                |
+| status      | Enum      | Current status of the listing (e.g., pending, approved, rejected) |
+| createdAt   | DateTime  | Timestamp of listing creation                                     |
 
-### 7. Backend API Endpoints
+#### **Upload Table**
 
-| **Endpoint**            | **Method** | **Role**          | **Description**                     |
-| ----------------------- | ---------- | ----------------- | ----------------------------------- |
-| `/api/cars`             | GET        | Guest/User/Dealer | Fetch filtered car listings.        |
-| `/api/cars/:id`         | GET        | Guest/User/Dealer | Fetch car details.                  |
-| `/api/cars`             | POST       | Dealer/Admin      | Create a car listing.               |
-| `/api/cars/:id`         | PUT        | Dealer/Admin      | Update a car listing.               |
-| `/api/cars/:id`         | DELETE     | Dealer/Admin      | Delete a car listing.               |
-| `/api/dealers/register` | POST       | Guest             | Submit dealer registration request. |
-| `/api/dealers/approve`  | PUT        | Admin             | Approve dealer registration.        |
-| `/api/users/register`   | POST       | Guest             | Register a user.                    |
-| `/api/users/login`      | POST       | Guest             | User/Dealer/Admin login.            |
-| `/api/ratings`          | POST       | User              | Add a rating for a dealer.          |
-
----
-
-### 8. Authentication
-
-- **Method:** JSON Web Tokens (JWT)
-- **Access Control:**
-  - Middleware for role-based permissions in the backend.
-
----
-
-### 9. Deployment
-
-- **Frontend:** Deploy on Vercel.
-- **Backend:** Deploy on Heroku.
-
----
-
-### 10. Future Enhancements
-
-- **Search Suggestions:** Autocomplete in search.
-- **Email Notifications:** Notify users about dealer approvals and updates.
-- **Favorites:** Allow users to save favorite car listings.
-
----
-
-### 11. Summary
-
-This document outlines the functional and non-functional requirements for the car marketplace application. The monolithic architecture ensures fast deployment while maintaining scalability. By leveraging modern technologies like Next.js and Node.js, the application will provide a seamless user experience for all roles.
+| Column Name | Data Type | Description                                         |
+| ----------- | --------- | --------------------------------------------------- |
+| key         | String    | Unique identifier for each upload                   |
+| url         | String    | URL of the uploaded file                            |
+| name        | String    | Name of the uploaded file                           |
+| type        | String    | Type of the uploaded file                           |
+| size        | Int       | Size of the uploaded file                           |
+| createdAt   | DateTime  | Timestamp of upload creation                        |
+| userId      | String    | Reference to the user who uploaded the file         |
+| listingId   | Int?      | Reference to the listing associated with the upload |
