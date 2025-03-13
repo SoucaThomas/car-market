@@ -1,19 +1,49 @@
 "use server";
 
-// This is a server action that would handle the form submission
-// In a real application, you would connect this to your database
-export async function submitDealerApplication(data: any) {
-  // Simulate a delay to show loading state
-  await new Promise((resolve) => setTimeout(resolve, 1500));
+import { auth } from "@/auth";
+import { prisma } from "@/prisma/prisma";
+import { DealerApplications } from "@prisma/client";
+import { headers } from "next/headers";
 
-  // Here you would typically:
-  // 1. Validate the data again on the server
-  // 2. Store it in your database
-  // 3. Send notification emails
-  // 4. Return success/error
+export async function submitDealerApplication(
+  data: Omit<DealerApplications, "id" | "userId">
+) {
+  console.log(data);
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  const user = session?.user;
+
+  if (!user) throw new Error("User not authenticated");
+  const application = await prisma.dealerApplications.create({
+    data: {
+      ...data,
+      userId: user.id,
+    },
+  });
 
   console.log("Dealer application submitted:", data);
 
-  // For demo purposes, we'll just return success
   return { success: true };
+}
+
+export async function getApplications(): Promise<DealerApplications[]> {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  const user = session?.user;
+
+  if (!user) throw new Error("User not authenticated");
+
+  const applications = prisma.dealerApplications.findMany({
+    where: {
+      userId: user.id,
+    },
+  });
+
+  console.log(applications);
+
+  return applications;
 }

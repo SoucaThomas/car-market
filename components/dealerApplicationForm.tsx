@@ -43,7 +43,7 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { submitDealerApplication } from "@/app/server/dealer";
 import { toast } from "@/hooks/use-toast";
-import { redirect } from "next/navigation";
+import { ApplicationStatus, DealerApplications } from "@prisma/client";
 
 const dealerFormSchema = z.object({
   // Personal Information
@@ -103,20 +103,40 @@ export function DealerApplicationForm() {
       zipCode: "",
       inventorySize: "1-10",
       specialties: "",
+      //@ts-ignore
       termsAgreed: false,
     },
   });
 
   async function onSubmit(data: DealerFormValues) {
     setIsSubmitting(true);
-
     try {
-      await submitDealerApplication(data);
+      const submissionData = {
+        businessName: data.businessName,
+        businessEmail: data.email,
+        businessType: data.businessType,
+        taxId: data.taxId,
+        yearEstablished: data.yearEstablished || null,
+        website: data.website || null,
+        streetAddress: data.streetAddress,
+        city: data.city,
+        state: data.state,
+        zipCode: data.zipCode,
+        inventorySize: data.inventorySize,
+        specialties: data.specialties || "",
+        status: ApplicationStatus.pending,
+        createdAt: new Date(),
+        termsAgreed: data.termsAgreed,
+      };
+
+      await submitDealerApplication(submissionData);
+
       toast({
         title: "Application Submitted",
         description:
           "Your dealer application has been submitted successfully. We'll review it and get back to you soon.",
       });
+
       form.reset();
       window.location.href = "/";
     } catch (error) {
