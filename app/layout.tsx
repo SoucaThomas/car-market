@@ -36,7 +36,7 @@ export default function RootLayout({
       >
         <NuqsAdapter>
           <Navbar />
-          <main className="mx-auto mt-20 flex h-full max-w-screen-2xl flex-row items-start justify-between gap-2 p-10">
+          <main className="mx-auto flex h-full max-w-screen-2xl flex-row items-start justify-between gap-2">
             {children}
           </main>
           <Toaster />
