@@ -1,7 +1,13 @@
 "use server";
 
 import { prisma } from "@/prisma/prisma";
-import { ListingStatus, Role, User } from "@prisma/client";
+import {
+  ApplicationStatus,
+  DealerApplications,
+  ListingStatus,
+  Role,
+  User,
+} from "@prisma/client";
 import { ListingWithUser } from "../shared/types";
 import { auth } from "@/auth";
 import { headers } from "next/headers";
@@ -33,6 +39,14 @@ export const getAdminUsers = async () => {
   const users = await prisma.user.findMany({});
 
   return users;
+};
+
+export const getAdminDealerApplications = async () => {
+  checkAdmin();
+
+  const applications = await prisma.dealerApplications.findMany({});
+
+  return applications;
 };
 
 export const adminChangeStatus = async (
@@ -83,6 +97,29 @@ export const adminChangeRole = async (
     const users = await prisma.user.findMany({});
 
     return Promise.resolve(users);
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
+
+export const adminChangeStatusDealershipApplication = async (
+  id: number,
+  action: ApplicationStatus
+): Promise<DealerApplications[] | Error> => {
+  checkAdmin();
+
+  try {
+    await prisma.dealerApplications.update({
+      where: {
+        id: id,
+      },
+      data: {
+        status: action,
+      },
+    });
+
+    const applications = await getAdminDealerApplications();
+    return Promise.resolve(applications);
   } catch (error) {
     return Promise.reject(error);
   }

@@ -14,6 +14,7 @@ import {
   Clock,
   Store,
   NotebookTabs,
+  Dock,
 } from "lucide-react";
 import { prisma } from "@/prisma/prisma";
 import { ListingsTable } from "@/components/ListingsTable";
@@ -21,12 +22,21 @@ import { UsersTable } from "@/components/UserListings";
 import {
   adminChangeRole,
   adminChangeStatus,
+  adminChangeStatusDealershipApplication,
   adminToggleUserStatus,
+  getAdminDealerApplications,
   getAdminListings,
   getAdminUsers,
 } from "@/app/server/admin";
-import { ListingStatus, Role, User } from "@prisma/client";
+import {
+  ListingStatus,
+  Role,
+  User,
+  DealerApplications,
+  ApplicationStatus,
+} from "@prisma/client";
 import { ListingWithUser } from "../shared/types";
+import { DealershipApplicationsTable } from "@/components/DealershipApplicationsTable";
 
 async function getAdminStats() {
   const [
@@ -57,13 +67,13 @@ async function getAdminStats() {
       where: { status: "rejected" },
     }),
     // Applications stats
-    prisma.dealerApplication.count({
+    prisma.dealerApplications.count({
       where: { status: "pending" },
     }),
-    prisma.dealerApplication.count({
+    prisma.dealerApplications.count({
       where: { status: "approved" },
     }),
-    prisma.dealerApplication.count({
+    prisma.dealerApplications.count({
       where: { status: "rejected" },
     }),
   ]);
@@ -91,6 +101,7 @@ export default async function AdminPage() {
   const listings = await getAdminListings();
   const stats = await getAdminStats();
   const users = await getAdminUsers();
+  const dealerApplications = await getAdminDealerApplications();
 
   async function handleListingAction(
     id: number,
@@ -125,6 +136,19 @@ export default async function AdminPage() {
       const response = await adminToggleUserStatus(id);
       return response;
     } catch (error) {
+      return Promise.reject(error);
+    }
+  }
+
+  async function handleApplicationDecision(
+    id: number,
+    action: ApplicationStatus
+  ): Promise<DealerApplications[] | Error> {
+    "use server";
+    try {
+      const response = await adminChangeStatusDealershipApplication(id, action);
+      return response;
+    } catch (error: any) {
       return Promise.reject(error);
     }
   }
@@ -230,7 +254,7 @@ export default async function AdminPage() {
 
       {/* Main Content Tabs */}
       <Tabs defaultValue="listings" className="space-y-4">
-        <TabsList className="grid grid-cols-3 gap-4 lg:grid-cols-3">
+        <TabsList className="grid h-full grid-cols-2 gap-4 lg:grid-cols-4">
           <TabsTrigger value="listings" className="flex items-center gap-2">
             <Clock className="h-4 w-4" />
             Pending Listings
@@ -239,6 +263,14 @@ export default async function AdminPage() {
           <TabsTrigger value="allListings" className="flex items-center gap-2">
             <NotebookTabs className="h-4 w-4" />
             Listings
+          </TabsTrigger>
+
+          <TabsTrigger
+            value="dealershipApplications"
+            className="flex items-center gap-2"
+          >
+            <Dock className="h-4 w-4" />
+            Pending Dealer Applications
           </TabsTrigger>
 
           <TabsTrigger value="users" className="flex items-center gap-2">
@@ -288,6 +320,24 @@ export default async function AdminPage() {
               <ListingsTable
                 listings={listings}
                 handleAction={handleListingAction}
+              />
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="dealershipApplications">
+          <Card>
+            <CardHeader>
+              <CardTitle>Pending Dealer Applications</CardTitle>
+              <CardDescription>
+                Review and manage dealership applications. Currently overseeing{" "}
+                {stats.applications.pending} pending applications for dealers.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <DealershipApplicationsTable
+                applications={dealerApplications}
+                handleApplicationDecision={handleApplicationDecision}
               />
             </CardContent>
           </Card>

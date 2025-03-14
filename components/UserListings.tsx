@@ -42,7 +42,6 @@ import { DialogTitle } from "@radix-ui/react-dialog";
 import { toast } from "@/hooks/use-toast";
 
 async function handleViewUser(id: string) {
-  // Implement your view logic here
   console.log(`View user ${id}`);
 }
 
