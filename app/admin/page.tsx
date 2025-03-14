@@ -37,6 +37,7 @@ import {
 } from "@prisma/client";
 import { ListingWithUser } from "../shared/types";
 import { DealershipApplicationsTable } from "@/components/DealershipApplicationsTable";
+import { application } from "express";
 
 async function getAdminStats() {
   const [
@@ -336,7 +337,9 @@ export default async function AdminPage() {
             </CardHeader>
             <CardContent>
               <DealershipApplicationsTable
-                applications={dealerApplications}
+                applications={dealerApplications.filter((application) => {
+                  application.status === ApplicationStatus.pending;
+                })}
                 handleApplicationDecision={handleApplicationDecision}
               />
             </CardContent>
