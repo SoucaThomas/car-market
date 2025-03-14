@@ -255,7 +255,7 @@ export default async function AdminPage() {
 
       {/* Main Content Tabs */}
       <Tabs defaultValue="listings" className="space-y-4">
-        <TabsList className="grid h-full grid-cols-2 gap-4 lg:grid-cols-4">
+        <TabsList className="grid h-full grid-cols-2 gap-4 lg:grid-cols-3 xl:grid-cols-5">
           <TabsTrigger value="listings" className="flex items-center gap-2">
             <Clock className="h-4 w-4" />
             Pending Listings
@@ -272,6 +272,14 @@ export default async function AdminPage() {
           >
             <Dock className="h-4 w-4" />
             Pending Dealer Applications
+          </TabsTrigger>
+
+          <TabsTrigger
+            value="allDealershipApplications"
+            className="flex items-center gap-2"
+          >
+            <Store className="h-4 w-4" />
+            Dealerships
           </TabsTrigger>
 
           <TabsTrigger value="users" className="flex items-center gap-2">
@@ -326,6 +334,7 @@ export default async function AdminPage() {
           </Card>
         </TabsContent>
 
+        {/* Pending Dealership Tab */}
         <TabsContent value="dealershipApplications">
           <Card>
             <CardHeader>
@@ -340,6 +349,26 @@ export default async function AdminPage() {
                 applications={dealerApplications.filter((application) => {
                   application.status === ApplicationStatus.pending;
                 })}
+                handleApplicationDecision={handleApplicationDecision}
+              />
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Dealership Tab */}
+        <TabsContent value="allDealershipApplications">
+          <Card>
+            <CardHeader>
+              <CardTitle>Dealerships</CardTitle>
+              <CardDescription>
+                Review and manage dealership applications. You are currently
+                handling {stats.applications.pending} applications awaiting
+                approval from dealers.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <DealershipApplicationsTable
+                applications={dealerApplications}
                 handleApplicationDecision={handleApplicationDecision}
               />
             </CardContent>
