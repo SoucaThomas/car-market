@@ -9,11 +9,14 @@ import {
 } from "./ui/select";
 import { FiltersSheet } from "./FiltersSheet";
 import { useQueryState } from "nuqs";
-import { useCallback, useTransition } from "react";
+import { useCallback, useTransition, useMemo } from "react";
 import debounce from "lodash.debounce";
 import { updateSearch } from "@/app/server/searchAction";
 import { searchParams } from "@/app/shared/types";
 
+// Create a debounced function outside the component to prevent recreation on each render
+const createDebouncedSearch = (callback: () => void) => 
+  debounce(callback, 300);
 interface ListingsProps {
   searchParams: Promise<searchParams>;
 }
@@ -22,14 +25,20 @@ export function SearchFilters({ searchParams }: ListingsProps) {
   const [sort, setSort] = useQueryState("sort", { defaultValue: "" });
   const [, startTransition] = useTransition();
 
-  const debouncedUpdateSearch = useCallback(
-    debounce((query: string) => {
+  // Create the debounced function once using useMemo
+  const debouncedFn = useMemo(() => 
+    createDebouncedSearch(() => {
       startTransition(async () => {
         await updateSearch();
       });
-    }, 300),
+    }),
     []
   );
+  
+  // Use the properly memoized debounced function in a callback
+  const debouncedUpdateSearch = useCallback(() => {
+    debouncedFn();
+  }, [debouncedFn]);
 
   return (
     <section>
@@ -43,7 +52,7 @@ export function SearchFilters({ searchParams }: ListingsProps) {
           <Select
             onValueChange={(value) => {
               setSort(value);
-              debouncedUpdateSearch(value);
+              debouncedUpdateSearch();
             }}
             value={sort}
           >

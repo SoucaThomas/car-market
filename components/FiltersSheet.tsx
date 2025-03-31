@@ -30,7 +30,7 @@ interface FiltersSheetProps {
 
 export function FiltersSheet({ searchParams }: FiltersSheetProps) {
   // URL query state with nuqs
-  const [queryState, setQueryState] = useQueryStates({
+  const [, setQueryState] = useQueryStates({
     carType: parseAsInteger,
     carBrand: parseAsString,
     carModel: parseAsString,
@@ -73,7 +73,6 @@ export function FiltersSheet({ searchParams }: FiltersSheetProps) {
     []
   );
   const [loading, setLoading] = useState(true);
-  const [initialParamsLoaded, setInitialParamsLoaded] = useState(false);
   const [activeFilterCount, setActiveFilterCount] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -148,8 +147,6 @@ export function FiltersSheet({ searchParams }: FiltersSheetProps) {
             }).filter((value) => value !== undefined && value !== null).length
           );
         }
-
-        setInitialParamsLoaded(true);
       } catch (error) {
         console.error("Failed to load initial data:", error);
       } finally {
@@ -181,7 +178,10 @@ export function FiltersSheet({ searchParams }: FiltersSheetProps) {
     fetchModels();
   }, [localFilters.carBrand]);
 
-  const updateLocalFilter = (key: keyof typeof localFilters, value: any) => {
+  const updateLocalFilter = <K extends keyof typeof localFilters>(
+    key: K,
+    value: (typeof localFilters)[K]
+  ) => {
     setLocalFilters((prev) => ({
       ...prev,
       [key]: value,
@@ -208,7 +208,7 @@ export function FiltersSheet({ searchParams }: FiltersSheetProps) {
 
     const filteredParams = Object.fromEntries(
       Object.entries(params).filter(
-        ([_, value]) => value !== undefined && value !== null
+        ([, value]) => value !== undefined && value !== null
       )
     );
 

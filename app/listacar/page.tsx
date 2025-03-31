@@ -122,7 +122,7 @@ export default function MyForm() {
     };
 
     fetchCarBrands();
-  }, []);
+  }, [router, toast]);
 
   const fetchCarModels = async (brand: { label: string; id: number }) => {
     if (brand) {

@@ -2,7 +2,6 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Car, Heart } from "lucide-react";
 import { NavSearch } from "./NavSearch";
-import { useSession } from "@/lib/auth-client";
 import { NavUser } from "./NavUser";
 import { auth } from "@/auth";
 import { User } from "@prisma/client";

@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState, useMemo } from "react";
+import { useCallback, useEffect, useState, useMemo } from "react";
 import {
   Carousel,
   CarouselContent,
@@ -17,6 +17,15 @@ const Gallery = ({ images }: GalleryProps) => {
   const [mainApi, setMainApi] = useState<CarouselApi>();
   const [thumbnailApi, setThumbnailApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
+
+  const handleClick = useCallback((index: number) => {
+    if (!mainApi || !thumbnailApi) {
+      return;
+    }
+    thumbnailApi.scrollTo(index);
+    mainApi.scrollTo(index);
+    setCurrent(index);
+  }, [mainApi, thumbnailApi, setCurrent]);
 
   const mainImage = useMemo(
     () =>
@@ -50,7 +59,7 @@ const Gallery = ({ images }: GalleryProps) => {
           />
         </CarouselItem>
       )),
-    [images, current]
+    [images, current, handleClick]
   );
 
   useEffect(() => {
@@ -79,14 +88,6 @@ const Gallery = ({ images }: GalleryProps) => {
     };
   }, [mainApi, thumbnailApi]);
 
-  const handleClick = (index: number) => {
-    if (!mainApi || !thumbnailApi) {
-      return;
-    }
-    thumbnailApi.scrollTo(index);
-    mainApi.scrollTo(index);
-    setCurrent(index);
-  };
 
   return (
     <div className="w-96 max-w-xl sm:w-auto">

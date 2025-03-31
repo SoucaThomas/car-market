@@ -25,6 +25,7 @@ import type { ListingWithUserAndImages } from "@/app/shared/types";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toggleFavorite, getFavoriteStatus } from "@/app/server/favorites";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 interface CarDetailsProps {
   listing: ListingWithUserAndImages;
@@ -113,15 +114,26 @@ export function CarDetails({ listing }: CarDetailsProps) {
       <nav className="flex text-sm text-muted-foreground">
         <ol className="flex items-center space-x-2">
           <li>
-            <a href="/" className="hover:text-primary">
+            <Link href="/" className="hover:text-primary">
               Home
-            </a>
+            </Link>
           </li>
           <li>/</li>
           <li>
-            <a href="/listings" className="hover:text-primary">
+            <Link href="/listings" className="hover:text-primary">
               Listings
-            </a>
+            </Link>
+          </li>
+          <li>/</li>
+          <li className="max-w-[200px] truncate font-medium text-foreground">
+            {listing.title ||
+              `${listing.year} ${listing.carBrand} ${listing.carModel}`}
+          </li>
+          <li>/</li>
+          <li>
+            <Link href="/listings" className="hover:text-primary">
+              Listings
+            </Link>
           </li>
           <li>/</li>
           <li className="max-w-[200px] truncate font-medium text-foreground">
@@ -488,7 +500,7 @@ export function CarDetails({ listing }: CarDetailsProps) {
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-primary">•</span>
-                  <span>Verify the vehicle's history and documentation</span>
+                  <span>Verify the vehicle&apos;s history and documentation</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-primary">•</span>

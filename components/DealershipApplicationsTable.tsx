@@ -12,14 +12,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import {
   Table,
@@ -30,25 +23,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import {
-  Role,
-  User,
-  DealerApplications,
-  ApplicationStatus,
-} from "@prisma/client";
-import { UserAvatar } from "./ui/userAvatar";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTrigger,
-} from "./ui/dialog";
-import { DialogTitle } from "@radix-ui/react-dialog";
+import { DealerApplications, ApplicationStatus } from "@prisma/client";
 import { toast } from "@/hooks/use-toast";
 
-async function handleViewUser(id: string) {
-  console.log(`View user ${id}`);
-}
+// async function handleViewUser(id: string) {
+//   console.log(`View user ${id}`);
+// }
 
 interface DealershipApplicationsTableProps {
   applications: DealerApplications[];

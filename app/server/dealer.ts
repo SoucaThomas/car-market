@@ -16,7 +16,7 @@ export async function submitDealerApplication(
   const user = session?.user;
 
   if (!user) throw new Error("User not authenticated");
-  const application = await prisma.dealerApplications.create({
+  await prisma.dealerApplications.create({
     data: {
       ...data,
       userId: user.id,

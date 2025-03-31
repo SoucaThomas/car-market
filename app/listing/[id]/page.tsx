@@ -11,9 +11,10 @@ import type { Metadata } from "next";
 export async function generateMetadata({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }): Promise<Metadata> {
-  const listing = await getListing(params.id);
+  const { id } = await params;
+  const listing = await getListing(id);
 
   if (!listing) {
     return {
@@ -69,11 +70,12 @@ async function ListingPageContent({ id }: { id: string }) {
 export default async function ListingPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
+  const { id } = await params;
   return (
     <Suspense fallback={<ListingLoadingSkeleton />}>
-      <ListingPageContent id={params.id} />
+      <ListingPageContent id={id} />
     </Suspense>
   );
 }

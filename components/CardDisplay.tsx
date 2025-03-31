@@ -2,7 +2,6 @@ import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Heart } from "lucide-react";
 import type { ListingWithUserAndImages } from "@/app/shared/types";
 import Link from "next/link";
 import { MapPin } from "lucide-react";

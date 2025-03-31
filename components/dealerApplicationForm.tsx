@@ -43,7 +43,7 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { submitDealerApplication } from "@/app/server/dealer";
 import { toast } from "@/hooks/use-toast";
-import { ApplicationStatus, DealerApplications } from "@prisma/client";
+import { ApplicationStatus } from "@prisma/client";
 
 const dealerFormSchema = z.object({
   // Personal Information
@@ -100,11 +100,11 @@ export function DealerApplicationForm() {
       streetAddress: "",
       city: "",
       state: "",
-      zipCode: "",
-      inventorySize: "1-10",
-      specialties: "",
-      //@ts-ignore
-      termsAgreed: false,
+          zipCode: "",
+          inventorySize: "1-10",
+          specialties: "",
+          //@ts-expect-error termsAgreed is a boolean in the form but needs to be literal true in schema
+          termsAgreed: false,
     },
   });
 
@@ -353,7 +353,7 @@ export function DealerApplicationForm() {
           <CardHeader>
             <CardTitle>Address</CardTitle>
             <CardDescription>
-              Provide your dealership's physical address.
+              Provide your dealership&apos;s physical address.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">

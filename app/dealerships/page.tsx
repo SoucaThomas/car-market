@@ -16,7 +16,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { PlusCircle, Search } from "lucide-react";
+import { PlusCircle } from "lucide-react";
 import { getApplications } from "../server/dealer";
 
 import { ViewApplicationButton } from "@/components/ui/viewDealershipApplicationButton";
