@@ -2,16 +2,21 @@ import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Heart, MapPin } from "lucide-react";
+import { Heart } from "lucide-react";
 import type { ListingWithUserAndImages } from "@/app/shared/types";
-import { redirect } from "next/navigation";
 import Link from "next/link";
+import { MapPin } from "lucide-react";
+import { getFavoriteStatus } from "@/app/server/favorites";
+import { FavoriteButton } from "./FavoriteButton";
 
 interface CardDisplay {
   listing: ListingWithUserAndImages;
 }
 
-export function CardDisplay({ listing }: CardDisplay) {
+export async function CardDisplay({ listing }: CardDisplay) {
+  // Get initial favorite status from server
+  const { isFavorited } = await getFavoriteStatus(listing.id);
+
   const imageUrl =
     listing.images && listing.images.length > 0
       ? listing.images[0].url
@@ -35,13 +40,10 @@ export function CardDisplay({ listing }: CardDisplay) {
             fill
             className="object-cover"
           />
-          <Button
-            variant="ghost"
-            size="icon"
-            className="absolute right-2 top-2 rounded-full bg-background/80 backdrop-blur-sm"
-          >
-            <Heart className="h-4 w-4" />
-          </Button>
+          <FavoriteButton
+            listingId={listing.id}
+            initialFavorited={isFavorited}
+          />
         </div>
       </div>
 

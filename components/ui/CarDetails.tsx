@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import {
   ChevronLeft,
@@ -14,6 +14,7 @@ import {
   Car,
   Wrench,
   Award,
+  Heart,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -22,6 +23,8 @@ import { UserAvatar } from "./userAvatar";
 import { Badge } from "@/components/ui/badge";
 import type { ListingWithUserAndImages } from "@/app/shared/types";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { toggleFavorite, getFavoriteStatus } from "@/app/server/favorites";
+import { cn } from "@/lib/utils";
 
 interface CarDetailsProps {
   listing: ListingWithUserAndImages;
@@ -29,6 +32,30 @@ interface CarDetailsProps {
 
 export function CarDetails({ listing }: CarDetailsProps) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isFavorited, setIsFavorited] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const checkFavoriteStatus = async () => {
+      const { isFavorited: favorited } = await getFavoriteStatus(listing.id);
+      setIsFavorited(favorited);
+    };
+    checkFavoriteStatus();
+  }, [listing.id]);
+
+  const handleFavoriteClick = async () => {
+    try {
+      setIsLoading(true);
+      const result = await toggleFavorite(listing.id);
+      if (result.success) {
+        setIsFavorited(!isFavorited);
+      }
+    } catch (error) {
+      console.error("Error toggling favorite:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const nextImage = () => {
     setCurrentImageIndex((prevIndex) =>
@@ -427,8 +454,22 @@ export function CarDetails({ listing }: CarDetailsProps) {
 
               <div className="mt-6 space-y-3">
                 <Button className="w-full">Contact Seller</Button>
-                <Button variant="outline" className="w-full">
-                  Save Listing
+                <Button
+                  variant="outline"
+                  className={cn(
+                    "w-full",
+                    isLoading && "cursor-not-allowed opacity-50"
+                  )}
+                  onClick={handleFavoriteClick}
+                  disabled={isLoading}
+                >
+                  <Heart
+                    className={cn(
+                      "mr-2 h-4 w-4",
+                      isFavorited && "fill-current text-red-500"
+                    )}
+                  />
+                  {isFavorited ? "Saved" : "Save Listing"}
                 </Button>
               </div>
             </CardContent>
