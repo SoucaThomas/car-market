@@ -29,9 +29,11 @@ export async function Navbar() {
         </div>
 
         <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" className="hidden sm:flex">
-            <Heart className="h-5 w-5" />
-          </Button>
+          <Link href="/favorites">
+            <Button variant="ghost" size="icon" className="hidden sm:flex">
+              <Heart className="h-5 w-5" />
+            </Button>
+          </Link>
           <NavUser user={user} size={9} />
           <Link href="/listacar">
             <Button>Sell your car</Button>
