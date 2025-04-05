@@ -31,44 +31,6 @@ interface DealerDetailsDialogProps {
   listing: ListingWithUserAndImages;
 }
 
-const renderStars = (rating: number) => {
-  const fullStars = Math.floor(rating);
-  const halfStar = rating % 1 !== 0 ? 1 : 0;
-  const stars = [];
-
-  for (let i = 0; i < fullStars; i++) {
-    stars.push(
-      <span key={i} className="text-yellow-500" title={`Rating: ${rating}`}>
-        ★
-      </span>
-    );
-  }
-  if (halfStar) {
-    stars.push(
-      <span
-        key={fullStars}
-        className="text-yellow-500"
-        title={`Rating: ${rating}`}
-      >
-        ☆
-      </span>
-    );
-  }
-  for (let i = 0; i < 5 - fullStars - halfStar; i++) {
-    stars.push(
-      <span
-        key={fullStars + halfStar + i + 1}
-        className="text-gray-300"
-        title={`Rating: ${rating}`}
-      >
-        ★
-      </span>
-    );
-  }
-
-  return stars;
-};
-
 export function DealerDetailsDialog({ listing }: DealerDetailsDialogProps) {
   const [dealer, setDealer] = useState<DealerInfo>();
   const [isLoading, setIsLoading] = useState(true);

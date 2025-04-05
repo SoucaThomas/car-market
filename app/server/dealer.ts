@@ -70,6 +70,7 @@ export async function getDealerInfo(dealerId: string): Promise<DealerInfo> {
         },
         createdAt: true,
         ratings: true,
+        location: true,
       },
     });
     if (!dealer) {
@@ -77,7 +78,7 @@ export async function getDealerInfo(dealerId: string): Promise<DealerInfo> {
     }
     const dealerWithLocation = {
       ...dealer,
-      location: dealer.address || "Unknown location",
+      location: dealer.location || "Unknown location",
     } as unknown as DealerInfo;
     return Promise.resolve(dealerWithLocation);
   } catch (error) {
