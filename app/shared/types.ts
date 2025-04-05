@@ -7,6 +7,17 @@ export type ListingWithUserAndImages = Listing & {
   images: Upload[];
 };
 
+export type DealerInfo = {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  listings: ListingWithUserAndImages[];
+  createdAt: string;
+  ratings: number;
+  location: string;
+} | null;
+
 import { z } from "zod";
 
 export const formSchema = z.object({

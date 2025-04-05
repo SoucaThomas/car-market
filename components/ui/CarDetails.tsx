@@ -26,6 +26,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toggleFavorite, getFavoriteStatus } from "@/app/server/favorites";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { DealerDetailsDialog } from "../DealerDetailsDialog";
 
 interface CarDetailsProps {
   listing: ListingWithUserAndImages;
@@ -435,19 +436,7 @@ export function CarDetails({ listing }: CarDetailsProps) {
               <h2 className="text-xl font-semibold">Seller Information</h2>
             </CardHeader>
             <CardContent>
-              <div className="mb-6 flex items-center gap-4">
-                <div className="relative h-16 w-16 overflow-hidden rounded-full">
-                  <UserAvatar user={listing.user} size={16} />
-                </div>
-                <div>
-                  <h3 className="text-lg font-medium">{listing.user.name}</h3>
-                  <p className="text-sm text-muted-foreground">
-                    {listing.user.role === "dealer"
-                      ? "Dealer"
-                      : "Private Seller"}
-                  </p>
-                </div>
-              </div>
+              <DealerDetailsDialog listing={listing} />
 
               <Separator className="mb-6" />
 
@@ -463,7 +452,6 @@ export function CarDetails({ listing }: CarDetailsProps) {
                   </div>
                 )}
               </div>
-
               <div className="mt-6 space-y-3">
                 <Button className="w-full">Contact Seller</Button>
                 <Button
@@ -500,7 +488,9 @@ export function CarDetails({ listing }: CarDetailsProps) {
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-primary">•</span>
-                  <span>Verify the vehicle&apos;s history and documentation</span>
+                  <span>
+                    Verify the vehicle&apos;s history and documentation
+                  </span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-primary">•</span>
