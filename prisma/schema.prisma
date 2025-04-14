@@ -13,10 +13,10 @@ model User {
   email    String  @unique @db.VarChar(100)
   role     Role    @default(user)
   isActive Boolean @default(true)
-  location String  @db.VarChar(100) @default("Unknown")
+  location String  @default("Unknown") @db.VarChar(100)
 
   emailVerified Boolean
-  image         String
+  image         String    @default("")
   updatedAt     DateTime
   sessions      Session[]
   accounts      Account[]
