@@ -1,8 +1,8 @@
-import { auth } from "@/auth";
-import { prisma } from "@/prisma/prisma";
-import { headers } from "next/headers";
-import { createUploadthing, type FileRouter } from "uploadthing/next";
-import { UploadThingError } from "uploadthing/server";
+import { auth } from '@/auth';
+import { prisma } from '@/prisma/prisma';
+import { headers } from 'next/headers';
+import { createUploadthing, type FileRouter } from 'uploadthing/next';
+import { UploadThingError } from 'uploadthing/server';
 
 const uploadThing = createUploadthing();
 
@@ -11,7 +11,7 @@ const MAX_SIZE = 1024 * 1024 * 4; // 4MB
 export const ourFileRouter = {
   imageUploader: uploadThing({
     image: {
-      maxFileSize: "32MB",
+      maxFileSize: '32MB',
       maxFileCount: 40,
     },
   })
@@ -19,7 +19,7 @@ export const ourFileRouter = {
       // Validate file size
       files.forEach((file) => {
         if (file.size > MAX_SIZE) {
-          throw new UploadThingError("File too large");
+          throw new UploadThingError('File too large');
         }
       });
 
@@ -30,7 +30,7 @@ export const ourFileRouter = {
 
       const user = session?.user;
 
-      if (!user) throw new UploadThingError("Unauthorized");
+      if (!user) throw new UploadThingError('Unauthorized');
 
       return { userId: user.id };
     })
@@ -48,12 +48,12 @@ export const ourFileRouter = {
           },
         });
 
-        console.log("Upload record created:", upload.key);
+        console.log('Upload record created:', upload.key);
 
         return { uploadedBy: metadata.userId, uploadId: upload.key };
       } catch (error) {
-        console.error("Error saving upload to database:", error);
-        throw new UploadThingError("Failed to save upload to database"); // Important: Throw error to signal failure
+        console.error('Error saving upload to database:', error);
+        throw new UploadThingError('Failed to save upload to database'); // Important: Throw error to signal failure
       }
     }),
 } satisfies FileRouter;

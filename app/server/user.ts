@@ -1,8 +1,8 @@
-"use server";
+'use server';
 
-import { User } from "@/auth";
-import { prisma } from "@/prisma/prisma";
-import { ListingStatus } from "@prisma/client";
+import { User } from '@/auth';
+import { prisma } from '@/prisma/prisma';
+import { ListingStatus } from '@prisma/client';
 
 export const getUserListings = async (
   user: User
@@ -22,12 +22,12 @@ export const getUserListings = async (
       status: true,
       price: true,
     },
-    orderBy: { createdAt: "asc" },
+    orderBy: { createdAt: 'asc' },
   });
 
   return result.map((item) => ({
     id: item.id,
-    title: item.title || "Untitled",
+    title: item.title || 'Untitled',
     status: item.status.toString(),
     price: item.price || 0,
   }));

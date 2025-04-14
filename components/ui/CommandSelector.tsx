@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import { Check, ChevronDown } from "lucide-react";
+import * as React from 'react';
+import { Check, ChevronDown } from 'lucide-react';
 
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
 import {
   Command,
   CommandEmpty,
@@ -12,12 +12,8 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+} from '@/components/ui/command';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 interface CommandSelectorProps<T extends { id: number; label: string }> {
   text: string;
@@ -68,7 +64,7 @@ export function CommandSelector({
               </div>
             ) : data.length === 0 ? (
               <div className="py-6 text-center text-sm">
-                {text === "car model" && value ? (
+                {text === 'car model' && value ? (
                   <p>No models available for this brand</p>
                 ) : (
                   <p>No {text} available</p>
@@ -83,15 +79,9 @@ export function CommandSelector({
                       key={`${item.id}-${item.label}`}
                       value={item.label}
                       onSelect={(currentValue) => {
-                        const selectedItem = data.find(
-                          (item) => item.label === currentValue
-                        );
+                        const selectedItem = data.find((item) => item.label === currentValue);
                         if (selectedItem) {
-                          setValue(
-                            value && selectedItem.id === value.id
-                              ? null
-                              : selectedItem
-                          );
+                          setValue(value && selectedItem.id === value.id ? null : selectedItem);
                         }
                         setOpen(false);
                       }}
@@ -99,10 +89,8 @@ export function CommandSelector({
                       {item.label}
                       <Check
                         className={cn(
-                          "ml-auto",
-                          value && value.id === item.id
-                            ? "opacity-100"
-                            : "opacity-0"
+                          'ml-auto',
+                          value && value.id === item.id ? 'opacity-100' : 'opacity-0'
                         )}
                       />
                     </CommandItem>

@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { Check, Ban } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Listing, ListingStatus } from "@prisma/client";
-import { adminChangeStatus } from "@/app/server/admin";
-import { toast } from "@/hooks/use-toast";
-import { redirect } from "next/navigation";
+import { Check, Ban } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Listing, ListingStatus } from '@prisma/client';
+import { adminChangeStatus } from '@/app/server/admin';
+import { toast } from '@/hooks/use-toast';
+import { redirect } from 'next/navigation';
 
 interface ModerationBarProps {
   listing: Listing;
@@ -18,24 +18,22 @@ export function ModerationBar({ listing }: ModerationBarProps) {
         <Button
           variant="destructive"
           onClick={async () => {
-            await adminChangeStatus(listing.id, ListingStatus.rejected).then(
-              (response) => {
-                if (response instanceof Error) {
-                  toast({
-                    title: "Error",
-                    description: response.message,
-                    variant: "destructive",
-                  });
-                } else {
-                  toast({
-                    title: "Listing rejected",
-                    description: "The listing has been rejected",
-                  });
+            await adminChangeStatus(listing.id, ListingStatus.rejected).then((response) => {
+              if (response instanceof Error) {
+                toast({
+                  title: 'Error',
+                  description: response.message,
+                  variant: 'destructive',
+                });
+              } else {
+                toast({
+                  title: 'Listing rejected',
+                  description: 'The listing has been rejected',
+                });
 
-                  redirect("/admin");
-                }
+                redirect('/admin');
               }
-            );
+            });
           }}
         >
           <Ban />
@@ -43,24 +41,22 @@ export function ModerationBar({ listing }: ModerationBarProps) {
         </Button>
         <Button
           onClick={async () => {
-            await adminChangeStatus(listing.id, ListingStatus.approved).then(
-              (response) => {
-                if (response instanceof Error) {
-                  toast({
-                    title: "Error",
-                    description: response.message,
-                    variant: "destructive",
-                  });
-                } else {
-                  toast({
-                    title: "Listing approved",
-                    description: "The listing has been approved",
-                  });
+            await adminChangeStatus(listing.id, ListingStatus.approved).then((response) => {
+              if (response instanceof Error) {
+                toast({
+                  title: 'Error',
+                  description: response.message,
+                  variant: 'destructive',
+                });
+              } else {
+                toast({
+                  title: 'Listing approved',
+                  description: 'The listing has been approved',
+                });
 
-                  redirect("/admin");
-                }
+                redirect('/admin');
               }
-            );
+            });
           }}
           className="bg-green-600 hover:bg-green-700"
         >

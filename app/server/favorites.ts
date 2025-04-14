@@ -1,10 +1,10 @@
-"use server";
+'use server';
 
-import { auth } from "@/auth";
-import { prisma } from "prisma/prisma";
+import { auth } from '@/auth';
+import { prisma } from 'prisma/prisma';
 
-import { revalidatePath } from "next/cache";
-import { headers } from "next/headers";
+import { revalidatePath } from 'next/cache';
+import { headers } from 'next/headers';
 
 export async function toggleFavorite(listingId: number) {
   try {
@@ -13,7 +13,7 @@ export async function toggleFavorite(listingId: number) {
     });
 
     if (!session?.user?.id) {
-      throw new Error("Unauthorized");
+      throw new Error('Unauthorized');
     }
 
     const userId = session.user.id;
@@ -45,13 +45,13 @@ export async function toggleFavorite(listingId: number) {
     }
 
     // Revalidate the listing page and any other pages that show favorites
-    revalidatePath("/listing/[id]");
-    revalidatePath("/");
+    revalidatePath('/listing/[id]');
+    revalidatePath('/');
 
     return { success: true };
   } catch (error) {
-    console.error("Error toggling favorite:", error);
-    return { success: false, error: "Failed to toggle favorite" };
+    console.error('Error toggling favorite:', error);
+    return { success: false, error: 'Failed to toggle favorite' };
   }
 }
 
@@ -76,8 +76,8 @@ export async function getFavoriteStatus(listingId: number) {
 
     return { isFavorited: !!favorite };
   } catch (error) {
-    console.error("Error getting favorite status:", error);
-    return { isFavorited: false, error: "Failed to get favorite status" };
+    console.error('Error getting favorite status:', error);
+    return { isFavorited: false, error: 'Failed to get favorite status' };
   }
 }
 
@@ -88,7 +88,7 @@ export async function getFavoritedListings() {
     });
 
     if (!session?.user?.id) {
-      return { listings: [], error: "Not authenticated" };
+      return { listings: [], error: 'Not authenticated' };
     }
 
     const favorites = await prisma.favorite.findMany({
@@ -104,7 +104,7 @@ export async function getFavoritedListings() {
         },
       },
       orderBy: {
-        createdAt: "desc",
+        createdAt: 'desc',
       },
     });
 
@@ -113,7 +113,7 @@ export async function getFavoritedListings() {
       success: true,
     };
   } catch (error) {
-    console.error("Error fetching favorited listings:", error);
-    return { listings: [], error: "Failed to fetch favorited listings" };
+    console.error('Error fetching favorited listings:', error);
+    return { listings: [], error: 'Failed to fetch favorited listings' };
   }
 }

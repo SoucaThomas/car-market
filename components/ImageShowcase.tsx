@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { Upload } from "@prisma/client";
-import clsx from "clsx";
-import Image from "next/image";
-import { useState } from "react";
-import { Button } from "./ui/button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Upload } from '@prisma/client';
+import clsx from 'clsx';
+import Image from 'next/image';
+import { useState } from 'react';
+import { Button } from './ui/button';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface ImageShowcaseProps {
   images: Upload[];
@@ -28,9 +28,7 @@ export function ImageShowcase(props: ImageShowcaseProps) {
           variant="outline"
           className="absolute left-4 top-1/2 aspect-square"
           onClick={() =>
-            setCurrentImageIndex(
-              (prev) => (prev - 1 + props.images.length) % props.images.length
-            )
+            setCurrentImageIndex((prev) => (prev - 1 + props.images.length) % props.images.length)
           }
         >
           <ChevronLeft size={24} />
@@ -39,9 +37,7 @@ export function ImageShowcase(props: ImageShowcaseProps) {
           variant="outline"
           className="absolute right-4 top-1/2 aspect-square"
           onClick={() =>
-            setCurrentImageIndex(
-              (prev) => (prev + 1 + props.images.length) % props.images.length
-            )
+            setCurrentImageIndex((prev) => (prev + 1 + props.images.length) % props.images.length)
           }
         >
           <ChevronRight size={24} />
@@ -52,8 +48,8 @@ export function ImageShowcase(props: ImageShowcaseProps) {
           {props.images.map((image, index) => (
             <div
               key={index}
-              className={clsx("h-1/4 w-full", {
-                "border-4": index === currentImageIndex,
+              className={clsx('h-1/4 w-full', {
+                'border-4': index === currentImageIndex,
               })}
               onClick={() => setCurrentImageIndex(index)}
             >

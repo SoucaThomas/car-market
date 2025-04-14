@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useEffect } from "react";
-import { CommandSelector } from "./CommandSelector";
-import { Label } from "./label";
+import { useEffect } from 'react';
+import { CommandSelector } from './CommandSelector';
+import { Label } from './label';
 
 interface FilterInputProps<T extends { id: number; label: string }> {
   label: string;

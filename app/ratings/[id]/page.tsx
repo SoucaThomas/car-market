@@ -1,21 +1,15 @@
-import Link from "next/link";
-import { Suspense } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Star } from "lucide-react";
-import { getDealerRatings } from "@/app/server/ratings";
-import { auth } from "@/auth";
-import { headers } from "next/headers";
-import type { Metadata } from "next";
-import RatingsLoadingSkeleton from "./loading";
-import ReviewCard from "./ReviewCard";
+import Link from 'next/link';
+import { Suspense } from 'react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Star } from 'lucide-react';
+import { getDealerRatings } from '@/app/server/ratings';
+import { auth } from '@/auth';
+import { headers } from 'next/headers';
+import type { Metadata } from 'next';
+import RatingsLoadingSkeleton from './loading';
+import ReviewCard from './ReviewCard';
 
 export async function generateMetadata({
   params,
@@ -27,15 +21,14 @@ export async function generateMetadata({
 
   if (!dealerData) {
     return {
-      title: "Dealer Not Found",
-      description:
-        "The dealer you're looking for doesn't exist or has been removed.",
+      title: 'Dealer Not Found',
+      description: "The dealer you're looking for doesn't exist or has been removed.",
     };
   }
 
   return {
-    title: `Ratings for ${dealerData.name || "Dealer"}`,
-    description: `View ratings and reviews for ${dealerData.name || "Dealer"}`,
+    title: `Ratings for ${dealerData.name || 'Dealer'}`,
+    description: `View ratings and reviews for ${dealerData.name || 'Dealer'}`,
   };
 }
 
@@ -50,10 +43,7 @@ async function DealerRatingsContent({ id }: { id: string }) {
     return (
       <div className="container mx-auto px-4 py-16 text-center">
         <h1 className="mb-4 text-3xl font-bold">Dealer Not Found</h1>
-        <p>
-          The dealer you&apos;re looking for doesn&apos;t exist or has been
-          removed.
-        </p>
+        <p>The dealer you&apos;re looking for doesn&apos;t exist or has been removed.</p>
       </div>
     );
   }
@@ -74,13 +64,8 @@ async function DealerRatingsContent({ id }: { id: string }) {
       <Card className="mb-8">
         <CardHeader className="flex flex-row items-center gap-4">
           <Avatar className="h-16 w-16">
-            <AvatarImage
-              src={dealerData.image || "/placeholder.svg"}
-              alt={dealerData.name || ""}
-            />
-            <AvatarFallback>
-              {dealerData.name?.substring(0, 2) || "??"}
-            </AvatarFallback>
+            <AvatarImage src={dealerData.image || '/placeholder.svg'} alt={dealerData.name || ''} />
+            <AvatarFallback>{dealerData.name?.substring(0, 2) || '??'}</AvatarFallback>
           </Avatar>
           <div>
             <CardTitle className="text-2xl">{dealerData.name}</CardTitle>
@@ -92,15 +77,14 @@ async function DealerRatingsContent({ id }: { id: string }) {
                     key={star}
                     className={`h-5 w-5 ${
                       star <= Math.round(dealerData.averageRating)
-                        ? "fill-yellow-400 text-yellow-400"
-                        : "text-gray-300"
+                        ? 'fill-yellow-400 text-yellow-400'
+                        : 'text-gray-300'
                     }`}
                   />
                 ))}
               </div>
               <span className="text-sm font-medium">
-                {dealerData.averageRating.toFixed(1)} ({dealerData.totalRatings}{" "}
-                ratings)
+                {dealerData.averageRating.toFixed(1)} ({dealerData.totalRatings} ratings)
               </span>
             </div>
           </div>
@@ -126,11 +110,7 @@ async function DealerRatingsContent({ id }: { id: string }) {
   );
 }
 
-export default async function DealerRatingsPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+export default async function DealerRatingsPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   return (
     <Suspense fallback={<RatingsLoadingSkeleton />}>

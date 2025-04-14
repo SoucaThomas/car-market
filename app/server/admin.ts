@@ -1,23 +1,17 @@
-"use server";
+'use server';
 
-import { prisma } from "@/prisma/prisma";
-import {
-  ApplicationStatus,
-  DealerApplications,
-  ListingStatus,
-  Role,
-  User,
-} from "@prisma/client";
-import { ListingWithUser } from "../shared/types";
-import { auth } from "@/auth";
-import { headers } from "next/headers";
+import { prisma } from '@/prisma/prisma';
+import { ApplicationStatus, DealerApplications, ListingStatus, Role, User } from '@prisma/client';
+import { ListingWithUser } from '../shared/types';
+import { auth } from '@/auth';
+import { headers } from 'next/headers';
 
 const checkAdmin = async () => {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
   if (!session || !session.user || session.user.role !== Role.admin) {
-    return new Error("Unauthorized");
+    return new Error('Unauthorized');
   }
 };
 
@@ -66,7 +60,7 @@ export const adminChangeStatus = async (
     });
 
     const listings = await prisma.listing.findMany({
-      where: pending ? { status: "pending" } : {},
+      where: pending ? { status: 'pending' } : {},
       include: {
         user: true,
       },
@@ -78,10 +72,7 @@ export const adminChangeStatus = async (
   }
 };
 
-export const adminChangeRole = async (
-  id: string,
-  role: Role
-): Promise<User[] | Error> => {
+export const adminChangeRole = async (id: string, role: Role): Promise<User[] | Error> => {
   checkAdmin();
 
   try {
@@ -125,9 +116,7 @@ export const adminChangeStatusDealershipApplication = async (
   }
 };
 
-export const adminToggleUserStatus = async (
-  id: string
-): Promise<User[] | Error> => {
+export const adminToggleUserStatus = async (id: string): Promise<User[] | Error> => {
   checkAdmin();
 
   try {
@@ -138,7 +127,7 @@ export const adminToggleUserStatus = async (
     });
 
     if (!user) {
-      return Promise.reject(new Error("User not found"));
+      return Promise.reject(new Error('User not found'));
     }
 
     await prisma.user.update({

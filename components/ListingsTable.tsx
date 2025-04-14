@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import { useState } from 'react';
 import {
   type ColumnDef,
   type ColumnFiltersState,
@@ -11,16 +11,16 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-} from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
-import { Button } from "@/components/ui/button";
+} from '@tanstack/react-table';
+import { ArrowUpDown, MoreHorizontal } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
+} from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
 import {
   Table,
   TableBody,
@@ -28,12 +28,12 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { Listing, ListingStatus } from "@prisma/client";
-import { redirect } from "next/navigation";
-import { ListingWithUser } from "@/app/shared/types";
-import { toast } from "@/hooks/use-toast";
+} from '@/components/ui/table';
+import { Badge } from '@/components/ui/badge';
+import { Listing, ListingStatus } from '@prisma/client';
+import { redirect } from 'next/navigation';
+import { ListingWithUser } from '@/app/shared/types';
+import { toast } from '@/hooks/use-toast';
 
 async function handleView(listing: Listing) {
   const listingDetails = listing;
@@ -62,16 +62,16 @@ export function ListingsTable({
 
   const columns: ColumnDef<Listing>[] = [
     {
-      accessorKey: "id",
-      header: "ID",
+      accessorKey: 'id',
+      header: 'ID',
     },
     {
-      accessorKey: "title",
+      accessorKey: 'title',
       header: ({ column }) => {
         return (
           <Button
             variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
           >
             Title
             <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -80,36 +80,36 @@ export function ListingsTable({
       },
     },
     {
-      accessorKey: "carBrand",
-      header: "Brand",
+      accessorKey: 'carBrand',
+      header: 'Brand',
     },
     {
-      accessorKey: "carModel",
-      header: "Model",
+      accessorKey: 'carModel',
+      header: 'Model',
     },
     {
-      accessorKey: "year",
-      header: "Year",
+      accessorKey: 'year',
+      header: 'Year',
     },
     {
-      accessorKey: "price",
-      header: "Price",
+      accessorKey: 'price',
+      header: 'Price',
       cell: ({ row }) => {
-        const price = Number.parseFloat(row.getValue("price"));
-        const formatted = new Intl.NumberFormat("en-US", {
-          style: "currency",
-          currency: "EUR",
+        const price = Number.parseFloat(row.getValue('price'));
+        const formatted = new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'EUR',
         }).format(price);
         return formatted;
       },
     },
     {
-      accessorKey: "status",
+      accessorKey: 'status',
       header: ({ column }) => {
         return (
           <Button
             variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
           >
             Status
             <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -117,15 +117,11 @@ export function ListingsTable({
         );
       },
       cell: ({ row }) => {
-        const status = row.getValue("status") as string;
+        const status = row.getValue('status') as string;
         return (
           <Badge
             variant={
-              status === "approved"
-                ? "outline"
-                : status === "rejected"
-                  ? "destructive"
-                  : "default"
+              status === 'approved' ? 'outline' : status === 'rejected' ? 'destructive' : 'default'
             }
           >
             {status}
@@ -134,12 +130,12 @@ export function ListingsTable({
       },
     },
     {
-      accessorKey: "user.name",
+      accessorKey: 'user.name',
       header: ({ column }) => {
         return (
           <Button
             variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
           >
             Seller
             <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -148,8 +144,8 @@ export function ListingsTable({
       },
     },
     {
-      id: "actions",
-      header: "Actions",
+      id: 'actions',
+      header: 'Actions',
       cell: ({ row }) => {
         const listing = row.original;
 
@@ -164,27 +160,24 @@ export function ListingsTable({
             <DropdownMenuContent align="end">
               <DropdownMenuItem
                 onClick={async () =>
-                  await handleAction(
-                    listing.id,
-                    ListingStatus.approved,
-                    pending
-                  ).then((response) => {
-                    if (response instanceof Error) {
-                      toast({
-                        title: "Error",
-                        description:
-                          "An error occurred while approving the listing.",
-                        variant: "destructive",
-                      });
-                      console.error(response.message);
-                    } else {
-                      toast({
-                        title: "Listing approved",
-                        description: "The listing is now approved.",
-                      });
-                      setListings(response);
+                  await handleAction(listing.id, ListingStatus.approved, pending).then(
+                    (response) => {
+                      if (response instanceof Error) {
+                        toast({
+                          title: 'Error',
+                          description: 'An error occurred while approving the listing.',
+                          variant: 'destructive',
+                        });
+                        console.error(response.message);
+                      } else {
+                        toast({
+                          title: 'Listing approved',
+                          description: 'The listing is now approved.',
+                        });
+                        setListings(response);
+                      }
                     }
-                  })
+                  )
                 }
                 className="text-green-600"
               >
@@ -192,62 +185,54 @@ export function ListingsTable({
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={async () =>
-                  await handleAction(
-                    listing.id,
-                    ListingStatus.pending,
-                    pending
-                  ).then((response) => {
-                    if (response instanceof Error) {
-                      toast({
-                        title: "Error",
-                        description:
-                          "An error occurred while moving the listing to pending.",
-                        variant: "destructive",
-                      });
-                      console.error(response.message);
-                    } else {
-                      toast({
-                        title: "Listing moved to pending",
-                        description: "The listing is now pending approval.",
-                      });
-                      setListings(response);
+                  await handleAction(listing.id, ListingStatus.pending, pending).then(
+                    (response) => {
+                      if (response instanceof Error) {
+                        toast({
+                          title: 'Error',
+                          description: 'An error occurred while moving the listing to pending.',
+                          variant: 'destructive',
+                        });
+                        console.error(response.message);
+                      } else {
+                        toast({
+                          title: 'Listing moved to pending',
+                          description: 'The listing is now pending approval.',
+                        });
+                        setListings(response);
+                      }
                     }
-                  })
+                  )
                 }
               >
                 Pending
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={async () =>
-                  await handleAction(
-                    listing.id,
-                    ListingStatus.rejected,
-                    pending
-                  ).then((response) => {
-                    if (response instanceof Error) {
-                      toast({
-                        title: "Error",
-                        description:
-                          "An error occurred while rejecting the listing.",
-                        variant: "destructive",
-                      });
-                      console.error(response.message);
-                    } else {
-                      toast({
-                        title: "Listing rejected",
-                        description: "The listing has been rejected.",
-                      });
-                      setListings(response);
+                  await handleAction(listing.id, ListingStatus.rejected, pending).then(
+                    (response) => {
+                      if (response instanceof Error) {
+                        toast({
+                          title: 'Error',
+                          description: 'An error occurred while rejecting the listing.',
+                          variant: 'destructive',
+                        });
+                        console.error(response.message);
+                      } else {
+                        toast({
+                          title: 'Listing rejected',
+                          description: 'The listing has been rejected.',
+                        });
+                        setListings(response);
+                      }
                     }
-                  })
+                  )
                 }
                 className="text-red-600"
               >
                 Reject
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleView(listing)}>
-                View Details
-              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleView(listing)}>View Details</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         );
@@ -275,10 +260,8 @@ export function ListingsTable({
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter listings..."
-          value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("title")?.setFilterValue(event.target.value)
-          }
+          value={(table.getColumn('title')?.getFilterValue() as string) ?? ''}
+          onChange={(event) => table.getColumn('title')?.setFilterValue(event.target.value)}
           className="max-w-sm"
         />
       </div>
@@ -292,10 +275,7 @@ export function ListingsTable({
                     <TableHead key={header.id}>
                       {header.isPlaceholder
                         ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                        : flexRender(header.column.columnDef.header, header.getContext())}
                     </TableHead>
                   );
                 })}
@@ -305,26 +285,17 @@ export function ListingsTable({
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
+                <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
+                <TableCell colSpan={columns.length} className="h-24 text-center">
                   No results.
                 </TableCell>
               </TableRow>

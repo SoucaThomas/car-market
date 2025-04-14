@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { BadgeCheck, LogOut, Sparkles, Wrench } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { BadgeCheck, LogOut, Sparkles, Wrench } from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,15 +10,15 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "./ui/button";
-import { Skeleton } from "./ui/skeleton";
-import { redirect } from "next/navigation";
+} from '@/components/ui/dropdown-menu';
+import { Button } from './ui/button';
+import { Skeleton } from './ui/skeleton';
+import { redirect } from 'next/navigation';
 
-import { authClient } from "@/lib/auth-client";
-import { UserAvatar } from "./ui/userAvatar";
-import { Role, User } from "@prisma/client";
-import Link from "next/link";
+import { authClient } from '@/lib/auth-client';
+import { UserAvatar } from './ui/userAvatar';
+import { Role, User } from '@prisma/client';
+import Link from 'next/link';
 
 export function NavUser({
   user,
@@ -44,22 +44,20 @@ export function NavUser({
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-                side={"right"}
+                side={'right'}
                 align="end"
                 sideOffset={4}
               >
                 <DropdownMenuLabel className="p-0 font-normal">
                   <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                     <Avatar className="h-8 w-8 rounded-lg">
-                      <AvatarImage src={user.image || ""} alt={user.name} />
+                      <AvatarImage src={user.image || ''} alt={user.name} />
                       <AvatarFallback className="rounded-lg">
                         {user.name.slice(0, 2)}
                       </AvatarFallback>
                     </Avatar>
                     <div className="grid flex-1 text-left text-sm leading-tight">
-                      <span className="truncate font-semibold">
-                        {user.name}
-                      </span>
+                      <span className="truncate font-semibold">{user.name}</span>
                       <span className="truncate text-xs">{user.email}</span>
                     </div>
                   </div>
@@ -67,7 +65,7 @@ export function NavUser({
                 <DropdownMenuSeparator />
                 {user.role === Role.admin && (
                   <DropdownMenuGroup>
-                    <DropdownMenuItem onClick={() => redirect("/admin")}>
+                    <DropdownMenuItem onClick={() => redirect('/admin')}>
                       <Wrench />
                       Admin Panel
                     </DropdownMenuItem>
@@ -76,7 +74,7 @@ export function NavUser({
                 <DropdownMenuSeparator />
                 {user.role != Role.dealer && (
                   <DropdownMenuGroup>
-                    <Link href={"/dealerships/apply"}>
+                    <Link href={'/dealerships/apply'}>
                       <DropdownMenuItem>
                         <Sparkles />
                         Become a Dealer
@@ -86,7 +84,7 @@ export function NavUser({
                 )}
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
-                  <DropdownMenuItem onClick={() => redirect("/dashboard")}>
+                  <DropdownMenuItem onClick={() => redirect('/dashboard')}>
                     <BadgeCheck />
                     Account
                   </DropdownMenuItem>
@@ -98,7 +96,7 @@ export function NavUser({
                     variant="ghost"
                     onClick={async () => {
                       await authClient.signOut();
-                      redirect("/");
+                      redirect('/');
                     }}
                   >
                     Log out
@@ -110,7 +108,7 @@ export function NavUser({
             <Button
               variant="outline"
               onClick={() => {
-                redirect("/sign-up");
+                redirect('/sign-up');
               }}
               className="h-10 w-24 rounded-xl"
             >

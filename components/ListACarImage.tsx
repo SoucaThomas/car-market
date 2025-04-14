@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from 'next/image';
 
 interface ListACarImageProps {
   fileUrl: string;
@@ -8,13 +8,7 @@ interface ListACarImageProps {
 export function ListACarImage({ fileName, fileUrl }: ListACarImageProps) {
   return (
     <div className="m-2 rounded-lg border border-gray-200 p-4">
-      <Image
-        src={fileUrl}
-        alt={fileName}
-        width={800}
-        height={800}
-        className="object-contain"
-      />
+      <Image src={fileUrl} alt={fileName} width={800} height={800} className="object-contain" />
     </div>
   );
 }

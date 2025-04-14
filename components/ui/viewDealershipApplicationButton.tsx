@@ -1,17 +1,15 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { DealerApplications } from "@prisma/client";
-import { DealershipApplicationModal } from "../DealershipApplicationModal";
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { DealerApplications } from '@prisma/client';
+import { DealershipApplicationModal } from '../DealershipApplicationModal';
 
 interface ViewApplicationButtonProps {
   application: DealerApplications;
 }
 
-export function ViewApplicationButton({
-  application,
-}: ViewApplicationButtonProps) {
+export function ViewApplicationButton({ application }: ViewApplicationButtonProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (

@@ -1,14 +1,7 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "./ui/card";
-import { FilterInput } from "./ui/filterInput";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from './ui/card';
+import { FilterInput } from './ui/filterInput';
+import { Button } from './ui/button';
+import { Input } from './ui/input';
 
 interface SelectCarProps<T extends Record<number, string>> {
   next: () => void;
@@ -59,34 +52,18 @@ export function SelectCar({
           <div className="flex flex-col gap-5">
             <p className="-mb-4 font-semibold">Car&apos;s condition</p>
             <div className="flex flex-row gap-4">
-              <Button
-                variant={carType === 1 ? "default" : "outline"}
-                onClick={() => setCarType(1)}
-              >
+              <Button variant={carType === 1 ? 'default' : 'outline'} onClick={() => setCarType(1)}>
                 Used
               </Button>
-              <Button
-                variant={carType === 2 ? "default" : "outline"}
-                onClick={() => setCarType(2)}
-              >
+              <Button variant={carType === 2 ? 'default' : 'outline'} onClick={() => setCarType(2)}>
                 New
               </Button>
             </div>
           </div>
 
-          <FilterInput
-            data={carBrands}
-            label="Car brand"
-            value={carBrand}
-            setValue={setCarBrand}
-          />
+          <FilterInput data={carBrands} label="Car brand" value={carBrand} setValue={setCarBrand} />
 
-          <FilterInput
-            data={carModels}
-            label="Car model"
-            value={carModel}
-            setValue={setCarModel}
-          />
+          <FilterInput data={carModels} label="Car model" value={carModel} setValue={setCarModel} />
 
           <div className="flex flex-col gap-5">
             <p className="-mb-4 font-semibold">Car&apos;s make year</p>
@@ -98,10 +75,7 @@ export function SelectCar({
           </div>
         </CardDescription>
         <CardFooter className="flex justify-end">
-          <Button
-            onClick={next}
-            disabled={!carBrand || !carModel || !year || !title}
-          >
+          <Button onClick={next} disabled={!carBrand || !carModel || !year || !title}>
             Continue
           </Button>
         </CardFooter>

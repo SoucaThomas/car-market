@@ -1,12 +1,6 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Table,
   TableBody,
@@ -14,12 +8,12 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { PlusCircle } from "lucide-react";
-import { getApplications } from "../server/dealer";
+} from '@/components/ui/table';
+import { Badge } from '@/components/ui/badge';
+import { PlusCircle } from 'lucide-react';
+import { getApplications } from '../server/dealer';
 
-import { ViewApplicationButton } from "@/components/ui/viewDealershipApplicationButton";
+import { ViewApplicationButton } from '@/components/ui/viewDealershipApplicationButton';
 
 export default async function ApplicationsPage() {
   const applications = await getApplications();
@@ -28,12 +22,8 @@ export default async function ApplicationsPage() {
     <div className="container mx-auto pt-10">
       <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">
-            Dealership Applications
-          </h1>
-          <p className="mt-1 text-muted-foreground">
-            View and manage your dealership applications
-          </p>
+          <h1 className="text-3xl font-bold tracking-tight">Dealership Applications</h1>
+          <p className="mt-1 text-muted-foreground">View and manage your dealership applications</p>
         </div>
         <Button asChild>
           <Link href="/dealerships/apply">
@@ -57,28 +47,20 @@ export default async function ApplicationsPage() {
                 <TableRow>
                   <TableHead>Application ID</TableHead>
                   <TableHead>Date</TableHead>
-                  <TableHead className="hidden md:table-cell">
-                    Dealership Name
-                  </TableHead>
+                  <TableHead className="hidden md:table-cell">Dealership Name</TableHead>
                   <TableHead>Status</TableHead>
-                  <TableHead className="hidden md:table-cell">
-                    Busniess Email
-                  </TableHead>
+                  <TableHead className="hidden md:table-cell">Busniess Email</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {applications.map((application) => (
                   <TableRow key={application.id}>
-                    <TableCell className="font-medium">
-                      {application.id}
-                    </TableCell>
+                    <TableCell className="font-medium">{application.id}</TableCell>
                     <TableCell>
                       {application.yearEstablished
-                        ? new Date(
-                            application.yearEstablished
-                          ).toLocaleDateString()
-                        : "N/A"}
+                        ? new Date(application.yearEstablished).toLocaleDateString()
+                        : 'N/A'}
                     </TableCell>
                     <TableCell className="hidden md:table-cell">
                       {application.businessName}
@@ -86,15 +68,14 @@ export default async function ApplicationsPage() {
                     <TableCell>
                       <Badge
                         variant={
-                          application.status === "approved"
-                            ? "success"
-                            : application.status === "pending"
-                              ? "outline"
-                              : "destructive"
+                          application.status === 'approved'
+                            ? 'success'
+                            : application.status === 'pending'
+                              ? 'outline'
+                              : 'destructive'
                         }
                       >
-                        {application.status.charAt(0).toUpperCase() +
-                          application.status.slice(1)}
+                        {application.status.charAt(0).toUpperCase() + application.status.slice(1)}
                       </Badge>
                     </TableCell>
                     <TableCell className="hidden max-w-[200px] truncate md:table-cell">

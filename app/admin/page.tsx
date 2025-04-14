@@ -1,11 +1,5 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Users,
   CarFront,
@@ -15,10 +9,10 @@ import {
   Store,
   NotebookTabs,
   Dock,
-} from "lucide-react";
-import { prisma } from "@/prisma/prisma";
-import { ListingsTable } from "@/components/ListingsTable";
-import { UsersTable } from "@/components/UserListings";
+} from 'lucide-react';
+import { prisma } from '@/prisma/prisma';
+import { ListingsTable } from '@/components/ListingsTable';
+import { UsersTable } from '@/components/UserListings';
 import {
   adminChangeRole,
   adminChangeStatus,
@@ -27,16 +21,10 @@ import {
   getAdminDealerApplications,
   getAdminListings,
   getAdminUsers,
-} from "@/app/server/admin";
-import {
-  ListingStatus,
-  Role,
-  User,
-  DealerApplications,
-  ApplicationStatus,
-} from "@prisma/client";
-import { ListingWithUser } from "../shared/types";
-import { DealershipApplicationsTable } from "@/components/DealershipApplicationsTable";
+} from '@/app/server/admin';
+import { ListingStatus, Role, User, DealerApplications, ApplicationStatus } from '@prisma/client';
+import { ListingWithUser } from '../shared/types';
+import { DealershipApplicationsTable } from '@/components/DealershipApplicationsTable';
 
 async function getAdminStats() {
   const [
@@ -53,28 +41,28 @@ async function getAdminStats() {
     // Users stats
     prisma.user.count(),
     prisma.user.count({
-      where: { role: "dealer" },
+      where: { role: 'dealer' },
     }),
     // Listings stats
     prisma.listing.count(),
     prisma.listing.count({
-      where: { status: "pending" },
+      where: { status: 'pending' },
     }),
     prisma.listing.count({
-      where: { status: "approved" },
+      where: { status: 'approved' },
     }),
     prisma.listing.count({
-      where: { status: "rejected" },
+      where: { status: 'rejected' },
     }),
     // Applications stats
     prisma.dealerApplications.count({
-      where: { status: "pending" },
+      where: { status: 'pending' },
     }),
     prisma.dealerApplications.count({
-      where: { status: "approved" },
+      where: { status: 'approved' },
     }),
     prisma.dealerApplications.count({
-      where: { status: "rejected" },
+      where: { status: 'rejected' },
     }),
   ]);
 
@@ -108,7 +96,7 @@ export default async function AdminPage() {
     action: ListingStatus,
     pending?: boolean
   ): Promise<ListingWithUser[] | Error> {
-    "use server";
+    'use server';
     try {
       const response = await adminChangeStatus(id, action, pending);
       return response;
@@ -117,11 +105,8 @@ export default async function AdminPage() {
     }
   }
 
-  async function handleUserChangeRole(
-    id: string,
-    action: Role
-  ): Promise<User[] | Error> {
-    "use server";
+  async function handleUserChangeRole(id: string, action: Role): Promise<User[] | Error> {
+    'use server';
     try {
       const response = await adminChangeRole(id, action);
       return response;
@@ -131,7 +116,7 @@ export default async function AdminPage() {
   }
 
   async function handleToggleUserStatus(id: string): Promise<User[] | Error> {
-    "use server";
+    'use server';
     try {
       const response = await adminToggleUserStatus(id);
       return response;
@@ -144,7 +129,7 @@ export default async function AdminPage() {
     id: number,
     action: ApplicationStatus
   ): Promise<DealerApplications[] | Error> {
-    "use server";
+    'use server';
     try {
       const response = await adminChangeStatusDealershipApplication(id, action);
       return response;
@@ -169,18 +154,14 @@ export default async function AdminPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.users.total}</div>
-            <p className="text-xs text-muted-foreground">
-              Including {stats.users.dealers} dealers
-            </p>
+            <p className="text-xs text-muted-foreground">Including {stats.users.dealers} dealers</p>
           </CardContent>
         </Card>
 
         {/* Listings Overview */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Total Listings
-            </CardTitle>
+            <CardTitle className="text-sm font-medium">Total Listings</CardTitle>
             <CarFront className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -201,9 +182,7 @@ export default async function AdminPage() {
         {/* Dealer Applications */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Dealer Applications
-            </CardTitle>
+            <CardTitle className="text-sm font-medium">Dealer Applications</CardTitle>
             <Store className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -228,15 +207,11 @@ export default async function AdminPage() {
         {/* Action Required Card */}
         <Card
           className={
-            stats.listings.pending > 0 || stats.applications.pending > 0
-              ? "border-orange-500"
-              : ""
+            stats.listings.pending > 0 || stats.applications.pending > 0 ? 'border-orange-500' : ''
           }
         >
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Action Required
-            </CardTitle>
+            <CardTitle className="text-sm font-medium">Action Required</CardTitle>
             <AlertCircle className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -265,18 +240,12 @@ export default async function AdminPage() {
             Listings
           </TabsTrigger>
 
-          <TabsTrigger
-            value="dealershipApplications"
-            className="flex items-center gap-2"
-          >
+          <TabsTrigger value="dealershipApplications" className="flex items-center gap-2">
             <Dock className="h-4 w-4" />
             Pending Dealer Applications
           </TabsTrigger>
 
-          <TabsTrigger
-            value="allDealershipApplications"
-            className="flex items-center gap-2"
-          >
+          <TabsTrigger value="allDealershipApplications" className="flex items-center gap-2">
             <Store className="h-4 w-4" />
             Dealerships
           </TabsTrigger>
@@ -303,9 +272,7 @@ export default async function AdminPage() {
             </CardHeader>
             <CardContent>
               <ListingsTable
-                listings={listings.filter(
-                  (listing) => listing.status === "pending"
-                )}
+                listings={listings.filter((listing) => listing.status === 'pending')}
                 handleAction={handleListingAction}
                 pending={true}
               />
@@ -319,16 +286,12 @@ export default async function AdminPage() {
             <CardHeader>
               <CardTitle>All listings</CardTitle>
               <CardDescription>
-                Manage user accounts and roles. Currently managing{" "}
-                {stats.users.total} users, including {stats.users.dealers}{" "}
-                dealers.
+                Manage user accounts and roles. Currently managing {stats.users.total} users,
+                including {stats.users.dealers} dealers.
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <ListingsTable
-                listings={listings}
-                handleAction={handleListingAction}
-              />
+              <ListingsTable listings={listings} handleAction={handleListingAction} />
             </CardContent>
           </Card>
         </TabsContent>
@@ -339,7 +302,7 @@ export default async function AdminPage() {
             <CardHeader>
               <CardTitle>Pending Dealer Applications</CardTitle>
               <CardDescription>
-                Review and manage dealership applications. Currently overseeing{" "}
+                Review and manage dealership applications. Currently overseeing{' '}
                 {stats.applications.pending} pending applications for dealers.
               </CardDescription>
             </CardHeader>
@@ -360,9 +323,8 @@ export default async function AdminPage() {
             <CardHeader>
               <CardTitle>Dealerships</CardTitle>
               <CardDescription>
-                Review and manage dealership applications. You are currently
-                handling {stats.applications.pending} applications awaiting
-                approval from dealers.
+                Review and manage dealership applications. You are currently handling{' '}
+                {stats.applications.pending} applications awaiting approval from dealers.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -380,9 +342,8 @@ export default async function AdminPage() {
             <CardHeader>
               <CardTitle>Users Management</CardTitle>
               <CardDescription>
-                Manage user accounts and roles. Currently managing{" "}
-                {stats.users.total} users, including {stats.users.dealers}{" "}
-                dealers.
+                Manage user accounts and roles. Currently managing {stats.users.total} users,
+                including {stats.users.dealers} dealers.
               </CardDescription>
             </CardHeader>
             <CardContent>

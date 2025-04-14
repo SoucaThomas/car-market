@@ -1,14 +1,12 @@
-"use server";
+'use server';
 
-import { auth } from "@/auth";
-import { prisma } from "@/prisma/prisma";
-import { DealerApplications } from "@prisma/client";
-import { headers } from "next/headers";
-import { DealerInfo } from "../shared/types";
+import { auth } from '@/auth';
+import { prisma } from '@/prisma/prisma';
+import { DealerApplications } from '@prisma/client';
+import { headers } from 'next/headers';
+import { DealerInfo } from '../shared/types';
 
-export async function submitDealerApplication(
-  data: Omit<DealerApplications, "id" | "userId">
-) {
+export async function submitDealerApplication(data: Omit<DealerApplications, 'id' | 'userId'>) {
   console.log(data);
   const session = await auth.api.getSession({
     headers: await headers(),
@@ -16,7 +14,7 @@ export async function submitDealerApplication(
 
   const user = session?.user;
 
-  if (!user) throw new Error("User not authenticated");
+  if (!user) throw new Error('User not authenticated');
   await prisma.dealerApplications.create({
     data: {
       ...data,
@@ -24,7 +22,7 @@ export async function submitDealerApplication(
     },
   });
 
-  console.log("Dealer application submitted:", data);
+  console.log('Dealer application submitted:', data);
 
   return { success: true };
 }
@@ -36,7 +34,7 @@ export async function getApplications(): Promise<DealerApplications[]> {
 
   const user = session?.user;
 
-  if (!user) throw new Error("User not authenticated");
+  if (!user) throw new Error('User not authenticated');
 
   const applications = prisma.dealerApplications.findMany({
     where: {
@@ -74,15 +72,15 @@ export async function getDealerInfo(dealerId: string): Promise<DealerInfo> {
       },
     });
     if (!dealer) {
-      throw new Error("Dealer not found");
+      throw new Error('Dealer not found');
     }
     const dealerWithLocation = {
       ...dealer,
-      location: dealer.location || "Unknown location",
+      location: dealer.location || 'Unknown location',
     } as unknown as DealerInfo;
     return Promise.resolve(dealerWithLocation);
   } catch (error) {
-    console.error("Error fetching dealer information:", error);
-    throw new Error("Could not fetch dealer information");
+    console.error('Error fetching dealer information:', error);
+    throw new Error('Could not fetch dealer information');
   }
 }

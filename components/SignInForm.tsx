@@ -1,48 +1,33 @@
-"use client";
+'use client';
 
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import Link from "next/link";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import React from "react";
-import { authClient } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
-import { useToast } from "@/hooks/use-toast";
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import Link from 'next/link';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { Form, FormControl, FormField, FormLabel, FormMessage } from '@/components/ui/form';
+import React from 'react';
+import { authClient } from '@/lib/auth-client';
+import { useRouter } from 'next/navigation';
+import { useToast } from '@/hooks/use-toast';
 
 const formSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8),
 });
 
-export function SignInForm({
-  className,
-  ...props
-}: React.ComponentPropsWithoutRef<"div">) {
+export function SignInForm({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
   const { toast } = useToast();
   const router = useRouter();
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "",
-      password: "",
+      email: '',
+      password: '',
     },
   });
 
@@ -54,13 +39,13 @@ export function SignInForm({
       },
       {
         onSuccess: () => {
-          router.push("/dashboard");
+          router.push('/dashboard');
         },
         onError: (ctx) => {
           console.log(ctx.error);
           toast({
-            variant: "destructive",
-            title: "Invalid credentials",
+            variant: 'destructive',
+            title: 'Invalid credentials',
             description: ctx.error.message,
           });
         },
@@ -69,13 +54,11 @@ export function SignInForm({
   };
 
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
+    <div className={cn('flex flex-col gap-6', className)} {...props}>
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl">Sign in</CardTitle>
-          <CardDescription>
-            Enter your email below to sign in to your account
-          </CardDescription>
+          <CardDescription>Enter your email below to sign in to your account</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -88,11 +71,7 @@ export function SignInForm({
                     <div className="grid gap-2">
                       <FormLabel>Email</FormLabel>
                       <FormControl>
-                        <Input
-                          placeholder="m@example.com"
-                          {...field}
-                          required
-                        />
+                        <Input placeholder="m@example.com" {...field} required />
                       </FormControl>
                       <FormMessage />
                     </div>
@@ -125,7 +104,7 @@ export function SignInForm({
                 </Button>
               </div>
               <div className="mt-4 text-center text-sm">
-                Don&apos;t have an account?{" "}
+                Don&apos;t have an account?{' '}
                 <Link href="sign-up" className="underline underline-offset-4">
                   Sign up
                 </Link>

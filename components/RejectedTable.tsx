@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import { useState } from 'react';
 import {
   type ColumnDef,
   type ColumnFiltersState,
@@ -11,17 +11,17 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-} from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+} from '@tanstack/react-table';
+import { ArrowUpDown, MoreHorizontal } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
+} from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
 import {
   Table,
   TableBody,
@@ -29,7 +29,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from '@/components/ui/table';
 
 type RejectedListing = {
   id: string;
@@ -37,44 +37,44 @@ type RejectedListing = {
   price: number;
   seller: string;
   rejectedAt: string;
-  status: "rejected";
+  status: 'rejected';
   reason: string;
 };
 
 const data: RejectedListing[] = [
   {
-    id: "1",
-    title: "2020 Tesla Model 3",
+    id: '1',
+    title: '2020 Tesla Model 3',
     price: 35000,
-    seller: "John Smith",
-    rejectedAt: "2024-02-28",
-    status: "rejected",
-    reason: "Incomplete information",
+    seller: 'John Smith',
+    rejectedAt: '2024-02-28',
+    status: 'rejected',
+    reason: 'Incomplete information',
   },
   {
-    id: "2",
-    title: "2019 BMW 3 Series",
+    id: '2',
+    title: '2019 BMW 3 Series',
     price: 28500,
-    seller: "Sarah Johnson",
-    rejectedAt: "2024-02-27",
-    status: "rejected",
-    reason: "Invalid documentation",
+    seller: 'Sarah Johnson',
+    rejectedAt: '2024-02-27',
+    status: 'rejected',
+    reason: 'Invalid documentation',
   },
   // Add more sample data as needed
 ];
 
 export const columns: ColumnDef<RejectedListing>[] = [
   {
-    accessorKey: "title",
-    header: "Title",
+    accessorKey: 'title',
+    header: 'Title',
   },
   {
-    accessorKey: "price",
+    accessorKey: 'price',
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
           Price
           <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -82,35 +82,35 @@ export const columns: ColumnDef<RejectedListing>[] = [
       );
     },
     cell: ({ row }) => {
-      const price = Number.parseFloat(row.getValue("price"));
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
+      const price = Number.parseFloat(row.getValue('price'));
+      const formatted = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
       }).format(price);
       return formatted;
     },
   },
   {
-    accessorKey: "seller",
-    header: "Seller",
+    accessorKey: 'seller',
+    header: 'Seller',
   },
   {
-    accessorKey: "rejectedAt",
-    header: "Rejected At",
+    accessorKey: 'rejectedAt',
+    header: 'Rejected At',
   },
   {
-    accessorKey: "reason",
-    header: "Reason",
+    accessorKey: 'reason',
+    header: 'Reason',
   },
   {
-    accessorKey: "status",
-    header: "Status",
+    accessorKey: 'status',
+    header: 'Status',
     cell: ({ row }) => {
-      return <Badge variant="destructive">{row.getValue("status")}</Badge>;
+      return <Badge variant="destructive">{row.getValue('status')}</Badge>;
     },
   },
   {
-    id: "actions",
+    id: 'actions',
     cell: ({ row }) => {
       const listing = row.original;
 
@@ -126,7 +126,7 @@ export const columns: ColumnDef<RejectedListing>[] = [
             <DropdownMenuItem
               onClick={() => {
                 // Handle view action
-                console.log("View listing:", listing.id);
+                console.log('View listing:', listing.id);
               }}
             >
               View Details
@@ -134,7 +134,7 @@ export const columns: ColumnDef<RejectedListing>[] = [
             <DropdownMenuItem
               onClick={() => {
                 // Handle reconsider action
-                console.log("Reconsider listing:", listing.id);
+                console.log('Reconsider listing:', listing.id);
               }}
             >
               Reconsider
@@ -170,10 +170,8 @@ export function RejectedTable() {
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter rejected listings..."
-          value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("title")?.setFilterValue(event.target.value)
-          }
+          value={(table.getColumn('title')?.getFilterValue() as string) ?? ''}
+          onChange={(event) => table.getColumn('title')?.setFilterValue(event.target.value)}
           className="max-w-sm"
         />
       </div>
@@ -187,10 +185,7 @@ export function RejectedTable() {
                     <TableHead key={header.id}>
                       {header.isPlaceholder
                         ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                        : flexRender(header.column.columnDef.header, header.getContext())}
                     </TableHead>
                   );
                 })}
@@ -200,26 +195,17 @@ export function RejectedTable() {
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
+                <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
+                <TableCell colSpan={columns.length} className="h-24 text-center">
                   No results.
                 </TableCell>
               </TableRow>

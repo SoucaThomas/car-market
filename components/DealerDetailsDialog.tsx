@@ -1,31 +1,17 @@
-"use client";
-import { useEffect, useState } from "react";
-import { ListingWithUserAndImages, DealerInfo } from "@/app/shared/types";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTrigger,
-  DialogTitle,
-} from "./ui/dialog";
-import { Separator } from "./ui/separator";
-import {
-  Calendar,
-  Mail,
-  MapPin,
-  Package,
-  Star,
-  StarHalf,
-  User,
-} from "lucide-react";
-import { getDealerInfo } from "@/app/server/dealer";
-import { Button } from "./ui/button";
-import Link from "next/link";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { Badge } from "./ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
-import { Card, CardContent, CardFooter } from "./ui/card";
-import Image from "next/image";
+'use client';
+import { useEffect, useState } from 'react';
+import { ListingWithUserAndImages, DealerInfo } from '@/app/shared/types';
+import { Dialog, DialogContent, DialogHeader, DialogTrigger, DialogTitle } from './ui/dialog';
+import { Separator } from './ui/separator';
+import { Calendar, Mail, MapPin, Package, Star, StarHalf, User } from 'lucide-react';
+import { getDealerInfo } from '@/app/server/dealer';
+import { Button } from './ui/button';
+import Link from 'next/link';
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
+import { Badge } from './ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
+import { Card, CardContent, CardFooter } from './ui/card';
+import Image from 'next/image';
 
 interface DealerDetailsDialogProps {
   listing: ListingWithUserAndImages;
@@ -46,14 +32,14 @@ export function DealerDetailsDialog({ listing }: DealerDetailsDialogProps) {
             createdAt: new Date(dealerInfo.createdAt).toLocaleDateString(),
             ratings: 4.3,
             totalListings: dealerInfo.listings.length,
-            location: "New York, NY",
+            location: 'New York, NY',
           };
           setDealer(formattedDealerInfo);
         } else {
           setDealer(null);
         }
       } catch (error) {
-        console.error("Failed to fetch dealer info:", error);
+        console.error('Failed to fetch dealer info:', error);
         setDealer(null);
       } finally {
         setIsLoading(false);
@@ -77,7 +63,7 @@ export function DealerDetailsDialog({ listing }: DealerDetailsDialogProps) {
             <h3 className="text-lg font-medium">{listing.user.name}</h3>
             <div className="flex items-center gap-1 text-sm text-muted-foreground">
               <Badge variant="outline" className="text-xs font-normal">
-                {listing.user.role === "dealer" ? "Dealer" : "Private Seller"}
+                {listing.user.role === 'dealer' ? 'Dealer' : 'Private Seller'}
               </Badge>
               {dealer?.ratings !== undefined && (
                 <div className="ml-2 flex items-center">
@@ -105,9 +91,7 @@ export function DealerDetailsDialog({ listing }: DealerDetailsDialogProps) {
                   <h2 className="text-2xl font-bold">{listing.user.name}</h2>
                   <div className="mt-1 flex items-center gap-2">
                     <Badge variant="outline" className="font-normal">
-                      {listing.user.role === "dealer"
-                        ? "Dealer"
-                        : "Private Seller"}
+                      {listing.user.role === 'dealer' ? 'Dealer' : 'Private Seller'}
                     </Badge>
                     {dealer?.location && (
                       <div className="flex items-center text-sm text-muted-foreground">
@@ -144,18 +128,13 @@ export function DealerDetailsDialog({ listing }: DealerDetailsDialogProps) {
             ) : dealer?.listings && dealer.listings.length > 0 ? (
               <div className="grid max-h-[400px] grid-cols-1 gap-4 overflow-y-auto pr-2">
                 {dealer.listings.map((dealerListing) => (
-                  <DealerListingCard
-                    key={dealerListing.id}
-                    listing={dealerListing}
-                  />
+                  <DealerListingCard key={dealerListing.id} listing={dealerListing} />
                 ))}
               </div>
             ) : (
               <div className="py-8 text-center">
                 <Package className="mx-auto h-12 w-12 text-muted-foreground/50" />
-                <p className="mt-2 text-muted-foreground">
-                  No listings available
-                </p>
+                <p className="mt-2 text-muted-foreground">No listings available</p>
               </div>
             )}
           </TabsContent>
@@ -175,9 +154,7 @@ export function DealerDetailsDialog({ listing }: DealerDetailsDialogProps) {
                     <Mail className="mt-0.5 h-5 w-5 text-primary" />
                     <div>
                       <p className="text-sm font-medium">Email</p>
-                      <p className="text-sm text-muted-foreground">
-                        {listing.user.email}
-                      </p>
+                      <p className="text-sm text-muted-foreground">{listing.user.email}</p>
                     </div>
                   </div>
 
@@ -186,7 +163,7 @@ export function DealerDetailsDialog({ listing }: DealerDetailsDialogProps) {
                     <div>
                       <p className="text-sm font-medium">Role</p>
                       <p className="text-sm text-muted-foreground">
-                        {dealer?.role || "Not specified"}
+                        {dealer?.role || 'Not specified'}
                       </p>
                     </div>
                   </div>
@@ -196,7 +173,7 @@ export function DealerDetailsDialog({ listing }: DealerDetailsDialogProps) {
                     <div>
                       <p className="text-sm font-medium">Joined</p>
                       <p className="text-sm text-muted-foreground">
-                        {dealer?.createdAt || "Not specified"}
+                        {dealer?.createdAt || 'Not specified'}
                       </p>
                     </div>
                   </div>
@@ -215,9 +192,9 @@ export function DealerDetailsDialog({ listing }: DealerDetailsDialogProps) {
 
                 <div className="mt-4">
                   <p className="text-sm text-muted-foreground">
-                    {dealer?.role === "dealer"
-                      ? "Professional car dealer with a focus on quality vehicles and customer satisfaction."
-                      : "Private seller offering vehicles directly to buyers without intermediaries."}
+                    {dealer?.role === 'dealer'
+                      ? 'Professional car dealer with a focus on quality vehicles and customer satisfaction.'
+                      : 'Private seller offering vehicles directly to buyers without intermediaries.'}
                   </p>
                 </div>
               </div>
@@ -254,17 +231,9 @@ function RatingStars({ rating }: { rating: number }) {
   return (
     <div className="flex" title={`Rating: ${rating.toFixed(1)}`}>
       {[...Array(fullStars)].map((_, i) => (
-        <Star
-          key={`full-${i}`}
-          className="h-4 w-4 fill-yellow-500 text-yellow-500"
-        />
+        <Star key={`full-${i}`} className="h-4 w-4 fill-yellow-500 text-yellow-500" />
       ))}
-      {hasHalfStar && (
-        <StarHalf
-          key="half"
-          className="h-4 w-4 fill-yellow-500 text-yellow-500"
-        />
-      )}
+      {hasHalfStar && <StarHalf key="half" className="h-4 w-4 fill-yellow-500 text-yellow-500" />}
       {[...Array(emptyStars)].map((_, i) => (
         <Star key={`empty-${i}`} className="h-4 w-4 text-gray-300" />
       ))}
@@ -277,7 +246,7 @@ function DealerListingCard({ listing }: { listing: ListingWithUserAndImages }) {
   const imageUrl =
     listing.images && listing.images.length > 0
       ? listing.images[0].url
-      : "/placeholder.svg?height=200&width=300";
+      : '/placeholder.svg?height=200&width=300';
 
   const features = [
     listing.fuelType,
@@ -292,8 +261,8 @@ function DealerListingCard({ listing }: { listing: ListingWithUserAndImages }) {
       <div className="flex flex-col sm:flex-row">
         <div className="relative aspect-[16/9] w-full sm:aspect-square sm:w-1/3">
           <Image
-            src={imageUrl || "/placeholder.svg"}
-            alt={listing.title || "Vehicle listing"}
+            src={imageUrl || '/placeholder.svg'}
+            alt={listing.title || 'Vehicle listing'}
             fill
             className="object-cover"
           />
@@ -304,11 +273,10 @@ function DealerListingCard({ listing }: { listing: ListingWithUserAndImages }) {
             <div className="flex items-start justify-between">
               <div>
                 <h3 className="text-base font-semibold">
-                  {listing.title ||
-                    `${listing.year} ${listing.carBrand} ${listing.carModel}`}
+                  {listing.title || `${listing.year} ${listing.carBrand} ${listing.carModel}`}
                 </h3>
                 <p className="mt-1 text-lg font-bold">
-                  ${listing.price?.toLocaleString() || "Contact for price"}
+                  ${listing.price?.toLocaleString() || 'Contact for price'}
                 </p>
               </div>
               {listing.condition && (
@@ -360,9 +328,9 @@ function DealerListingCard({ listing }: { listing: ListingWithUserAndImages }) {
 // Helper function to get initials from name
 function getInitials(name: string): string {
   return name
-    .split(" ")
+    .split(' ')
     .map((part) => part[0])
-    .join("")
+    .join('')
     .toUpperCase()
     .substring(0, 2);
 }

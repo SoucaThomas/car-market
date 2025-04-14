@@ -1,4 +1,4 @@
-import { Listing, Upload, User } from "@prisma/client";
+import { Listing, Upload, User } from '@prisma/client';
 
 export type ListingWithUser = Listing & { user: User };
 
@@ -18,25 +18,21 @@ export type DealerInfo = {
   location: string;
 } | null;
 
-import { z } from "zod";
+import { z } from 'zod';
 
 export const formSchema = z.object({
-  listingTitle: z
-    .string()
-    .min(3, { message: "Title must be at least 3 characters." }),
-  carCondtition: z
-    .string()
-    .min(1, { message: "Car condtion must be selected." }),
-  brand: z.string().min(1, { message: "Brand must be selected." }),
-  model: z.string().min(1, { message: "Model must be selected." }),
+  listingTitle: z.string().min(3, { message: 'Title must be at least 3 characters.' }),
+  carCondtition: z.string().min(1, { message: 'Car condtion must be selected.' }),
+  brand: z.string().min(1, { message: 'Brand must be selected.' }),
+  model: z.string().min(1, { message: 'Model must be selected.' }),
   year: z.number().min(1900).max(new Date().getFullYear()),
-  price: z.number().min(0).min(1, { message: "Price must be set." }),
+  price: z.number().min(0).min(1, { message: 'Price must be set.' }),
   mileage: z.number().min(0),
-  drive: z.string().min(1, { message: "Drive must be selected." }),
-  country: z.string().min(1, { message: "Country must be selected." }),
+  drive: z.string().min(1, { message: 'Drive must be selected.' }),
+  country: z.string().min(1, { message: 'Country must be selected.' }),
   engineSize: z.number().min(0),
-  fuelType: z.string().min(1, { message: "Fuel type must be selected." }),
-  color: z.string().min(1, { message: "Color must be selected." }),
+  fuelType: z.string().min(1, { message: 'Fuel type must be selected.' }),
+  color: z.string().min(1, { message: 'Color must be selected.' }),
   description: z.string().min(10),
   Pictures: z.array(
     z.object({
@@ -47,7 +43,7 @@ export const formSchema = z.object({
       size: z.number(),
       ufsUrl: z.string(),
     }),
-    { message: "At least one picture must be uploaded." }
+    { message: 'At least one picture must be uploaded.' }
   ),
 });
 
@@ -69,7 +65,7 @@ export const listingSchema = z.object({
 
 export interface searchParams {
   search?: string;
-  sort?: "price" | "mileage" | "year";
+  sort?: 'price' | 'mileage' | 'year';
   carType?: number;
   carBrand?: string;
   carModel?: string;

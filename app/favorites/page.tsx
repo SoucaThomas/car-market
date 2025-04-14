@@ -1,14 +1,14 @@
-import { getFavoritedListings } from "@/app/server/favorites";
-import { CardDisplay } from "@/components/CardDisplay";
-import { auth } from "@/auth";
-import { headers } from "next/headers";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { Heart } from "lucide-react";
+import { getFavoritedListings } from '@/app/server/favorites';
+import { CardDisplay } from '@/components/CardDisplay';
+import { auth } from '@/auth';
+import { headers } from 'next/headers';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import { Heart } from 'lucide-react';
 
 export const metadata = {
-  title: "My Favorites - Car Market",
-  description: "View your saved car listings",
+  title: 'My Favorites - Car Market',
+  description: 'View your saved car listings',
 };
 
 export default async function FavoritesPage() {
@@ -20,9 +20,7 @@ export default async function FavoritesPage() {
     return (
       <div className="container mx-auto px-4 py-16 text-center">
         <h1 className="mb-4 text-3xl font-bold">Sign in Required</h1>
-        <p className="mb-8 text-muted-foreground">
-          Please sign in to view your favorite listings.
-        </p>
+        <p className="mb-8 text-muted-foreground">Please sign in to view your favorite listings.</p>
         <Link href="/sign-in">
           <Button>Sign In</Button>
         </Link>

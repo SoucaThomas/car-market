@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import Image from "next/image";
+import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import {
   ChevronLeft,
   ChevronRight,
@@ -15,17 +15,17 @@ import {
   Wrench,
   Award,
   Heart,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { Badge } from "@/components/ui/badge";
-import type { ListingWithUserAndImages } from "@/app/shared/types";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { toggleFavorite, getFavoriteStatus } from "@/app/server/favorites";
-import { cn } from "@/lib/utils";
-import Link from "next/link";
-import { DealerDetailsDialog } from "../DealerDetailsDialog";
+} from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
+import { Badge } from '@/components/ui/badge';
+import type { ListingWithUserAndImages } from '@/app/shared/types';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { toggleFavorite, getFavoriteStatus } from '@/app/server/favorites';
+import { cn } from '@/lib/utils';
+import Link from 'next/link';
+import { DealerDetailsDialog } from '../DealerDetailsDialog';
 
 interface CarDetailsProps {
   listing: ListingWithUserAndImages;
@@ -52,7 +52,7 @@ export function CarDetails({ listing }: CarDetailsProps) {
         setIsFavorited(!isFavorited);
       }
     } catch (error) {
-      console.error("Error toggling favorite:", error);
+      console.error('Error toggling favorite:', error);
     } finally {
       setIsLoading(false);
     }
@@ -126,8 +126,7 @@ export function CarDetails({ listing }: CarDetailsProps) {
           </li>
           <li>/</li>
           <li className="max-w-[200px] truncate font-medium text-foreground">
-            {listing.title ||
-              `${listing.year} ${listing.carBrand} ${listing.carModel}`}
+            {listing.title || `${listing.year} ${listing.carBrand} ${listing.carModel}`}
           </li>
           <li>/</li>
           <li>
@@ -137,8 +136,7 @@ export function CarDetails({ listing }: CarDetailsProps) {
           </li>
           <li>/</li>
           <li className="max-w-[200px] truncate font-medium text-foreground">
-            {listing.title ||
-              `${listing.year} ${listing.carBrand} ${listing.carModel}`}
+            {listing.title || `${listing.year} ${listing.carBrand} ${listing.carModel}`}
           </li>
         </ol>
       </nav>
@@ -151,9 +149,9 @@ export function CarDetails({ listing }: CarDetailsProps) {
               <Image
                 src={
                   listing.images[currentImageIndex]?.ufsUrl ||
-                  "/placeholder.svg?height=500&width=800"
+                  '/placeholder.svg?height=500&width=800'
                 }
-                alt={`${listing.title || "Car listing"} - Image ${currentImageIndex + 1}`}
+                alt={`${listing.title || 'Car listing'} - Image ${currentImageIndex + 1}`}
                 fill
                 className="object-cover"
                 priority
@@ -188,9 +186,7 @@ export function CarDetails({ listing }: CarDetailsProps) {
             )}
 
             {listing.condition && (
-              <Badge className="absolute left-4 top-4 text-sm">
-                {listing.condition}
-              </Badge>
+              <Badge className="absolute left-4 top-4 text-sm">{listing.condition}</Badge>
             )}
           </div>
 
@@ -203,13 +199,13 @@ export function CarDetails({ listing }: CarDetailsProps) {
                   onClick={() => goToImage(index)}
                   className={`relative h-16 w-24 overflow-hidden rounded-md border-2 transition-all ${
                     index === currentImageIndex
-                      ? "border-primary"
-                      : "border-transparent hover:border-primary/50"
+                      ? 'border-primary'
+                      : 'border-transparent hover:border-primary/50'
                   }`}
                 >
                   <Image
-                    src={image.ufsUrl || "/placeholder.svg?height=64&width=96"}
-                    alt={`${listing.title || "Car listing"} - Thumbnail ${index + 1}`}
+                    src={image.ufsUrl || '/placeholder.svg?height=64&width=96'}
+                    alt={`${listing.title || 'Car listing'} - Thumbnail ${index + 1}`}
                     fill
                     className="object-cover"
                   />
@@ -223,8 +219,7 @@ export function CarDetails({ listing }: CarDetailsProps) {
             <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
               <div>
                 <h1 className="text-3xl font-bold">
-                  {listing.title ||
-                    `${listing.year} ${listing.carBrand} ${listing.carModel}`}
+                  {listing.title || `${listing.year} ${listing.carBrand} ${listing.carModel}`}
                 </h1>
                 {listing.country && (
                   <div className="mt-2 flex items-center text-muted-foreground">
@@ -235,9 +230,9 @@ export function CarDetails({ listing }: CarDetailsProps) {
               </div>
               <div className="text-right">
                 <p className="text-3xl font-bold text-primary">
-                  ${listing.price?.toLocaleString() || "Contact for price"}
+                  ${listing.price?.toLocaleString() || 'Contact for price'}
                 </p>
-                {listing.status === "pending" && (
+                {listing.status === 'pending' && (
                   <Badge variant="outline" className="mt-1">
                     Pending Approval
                   </Badge>
@@ -284,28 +279,21 @@ export function CarDetails({ listing }: CarDetailsProps) {
                     </div>
                   )}
 
-                  {listing.mileage !== null &&
-                    listing.mileage !== undefined && (
-                      <div className="flex items-start">
-                        <Gauge className="mr-2 h-5 w-5 text-muted-foreground" />
-                        <div>
-                          <p className="text-sm text-muted-foreground">
-                            Mileage
-                          </p>
-                          <p className="font-medium">
-                            {listing.mileage.toLocaleString()} mi
-                          </p>
-                        </div>
+                  {listing.mileage !== null && listing.mileage !== undefined && (
+                    <div className="flex items-start">
+                      <Gauge className="mr-2 h-5 w-5 text-muted-foreground" />
+                      <div>
+                        <p className="text-sm text-muted-foreground">Mileage</p>
+                        <p className="font-medium">{listing.mileage.toLocaleString()} mi</p>
                       </div>
-                    )}
+                    </div>
+                  )}
 
                   {listing.fuelType && (
                     <div className="flex items-start">
                       <Droplet className="mr-2 h-5 w-5 text-muted-foreground" />
                       <div>
-                        <p className="text-sm text-muted-foreground">
-                          Fuel Type
-                        </p>
+                        <p className="text-sm text-muted-foreground">Fuel Type</p>
                         <p className="font-medium">{listing.fuelType}</p>
                       </div>
                     </div>
@@ -325,9 +313,7 @@ export function CarDetails({ listing }: CarDetailsProps) {
                     <div className="flex items-start">
                       <Car className="mr-2 h-5 w-5 text-muted-foreground" />
                       <div>
-                        <p className="text-sm text-muted-foreground">
-                          Drive Type
-                        </p>
+                        <p className="text-sm text-muted-foreground">Drive Type</p>
                         <p className="font-medium">{listing.drive}</p>
                       </div>
                     </div>
@@ -351,59 +337,41 @@ export function CarDetails({ listing }: CarDetailsProps) {
                     <div className="space-y-3">
                       <div className="flex justify-between border-b py-2">
                         <span className="text-muted-foreground">Brand</span>
-                        <span className="font-medium">
-                          {listing.carBrand || "N/A"}
-                        </span>
+                        <span className="font-medium">{listing.carBrand || 'N/A'}</span>
                       </div>
                       <div className="flex justify-between border-b py-2">
                         <span className="text-muted-foreground">Model</span>
-                        <span className="font-medium">
-                          {listing.carModel || "N/A"}
-                        </span>
+                        <span className="font-medium">{listing.carModel || 'N/A'}</span>
                       </div>
                       <div className="flex justify-between border-b py-2">
                         <span className="text-muted-foreground">Year</span>
-                        <span className="font-medium">
-                          {listing.year || "N/A"}
-                        </span>
+                        <span className="font-medium">{listing.year || 'N/A'}</span>
                       </div>
                       <div className="flex justify-between border-b py-2">
                         <span className="text-muted-foreground">Condition</span>
-                        <span className="font-medium">
-                          {listing.condition || "N/A"}
-                        </span>
+                        <span className="font-medium">{listing.condition || 'N/A'}</span>
                       </div>
                     </div>
                     <div className="space-y-3">
                       <div className="flex justify-between border-b py-2">
                         <span className="text-muted-foreground">Mileage</span>
                         <span className="font-medium">
-                          {listing.mileage?.toLocaleString() || "N/A"} mi
+                          {listing.mileage?.toLocaleString() || 'N/A'} mi
                         </span>
                       </div>
                       <div className="flex justify-between border-b py-2">
-                        <span className="text-muted-foreground">
-                          Engine Size
-                        </span>
+                        <span className="text-muted-foreground">Engine Size</span>
                         <span className="font-medium">
-                          {listing.engineSize
-                            ? `${listing.engineSize}L`
-                            : "N/A"}
+                          {listing.engineSize ? `${listing.engineSize}L` : 'N/A'}
                         </span>
                       </div>
                       <div className="flex justify-between border-b py-2">
                         <span className="text-muted-foreground">Fuel Type</span>
-                        <span className="font-medium">
-                          {listing.fuelType || "N/A"}
-                        </span>
+                        <span className="font-medium">{listing.fuelType || 'N/A'}</span>
                       </div>
                       <div className="flex justify-between border-b py-2">
-                        <span className="text-muted-foreground">
-                          Drive Type
-                        </span>
-                        <span className="font-medium">
-                          {listing.drive || "N/A"}
-                        </span>
+                        <span className="text-muted-foreground">Drive Type</span>
+                        <span className="font-medium">{listing.drive || 'N/A'}</span>
                       </div>
                     </div>
                   </div>
@@ -417,9 +385,7 @@ export function CarDetails({ listing }: CarDetailsProps) {
                       {listing.description}
                     </p>
                   ) : (
-                    <p className="italic text-muted-foreground">
-                      No description provided
-                    </p>
+                    <p className="italic text-muted-foreground">No description provided</p>
                   )}
                 </div>
               </TabsContent>
@@ -455,20 +421,14 @@ export function CarDetails({ listing }: CarDetailsProps) {
                 <Button className="w-full">Contact Seller</Button>
                 <Button
                   variant="outline"
-                  className={cn(
-                    "w-full",
-                    isLoading && "cursor-not-allowed opacity-50"
-                  )}
+                  className={cn('w-full', isLoading && 'cursor-not-allowed opacity-50')}
                   onClick={handleFavoriteClick}
                   disabled={isLoading}
                 >
                   <Heart
-                    className={cn(
-                      "mr-2 h-4 w-4",
-                      isFavorited && "fill-current text-red-500"
-                    )}
+                    className={cn('mr-2 h-4 w-4', isFavorited && 'fill-current text-red-500')}
                   />
-                  {isFavorited ? "Saved" : "Save Listing"}
+                  {isFavorited ? 'Saved' : 'Save Listing'}
                 </Button>
               </div>
             </CardContent>
@@ -487,9 +447,7 @@ export function CarDetails({ listing }: CarDetailsProps) {
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-primary">•</span>
-                  <span>
-                    Verify the vehicle&apos;s history and documentation
-                  </span>
+                  <span>Verify the vehicle&apos;s history and documentation</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-primary">•</span>
@@ -497,9 +455,7 @@ export function CarDetails({ listing }: CarDetailsProps) {
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-primary">•</span>
-                  <span>
-                    Never wire money or use non-secure payment methods
-                  </span>
+                  <span>Never wire money or use non-secure payment methods</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-primary">•</span>

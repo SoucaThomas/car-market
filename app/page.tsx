@@ -1,7 +1,7 @@
-import { Listings } from "@/components/Listings";
-import React from "react";
-import { SearchFilters } from "@/components/SearchFilters";
-import { searchParams } from "./shared/types";
+import { Listings } from '@/components/Listings';
+import React from 'react';
+import { SearchFilters } from '@/components/SearchFilters';
+import { searchParams } from './shared/types';
 
 interface PageProps {
   searchParams: Promise<searchParams>;

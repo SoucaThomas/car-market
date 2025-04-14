@@ -1,12 +1,12 @@
-import { getListing } from "@/app/server/listings";
-import { CarDetails } from "@/components/ui/CarDetails";
-import { Suspense } from "react";
-import ListingLoadingSkeleton from "./loading";
-import { auth } from "@/auth";
-import { headers } from "next/headers";
-import { ListingStatus, Role } from "@prisma/client";
-import { ModerationBar } from "@/components/ModerationBar";
-import type { Metadata } from "next";
+import { getListing } from '@/app/server/listings';
+import { CarDetails } from '@/components/ui/CarDetails';
+import { Suspense } from 'react';
+import ListingLoadingSkeleton from './loading';
+import { auth } from '@/auth';
+import { headers } from 'next/headers';
+import { ListingStatus, Role } from '@prisma/client';
+import { ModerationBar } from '@/components/ModerationBar';
+import type { Metadata } from 'next';
 
 export async function generateMetadata({
   params,
@@ -18,16 +18,13 @@ export async function generateMetadata({
 
   if (!listing) {
     return {
-      title: "Listing Not Found",
-      description:
-        "The car listing you're looking for doesn't exist or has been removed.",
+      title: 'Listing Not Found',
+      description: "The car listing you're looking for doesn't exist or has been removed.",
     };
   }
 
   return {
-    title:
-      listing.title ||
-      `${listing.year} ${listing.carBrand} ${listing.carModel}`,
+    title: listing.title || `${listing.year} ${listing.carBrand} ${listing.carModel}`,
     description:
       listing.description?.substring(0, 160) ||
       `${listing.year} ${listing.carBrand} ${listing.carModel} for sale`,
@@ -48,10 +45,7 @@ async function ListingPageContent({ id }: { id: string }) {
     return (
       <div className="container mx-auto px-4 py-16 text-center">
         <h1 className="mb-4 text-3xl font-bold">Listing Not Found</h1>
-        <p>
-          The car listing you&apos;re looking for doesn&apos;t exist or has been
-          removed.
-        </p>
+        <p>The car listing you&apos;re looking for doesn&apos;t exist or has been removed.</p>
       </div>
     );
   }
@@ -59,19 +53,14 @@ async function ListingPageContent({ id }: { id: string }) {
   return (
     <main className="container mx-auto px-4 py-8">
       <CarDetails listing={listing} />
-      {session?.user.role === Role.admin &&
-        listing.status === ListingStatus.pending && (
-          <ModerationBar listing={listing} />
-        )}
+      {session?.user.role === Role.admin && listing.status === ListingStatus.pending && (
+        <ModerationBar listing={listing} />
+      )}
     </main>
   );
 }
 
-export default async function ListingPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+export default async function ListingPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   return (
     <Suspense fallback={<ListingLoadingSkeleton />}>

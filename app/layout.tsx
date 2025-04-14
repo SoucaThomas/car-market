@@ -1,23 +1,23 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import { NuqsAdapter } from "nuqs/adapters/next/app";
-import { Toaster } from "@/components/ui/toaster";
-import { Navbar } from "@/components/Navbar";
+import type { Metadata } from 'next';
+import { Geist, Geist_Mono } from 'next/font/google';
+import './globals.css';
+import { NuqsAdapter } from 'nuqs/adapters/next/app';
+import { Toaster } from '@/components/ui/toaster';
+import { Navbar } from '@/components/Navbar';
 
 const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+  variable: '--font-geist-sans',
+  subsets: ['latin'],
 });
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  variable: '--font-geist-mono',
+  subsets: ['latin'],
 });
 
 export const metadata: Metadata = {
-  title: "Car Market",
-  description: "Car Market",
+  title: 'Car Market',
+  description: 'Car Market',
 };
 
 export default function RootLayout({
@@ -31,9 +31,7 @@ export default function RootLayout({
       suppressHydrationWarning
       className="h-screen w-screen overflow-x-hidden overflow-y-scroll"
     >
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <NuqsAdapter>
           <Navbar />
           <main className="mx-auto flex h-full max-w-screen-2xl flex-row items-start justify-between gap-2">

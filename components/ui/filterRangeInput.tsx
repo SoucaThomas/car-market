@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import type React from "react";
+import type React from 'react';
 
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 interface FilterRangeInputProps {
   label: string;
@@ -20,17 +20,15 @@ export function FilterRangeInput({
   valueTo,
   setValueFrom,
   setValueTo,
-  placeholder = "",
+  placeholder = '',
 }: FilterRangeInputProps) {
   const handleFromChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value =
-      e.target.value === "" ? null : Number.parseFloat(e.target.value);
+    const value = e.target.value === '' ? null : Number.parseFloat(e.target.value);
     setValueFrom(value);
   };
 
   const handleToChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value =
-      e.target.value === "" ? null : Number.parseFloat(e.target.value);
+    const value = e.target.value === '' ? null : Number.parseFloat(e.target.value);
     setValueTo(value);
   };
 
@@ -42,7 +40,7 @@ export function FilterRangeInput({
           <Input
             type="number"
             placeholder={`Min ${placeholder}`}
-            value={valueFrom === null ? "" : valueFrom}
+            value={valueFrom === null ? '' : valueFrom}
             onChange={handleFromChange}
           />
         </div>
@@ -50,7 +48,7 @@ export function FilterRangeInput({
           <Input
             type="number"
             placeholder={`Max ${placeholder}`}
-            value={valueTo === null ? "" : valueTo}
+            value={valueTo === null ? '' : valueTo}
             onChange={handleToChange}
           />
         </div>

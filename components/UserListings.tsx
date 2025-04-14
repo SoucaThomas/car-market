@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import { useState } from 'react';
 import {
   type ColumnDef,
   type ColumnFiltersState,
@@ -11,16 +11,16 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-} from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
-import { Button } from "@/components/ui/button";
+} from '@tanstack/react-table';
+import { ArrowUpDown, MoreHorizontal } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
+} from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
 import {
   Table,
   TableBody,
@@ -28,18 +28,13 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { Role, User } from "@prisma/client";
-import { UserAvatar } from "./ui/userAvatar";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTrigger,
-} from "./ui/dialog";
-import { DialogTitle } from "@radix-ui/react-dialog";
-import { toast } from "@/hooks/use-toast";
+} from '@/components/ui/table';
+import { Badge } from '@/components/ui/badge';
+import { Role, User } from '@prisma/client';
+import { UserAvatar } from './ui/userAvatar';
+import { Dialog, DialogContent, DialogHeader, DialogTrigger } from './ui/dialog';
+import { DialogTitle } from '@radix-ui/react-dialog';
+import { toast } from '@/hooks/use-toast';
 
 async function handleViewUser(id: string) {
   console.log(`View user ${id}`);
@@ -47,11 +42,7 @@ async function handleViewUser(id: string) {
 
 interface UsersTableProps {
   users: User[];
-  handleUserChangeRole: (
-    id: string,
-    action: Role,
-    pending?: boolean
-  ) => Promise<User[] | Error>;
+  handleUserChangeRole: (id: string, action: Role, pending?: boolean) => Promise<User[] | Error>;
   handleToggleUserStatus: (id: string) => Promise<User[] | Error>;
 }
 
@@ -66,8 +57,8 @@ export function UsersTable({
 
   const columns: ColumnDef<User>[] = [
     {
-      accessorKey: "image",
-      header: "Avatar",
+      accessorKey: 'image',
+      header: 'Avatar',
       cell: ({ row }) => {
         return (
           <div className="relative h-10 w-10 overflow-hidden rounded-full">
@@ -77,20 +68,20 @@ export function UsersTable({
       },
     },
     {
-      accessorKey: "id",
-      header: "ID",
+      accessorKey: 'id',
+      header: 'ID',
       cell: ({ row }) => {
-        const id = row.getValue("id") as string;
+        const id = row.getValue('id') as string;
         return `${id.slice(0, 8)}...`;
       },
     },
     {
-      accessorKey: "name",
+      accessorKey: 'name',
       header: ({ column }) => {
         return (
           <Button
             variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
           >
             Name
             <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -99,12 +90,12 @@ export function UsersTable({
       },
     },
     {
-      accessorKey: "email",
+      accessorKey: 'email',
       header: ({ column }) => {
         return (
           <Button
             variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
           >
             Email
             <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -113,12 +104,12 @@ export function UsersTable({
       },
     },
     {
-      accessorKey: "role",
+      accessorKey: 'role',
       header: ({ column }) => {
         return (
           <Button
             variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
           >
             Role
             <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -126,16 +117,10 @@ export function UsersTable({
         );
       },
       cell: ({ row }) => {
-        const role = row.getValue("role") as string;
+        const role = row.getValue('role') as string;
         return (
           <Badge
-            variant={
-              role === "admin"
-                ? "default"
-                : role === "dealer"
-                  ? "secondary"
-                  : "outline"
-            }
+            variant={role === 'admin' ? 'default' : role === 'dealer' ? 'secondary' : 'outline'}
           >
             {role}
           </Badge>
@@ -143,12 +128,12 @@ export function UsersTable({
       },
     },
     {
-      accessorKey: "isActive",
+      accessorKey: 'isActive',
       header: ({ column }) => {
         return (
           <Button
             variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
           >
             Status
             <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -156,24 +141,24 @@ export function UsersTable({
         );
       },
       cell: ({ row }) => {
-        const isActive = row.getValue("isActive") as boolean;
+        const isActive = row.getValue('isActive') as boolean;
         return (
-          <Badge variant={isActive ? "default" : "destructive"}>
-            {isActive ? "Active" : "Inactive"}
+          <Badge variant={isActive ? 'default' : 'destructive'}>
+            {isActive ? 'Active' : 'Inactive'}
           </Badge>
         );
       },
     },
     {
-      accessorKey: "createdAt",
-      header: "Joined",
+      accessorKey: 'createdAt',
+      header: 'Joined',
       cell: ({ row }) => {
-        return new Date(row.getValue("createdAt")).toLocaleDateString();
+        return new Date(row.getValue('createdAt')).toLocaleDateString();
       },
     },
     {
-      id: "actions",
-      header: "Actions",
+      id: 'actions',
+      header: 'Actions',
       cell: ({ row }) => {
         const user = row.original;
 
@@ -191,17 +176,16 @@ export function UsersTable({
                   handleToggleUserStatus(user.id).then((response) => {
                     if (response instanceof Error) {
                       toast({
-                        title: "Error",
-                        description:
-                          "An error occurred while toggling user status",
-                        variant: "destructive",
+                        title: 'Error',
+                        description: 'An error occurred while toggling user status',
+                        variant: 'destructive',
                       });
                       console.error(response);
                     } else {
                       toast({
-                        title: `User ${user.isActive ? "deactivated" : "activated"}`,
+                        title: `User ${user.isActive ? 'deactivated' : 'activated'}`,
                         description: `User ${user.name} has been ${
-                          user.isActive ? "deactivated" : "activated"
+                          user.isActive ? 'deactivated' : 'activated'
                         }`,
                       });
                       setUsers(response);
@@ -209,13 +193,11 @@ export function UsersTable({
                   })
                 }
               >
-                {user.isActive ? "Deactivate" : "Activate"}
+                {user.isActive ? 'Deactivate' : 'Activate'}
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <Dialog>
-                  <DialogTrigger onClick={(e) => e.stopPropagation()}>
-                    Change Role
-                  </DialogTrigger>
+                  <DialogTrigger onClick={(e) => e.stopPropagation()}>Change Role</DialogTrigger>
                   <DialogContent>
                     <DialogHeader>
                       <DialogTitle>Change Role for {user.name}</DialogTitle>
@@ -224,25 +206,22 @@ export function UsersTable({
                       <Button
                         variant="outline"
                         onClick={() => {
-                          handleUserChangeRole(user.id, Role.admin).then(
-                            (response) => {
-                              if (response instanceof Error) {
-                                toast({
-                                  title: "Error",
-                                  description:
-                                    "An error occurred while changing user role",
-                                  variant: "destructive",
-                                });
-                                console.error(response);
-                              } else {
-                                toast({
-                                  title: `User role changed to admin`,
-                                  description: `User ${user.name} has been changed to admin`,
-                                });
-                                setUsers(response);
-                              }
+                          handleUserChangeRole(user.id, Role.admin).then((response) => {
+                            if (response instanceof Error) {
+                              toast({
+                                title: 'Error',
+                                description: 'An error occurred while changing user role',
+                                variant: 'destructive',
+                              });
+                              console.error(response);
+                            } else {
+                              toast({
+                                title: `User role changed to admin`,
+                                description: `User ${user.name} has been changed to admin`,
+                              });
+                              setUsers(response);
                             }
-                          );
+                          });
                         }}
                       >
                         Make Admin
@@ -250,25 +229,22 @@ export function UsersTable({
                       <Button
                         variant="outline"
                         onClick={() => {
-                          handleUserChangeRole(user.id, Role.dealer).then(
-                            (response) => {
-                              if (response instanceof Error) {
-                                toast({
-                                  title: "Error",
-                                  description:
-                                    "An error occurred while changing user role",
-                                  variant: "destructive",
-                                });
-                                console.error(response);
-                              } else {
-                                toast({
-                                  title: `User role changed to dealer`,
-                                  description: `User ${user.name} has been changed to dealer`,
-                                });
-                                setUsers(response);
-                              }
+                          handleUserChangeRole(user.id, Role.dealer).then((response) => {
+                            if (response instanceof Error) {
+                              toast({
+                                title: 'Error',
+                                description: 'An error occurred while changing user role',
+                                variant: 'destructive',
+                              });
+                              console.error(response);
+                            } else {
+                              toast({
+                                title: `User role changed to dealer`,
+                                description: `User ${user.name} has been changed to dealer`,
+                              });
+                              setUsers(response);
                             }
-                          );
+                          });
                         }}
                       >
                         Make Dealer
@@ -276,13 +252,11 @@ export function UsersTable({
                       <Button
                         variant="outline"
                         onClick={() => {
-                          handleUserChangeRole(user.id, Role.user).then(
-                            (response) => {
-                              if (response instanceof Error) {
-                                console.error(response);
-                              } else setUsers(response);
-                            }
-                          );
+                          handleUserChangeRole(user.id, Role.user).then((response) => {
+                            if (response instanceof Error) {
+                              console.error(response);
+                            } else setUsers(response);
+                          });
                         }}
                       >
                         Make User
@@ -322,10 +296,8 @@ export function UsersTable({
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter users..."
-          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("name")?.setFilterValue(event.target.value)
-          }
+          value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
+          onChange={(event) => table.getColumn('name')?.setFilterValue(event.target.value)}
           className="max-w-sm"
         />
       </div>
@@ -339,10 +311,7 @@ export function UsersTable({
                     <TableHead key={header.id}>
                       {header.isPlaceholder
                         ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                        : flexRender(header.column.columnDef.header, header.getContext())}
                     </TableHead>
                   );
                 })}
@@ -352,26 +321,17 @@ export function UsersTable({
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
+                <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
+                <TableCell colSpan={columns.length} className="h-24 text-center">
                   No results.
                 </TableCell>
               </TableRow>

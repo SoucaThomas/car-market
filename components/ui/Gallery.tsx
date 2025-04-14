@@ -1,13 +1,8 @@
-"use client";
-import { useCallback, useEffect, useState, useMemo } from "react";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselApi,
-} from "@/components/ui/carousel";
-import Image from "next/image";
-import { Upload } from "@prisma/client";
+'use client';
+import { useCallback, useEffect, useState, useMemo } from 'react';
+import { Carousel, CarouselContent, CarouselItem, CarouselApi } from '@/components/ui/carousel';
+import Image from 'next/image';
+import { Upload } from '@prisma/client';
 
 interface GalleryProps {
   images: Upload[];
@@ -18,14 +13,17 @@ const Gallery = ({ images }: GalleryProps) => {
   const [thumbnailApi, setThumbnailApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
 
-  const handleClick = useCallback((index: number) => {
-    if (!mainApi || !thumbnailApi) {
-      return;
-    }
-    thumbnailApi.scrollTo(index);
-    mainApi.scrollTo(index);
-    setCurrent(index);
-  }, [mainApi, thumbnailApi, setCurrent]);
+  const handleClick = useCallback(
+    (index: number) => {
+      if (!mainApi || !thumbnailApi) {
+        return;
+      }
+      thumbnailApi.scrollTo(index);
+      mainApi.scrollTo(index);
+      setCurrent(index);
+    },
+    [mainApi, thumbnailApi, setCurrent]
+  );
 
   const mainImage = useMemo(
     () =>
@@ -35,7 +33,7 @@ const Gallery = ({ images }: GalleryProps) => {
             src={image.ufsUrl}
             alt={`Carousel Main Image ${index + 1}`}
             fill
-            style={{ objectFit: "cover" }}
+            style={{ objectFit: 'cover' }}
           />
         </CarouselItem>
       )),
@@ -51,11 +49,11 @@ const Gallery = ({ images }: GalleryProps) => {
           onClick={() => handleClick(index)}
         >
           <Image
-            className={`${index === current ? "border-2" : ""}`}
+            className={`${index === current ? 'border-2' : ''}`}
             src={image.ufsUrl}
             fill
             alt={`Carousel Thumbnail Image ${index + 1}`}
-            style={{ objectFit: "cover" }}
+            style={{ objectFit: 'cover' }}
           />
         </CarouselItem>
       )),
@@ -79,15 +77,14 @@ const Gallery = ({ images }: GalleryProps) => {
       mainApi.scrollTo(selected);
     };
 
-    mainApi.on("select", handleTopSelect);
-    thumbnailApi.on("select", handleBottomSelect);
+    mainApi.on('select', handleTopSelect);
+    thumbnailApi.on('select', handleBottomSelect);
 
     return () => {
-      mainApi.off("select", handleTopSelect);
-      thumbnailApi.off("select", handleBottomSelect);
+      mainApi.off('select', handleTopSelect);
+      thumbnailApi.off('select', handleBottomSelect);
     };
   }, [mainApi, thumbnailApi]);
-
 
   return (
     <div className="w-96 max-w-xl sm:w-auto">

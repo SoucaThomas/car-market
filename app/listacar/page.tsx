@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
@@ -13,15 +13,15 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select';
 import {
   Command,
   CommandEmpty,
@@ -29,30 +29,22 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Check, ChevronsUpDown } from "lucide-react";
-import { Textarea } from "@/components/ui/textarea";
-import { Card } from "@/components/ui/card";
-import { UploadButton } from "@/lib/uploadthing";
-import { countries, fuelTypes, colors, driveType } from "@/constants";
-import { useToast } from "@/hooks/use-toast";
-import { useEffect, useState } from "react";
-import {
-  createListing,
-  getCarBrands,
-  getCarModels,
-} from "@/app/server/listings";
-import { formSchema } from "@/app/shared/types";
-import { useRouter } from "next/navigation";
-import { ListACarImage } from "@/components/ListACarImage";
-import { getUserListingCount } from "../server/user";
-import { authClient } from "@/lib/auth-client";
-import { Role, User } from "@prisma/client";
+} from '@/components/ui/command';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Check, ChevronsUpDown } from 'lucide-react';
+import { Textarea } from '@/components/ui/textarea';
+import { Card } from '@/components/ui/card';
+import { UploadButton } from '@/lib/uploadthing';
+import { countries, fuelTypes, colors, driveType } from '@/constants';
+import { useToast } from '@/hooks/use-toast';
+import { useEffect, useState } from 'react';
+import { createListing, getCarBrands, getCarModels } from '@/app/server/listings';
+import { formSchema } from '@/app/shared/types';
+import { useRouter } from 'next/navigation';
+import { ListACarImage } from '@/components/ListACarImage';
+import { getUserListingCount } from '../server/user';
+import { authClient } from '@/lib/auth-client';
+import { Role, User } from '@prisma/client';
 
 export type FormValues = z.infer<typeof formSchema>;
 
@@ -64,13 +56,13 @@ export default function MyForm() {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      listingTitle: "",
+      listingTitle: '',
       year: 0,
       price: 0,
       engineSize: 0,
       mileage: 0,
-      description: "",
-      carCondtition: "New",
+      description: '',
+      carCondtition: 'New',
     },
   });
 
@@ -79,17 +71,17 @@ export default function MyForm() {
       await createListing(values);
 
       toast({
-        title: "Form submitted",
-        description: "Form submitted successfully",
+        title: 'Form submitted',
+        description: 'Form submitted successfully',
       });
 
-      router.push("/dashboard");
+      router.push('/dashboard');
     } catch (error) {
-      console.error("Form submission error", error);
+      console.error('Form submission error', error);
       toast({
-        title: "Form submission error",
+        title: 'Form submission error',
         description: (error as Error).message,
-        variant: "destructive",
+        variant: 'destructive',
       });
     }
   }
@@ -99,17 +91,15 @@ export default function MyForm() {
       const session = authClient.getSession();
 
       if (((await session).data?.user as User).role === Role.user) {
-        const listingsCount = await getUserListingCount(
-          (await session).data?.user as User
-        );
+        const listingsCount = await getUserListingCount((await session).data?.user as User);
 
         if (listingsCount >= 3) {
-          router.push("/");
+          router.push('/');
           toast({
-            title: "Error!",
-            variant: "destructive",
+            title: 'Error!',
+            variant: 'destructive',
             description:
-              "Cant list more than 3 listings as a normal user, apply to become a dealership to list more cars!",
+              'Cant list more than 3 listings as a normal user, apply to become a dealership to list more cars!',
           });
         }
       }
@@ -135,10 +125,7 @@ export default function MyForm() {
   return (
     <Card className="mx-auto w-full max-w-xl p-10">
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="w-full space-y-8 py-10"
-        >
+        <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-8 py-10">
           <FormField
             control={form.control}
             name="listingTitle"
@@ -160,16 +147,13 @@ export default function MyForm() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Car&apos;s condition </FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="New" />
                     </SelectTrigger>
                   </FormControl>
-                  <SelectContent defaultValue={"New"}>
+                  <SelectContent defaultValue={'New'}>
                     <SelectItem value="New">New</SelectItem>
                     <SelectItem value="Used">Used</SelectItem>
                   </SelectContent>
@@ -193,14 +177,13 @@ export default function MyForm() {
                         variant="outline"
                         role="combobox"
                         className={cn(
-                          "w-full justify-between",
-                          !field.value && "text-muted-foreground"
+                          'w-full justify-between',
+                          !field.value && 'text-muted-foreground'
                         )}
                       >
                         {field.value
-                          ? brands.find((brand) => brand.label === field.value)
-                              ?.label
-                          : "Select brand"}
+                          ? brands.find((brand) => brand.label === field.value)?.label
+                          : 'Select brand'}
                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                       </Button>
                     </FormControl>
@@ -216,17 +199,15 @@ export default function MyForm() {
                               value={brand.label}
                               key={brand.label}
                               onSelect={() => {
-                                form.setValue("brand", brand.label);
+                                form.setValue('brand', brand.label);
 
                                 fetchCarModels(brand);
                               }}
                             >
                               <Check
                                 className={cn(
-                                  "mr-2 h-4 w-4",
-                                  brand.label === field.value
-                                    ? "opacity-100"
-                                    : "opacity-0"
+                                  'mr-2 h-4 w-4',
+                                  brand.label === field.value ? 'opacity-100' : 'opacity-0'
                                 )}
                               />
                               {brand.label}
@@ -256,14 +237,13 @@ export default function MyForm() {
                         variant="outline"
                         role="combobox"
                         className={cn(
-                          "w-full justify-between",
-                          !field.value && "text-muted-foreground"
+                          'w-full justify-between',
+                          !field.value && 'text-muted-foreground'
                         )}
                       >
                         {field.value
-                          ? models.find((model) => model.label === field.value)
-                              ?.label
-                          : "Select Model"}
+                          ? models.find((model) => model.label === field.value)?.label
+                          : 'Select Model'}
                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                       </Button>
                     </FormControl>
@@ -279,15 +259,13 @@ export default function MyForm() {
                               value={model.label}
                               key={model.label}
                               onSelect={() => {
-                                form.setValue("model", model.label);
+                                form.setValue('model', model.label);
                               }}
                             >
                               <Check
                                 className={cn(
-                                  "mr-2 h-4 w-4",
-                                  model.label === field.value
-                                    ? "opacity-100"
-                                    : "opacity-0"
+                                  'mr-2 h-4 w-4',
+                                  model.label === field.value ? 'opacity-100' : 'opacity-0'
                                 )}
                               />
                               {model.label}
@@ -315,7 +293,7 @@ export default function MyForm() {
                     placeholder="2025"
                     type="number"
                     {...field}
-                    value={field.value === 0 ? "" : field.value} // Conditionally set value
+                    value={field.value === 0 ? '' : field.value} // Conditionally set value
                     onChange={(e) => {
                       const parsedValue = Number(e.target.value);
                       field.onChange(isNaN(parsedValue) ? 0 : parsedValue); // Handle NaN
@@ -339,7 +317,7 @@ export default function MyForm() {
                     placeholder="$"
                     type="number"
                     {...field}
-                    value={field.value === 0 ? "" : field.value} // Conditionally set value
+                    value={field.value === 0 ? '' : field.value} // Conditionally set value
                     onChange={(e) => {
                       const parsedValue = Number(e.target.value);
                       field.onChange(isNaN(parsedValue) ? 0 : parsedValue); // Handle NaN
@@ -363,7 +341,7 @@ export default function MyForm() {
                     placeholder="100 000 km"
                     type="number"
                     {...field}
-                    value={field.value === 0 ? "" : field.value} // Conditionally set value
+                    value={field.value === 0 ? '' : field.value} // Conditionally set value
                     onChange={(e) => {
                       const parsedValue = Number(e.target.value);
                       field.onChange(isNaN(parsedValue) ? 0 : parsedValue); // Handle NaN
@@ -389,15 +367,13 @@ export default function MyForm() {
                         variant="outline"
                         role="combobox"
                         className={cn(
-                          "w-full justify-between",
-                          !field.value && "text-muted-foreground"
+                          'w-full justify-between',
+                          !field.value && 'text-muted-foreground'
                         )}
                       >
                         {field.value
-                          ? driveType.find(
-                              (drive) => drive.label === field.value
-                            )?.label
-                          : "Select transsmision"}
+                          ? driveType.find((drive) => drive.label === field.value)?.label
+                          : 'Select transsmision'}
                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                       </Button>
                     </FormControl>
@@ -413,15 +389,13 @@ export default function MyForm() {
                               value={drive.label}
                               key={drive.id}
                               onSelect={() => {
-                                form.setValue("drive", drive.label);
+                                form.setValue('drive', drive.label);
                               }}
                             >
                               <Check
                                 className={cn(
-                                  "mr-2 h-4 w-4",
-                                  drive.label === field.value
-                                    ? "opacity-100"
-                                    : "opacity-0"
+                                  'mr-2 h-4 w-4',
+                                  drive.label === field.value ? 'opacity-100' : 'opacity-0'
                                 )}
                               />
                               {drive.label}
@@ -450,15 +424,13 @@ export default function MyForm() {
                         variant="outline"
                         role="combobox"
                         className={cn(
-                          "w-full justify-between",
-                          !field.value && "text-muted-foreground"
+                          'w-full justify-between',
+                          !field.value && 'text-muted-foreground'
                         )}
                       >
                         {field.value
-                          ? countries.find(
-                              (country) => country.label === field.value
-                            )?.label
-                          : "Select country"}
+                          ? countries.find((country) => country.label === field.value)?.label
+                          : 'Select country'}
                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                       </Button>
                     </FormControl>
@@ -474,15 +446,13 @@ export default function MyForm() {
                               value={country.label}
                               key={country.id}
                               onSelect={() => {
-                                form.setValue("country", country.label);
+                                form.setValue('country', country.label);
                               }}
                             >
                               <Check
                                 className={cn(
-                                  "mr-2 h-4 w-4",
-                                  country.label === field.value
-                                    ? "opacity-100"
-                                    : "opacity-0"
+                                  'mr-2 h-4 w-4',
+                                  country.label === field.value ? 'opacity-100' : 'opacity-0'
                                 )}
                               />
                               {country.label}
@@ -509,7 +479,7 @@ export default function MyForm() {
                     placeholder="1997 cm3"
                     type="number"
                     {...field}
-                    value={field.value === 0 ? "" : field.value} // Conditionally set value
+                    value={field.value === 0 ? '' : field.value} // Conditionally set value
                     onChange={(e) => {
                       const parsedValue = Number(e.target.value);
                       field.onChange(isNaN(parsedValue) ? 0 : parsedValue); // Handle NaN
@@ -534,14 +504,13 @@ export default function MyForm() {
                         variant="outline"
                         role="combobox"
                         className={cn(
-                          "w-full justify-between",
-                          !field.value && "text-muted-foreground"
+                          'w-full justify-between',
+                          !field.value && 'text-muted-foreground'
                         )}
                       >
                         {field.value
-                          ? fuelTypes.find((fuel) => fuel.label === field.value)
-                              ?.label
-                          : "Select fuel type"}
+                          ? fuelTypes.find((fuel) => fuel.label === field.value)?.label
+                          : 'Select fuel type'}
                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                       </Button>
                     </FormControl>
@@ -557,15 +526,13 @@ export default function MyForm() {
                               value={fuel.label}
                               key={fuel.label}
                               onSelect={() => {
-                                form.setValue("fuelType", fuel.label);
+                                form.setValue('fuelType', fuel.label);
                               }}
                             >
                               <Check
                                 className={cn(
-                                  "mr-2 h-4 w-4",
-                                  fuel.label === field.value
-                                    ? "opacity-100"
-                                    : "opacity-0"
+                                  'mr-2 h-4 w-4',
+                                  fuel.label === field.value ? 'opacity-100' : 'opacity-0'
                                 )}
                               />
                               {fuel.label}
@@ -593,14 +560,13 @@ export default function MyForm() {
                         variant="outline"
                         role="combobox"
                         className={cn(
-                          "w-full justify-between",
-                          !field.value && "text-muted-foreground"
+                          'w-full justify-between',
+                          !field.value && 'text-muted-foreground'
                         )}
                       >
                         {field.value
-                          ? colors.find((color) => color.label === field.value)
-                              ?.label
-                          : "Select color"}
+                          ? colors.find((color) => color.label === field.value)?.label
+                          : 'Select color'}
                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                       </Button>
                     </FormControl>
@@ -616,15 +582,13 @@ export default function MyForm() {
                               value={color.label}
                               key={color.id}
                               onSelect={() => {
-                                form.setValue("color", color.label);
+                                form.setValue('color', color.label);
                               }}
                             >
                               <Check
                                 className={cn(
-                                  "mr-2 h-4 w-4",
-                                  color.label === field.value
-                                    ? "opacity-100"
-                                    : "opacity-0"
+                                  'mr-2 h-4 w-4',
+                                  color.label === field.value ? 'opacity-100' : 'opacity-0'
                                 )}
                               />
                               {color.label}
@@ -649,9 +613,7 @@ export default function MyForm() {
                 <FormControl>
                   <Textarea placeholder="" className="resize-none" {...field} />
                 </FormControl>
-                <FormDescription>
-                  A short description of the listed car
-                </FormDescription>
+                <FormDescription>A short description of the listed car</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -666,27 +628,23 @@ export default function MyForm() {
                 <FormControl>
                   <div>
                     {form
-                      .watch("Pictures")
+                      .watch('Pictures')
                       ?.map((file, index) => (
-                        <ListACarImage
-                          key={index}
-                          fileUrl={file.ufsUrl}
-                          fileName={file.name}
-                        />
+                        <ListACarImage key={index} fileUrl={file.ufsUrl} fileName={file.name} />
                       ))}
 
                     <UploadButton
                       endpoint="imageUploader"
                       onUploadError={(error: Error) => {
                         toast({
-                          title: "Upload error",
+                          title: 'Upload error',
                           description: error.message,
-                          variant: "destructive",
+                          variant: 'destructive',
                         });
                       }}
                       onClientUploadComplete={(files) => {
-                        form.setValue("Pictures", [
-                          ...(form.getValues("Pictures") || []),
+                        form.setValue('Pictures', [
+                          ...(form.getValues('Pictures') || []),
                           ...files,
                         ]);
                       }}

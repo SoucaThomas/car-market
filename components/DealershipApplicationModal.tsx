@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -9,19 +9,11 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Separator } from "@/components/ui/separator";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { DealerApplications } from "@prisma/client";
-import {
-  CalendarIcon,
-  Building2,
-  Mail,
-  Globe,
-  MapPin,
-  FileText,
-  Clock,
-} from "lucide-react";
+} from '@/components/ui/dialog';
+import { Separator } from '@/components/ui/separator';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { DealerApplications } from '@prisma/client';
+import { CalendarIcon, Building2, Mail, Globe, MapPin, FileText, Clock } from 'lucide-react';
 
 interface DealershipApplicationModalProps {
   application: DealerApplications | null;
@@ -44,15 +36,14 @@ export function DealershipApplicationModal({
             <span>Application APP-{application.id}</span>
             <Badge
               variant={
-                application.status === "approved"
-                  ? "success"
-                  : application.status === "pending"
-                    ? "outline"
-                    : "destructive"
+                application.status === 'approved'
+                  ? 'success'
+                  : application.status === 'pending'
+                    ? 'outline'
+                    : 'destructive'
               }
             >
-              {application.status.charAt(0).toUpperCase() +
-                application.status.slice(1)}
+              {application.status.charAt(0).toUpperCase() + application.status.slice(1)}
             </Badge>
           </DialogTitle>
           <DialogDescription>
@@ -106,9 +97,7 @@ export function DealershipApplicationModal({
                   Year Established
                 </div>
                 <div>
-                  {application.yearEstablished
-                    ? application.yearEstablished.getFullYear()
-                    : "N/A"}
+                  {application.yearEstablished ? application.yearEstablished.getFullYear() : 'N/A'}
                 </div>
               </div>
 
@@ -117,7 +106,7 @@ export function DealershipApplicationModal({
                   <Globe className="h-4 w-4" />
                   Website
                 </div>
-                <div>{application.website || "N/A"}</div>
+                <div>{application.website || 'N/A'}</div>
               </div>
             </div>
 
@@ -140,24 +129,18 @@ export function DealershipApplicationModal({
           <TabsContent value="details" className="mt-4 space-y-4">
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <div className="space-y-1">
-                <div className="text-sm font-medium text-muted-foreground">
-                  Inventory Size
-                </div>
+                <div className="text-sm font-medium text-muted-foreground">Inventory Size</div>
                 <div>{application.inventorySize} vehicles</div>
               </div>
 
               <div className="space-y-1">
-                <div className="text-sm font-medium text-muted-foreground">
-                  Specialties
-                </div>
-                <div>{application.specialties || "None specified"}</div>
+                <div className="text-sm font-medium text-muted-foreground">Specialties</div>
+                <div>{application.specialties || 'None specified'}</div>
               </div>
 
               <div className="space-y-1">
-                <div className="text-sm font-medium text-muted-foreground">
-                  Terms Agreed
-                </div>
-                <div>{application.termsAgreed ? "Yes" : "No"}</div>
+                <div className="text-sm font-medium text-muted-foreground">Terms Agreed</div>
+                <div>{application.termsAgreed ? 'Yes' : 'No'}</div>
               </div>
 
               <div className="space-y-1">
@@ -172,21 +155,18 @@ export function DealershipApplicationModal({
             <Separator />
 
             <div className="space-y-1">
-              <div className="text-sm font-medium text-muted-foreground">
-                Application Status
-              </div>
+              <div className="text-sm font-medium text-muted-foreground">Application Status</div>
               <div>
                 <Badge
                   variant={
-                    application.status === "approved"
-                      ? "success"
-                      : application.status === "pending"
-                        ? "outline"
-                        : "destructive"
+                    application.status === 'approved'
+                      ? 'success'
+                      : application.status === 'pending'
+                        ? 'outline'
+                        : 'destructive'
                   }
                 >
-                  {application.status.charAt(0).toUpperCase() +
-                    application.status.slice(1)}
+                  {application.status.charAt(0).toUpperCase() + application.status.slice(1)}
                 </Badge>
               </div>
             </div>

@@ -1,11 +1,11 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Car, Heart } from "lucide-react";
-import { NavSearch } from "./NavSearch";
-import { NavUser } from "./NavUser";
-import { auth } from "@/auth";
-import { User } from "@prisma/client";
-import { headers } from "next/headers";
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { Car, Heart } from 'lucide-react';
+import { NavSearch } from './NavSearch';
+import { NavUser } from './NavUser';
+import { auth } from '@/auth';
+import { User } from '@prisma/client';
+import { headers } from 'next/headers';
 
 export async function Navbar() {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -18,9 +18,7 @@ export async function Navbar() {
         <div className="flex items-center gap-2">
           <Link href="/" className="flex items-center gap-2">
             <Car className="h-6 w-6" />
-            <span className="hidden text-xl font-bold sm:inline-block">
-              CarMarket
-            </span>
+            <span className="hidden text-xl font-bold sm:inline-block">CarMarket</span>
           </Link>
         </div>
 

@@ -1,18 +1,11 @@
-"use client";
+'use client';
 
-import { toast } from "@/hooks/use-toast";
-import { Button } from "./ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "./ui/card";
-import { UploadDropzone } from "@/lib/uploadthing";
-import { useState } from "react";
-import type {} from "@uploadthing/react";
+import { toast } from '@/hooks/use-toast';
+import { Button } from './ui/button';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from './ui/card';
+import { UploadDropzone } from '@/lib/uploadthing';
+import { useState } from 'react';
+import type {} from '@uploadthing/react';
 interface UploadPicturesProps {
   next: () => void;
   previous: () => void;
@@ -20,11 +13,7 @@ interface UploadPicturesProps {
   setFiles: (file: any) => void;
 }
 
-export function UploadPictures({
-  next,
-  previous,
-  setFiles,
-}: UploadPicturesProps) {
+export function UploadPictures({ next, previous, setFiles }: UploadPicturesProps) {
   const [canContinue, setCanContinue] = useState(false);
 
   return (
@@ -39,18 +28,17 @@ export function UploadPictures({
             onClientUploadComplete={(res) => {
               setCanContinue(true);
               setFiles(res);
-              console.log("Files: ", res);
+              console.log('Files: ', res);
             }}
             onUploadError={(error: Error) => {
               toast({
-                title: "Error",
+                title: 'Error',
                 description: `Failed to upload image: ${error.message}`,
                 duration: 5000,
               });
             }}
             appearance={{
-              button:
-                "bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800",
+              button: 'bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800',
             }}
           />
         </CardDescription>

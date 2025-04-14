@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { User } from "@prisma/client";
-import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
-import clsx from "clsx";
+import { User } from '@prisma/client';
+import { Avatar, AvatarFallback, AvatarImage } from './avatar';
+import clsx from 'clsx';
 
 interface UserAvatarProps {
   user: User;
@@ -11,16 +11,9 @@ interface UserAvatarProps {
 
 export function UserAvatar({ user, size }: UserAvatarProps) {
   return (
-    <Avatar
-      className={clsx(
-        "rounded-full",
-        size ? `h-${size} w-${size}` : "h-12 w-12"
-      )}
-    >
-      <AvatarImage src={user.image || ""} alt={user.name} />
-      <AvatarFallback className="rounded-lg">
-        {user.name.slice(0, 2)}
-      </AvatarFallback>
+    <Avatar className={clsx('rounded-full', size ? `h-${size} w-${size}` : 'h-12 w-12')}>
+      <AvatarImage src={user.image || ''} alt={user.name} />
+      <AvatarFallback className="rounded-lg">{user.name.slice(0, 2)}</AvatarFallback>
     </Avatar>
   );
 }

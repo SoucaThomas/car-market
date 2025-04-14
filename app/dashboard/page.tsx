@@ -1,11 +1,5 @@
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Table,
   TableBody,
@@ -14,12 +8,12 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { getUserListings } from "@/app/server/user";
-import { Skeleton } from "@/components/ui/skeleton";
-import { auth, User } from "@/auth";
-import { headers } from "next/headers";
-import Link from "next/link";
+} from '@/components/ui/table';
+import { getUserListings } from '@/app/server/user';
+import { Skeleton } from '@/components/ui/skeleton';
+import { auth, User } from '@/auth';
+import { headers } from 'next/headers';
+import Link from 'next/link';
 
 export default async function Dashboard() {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -51,9 +45,7 @@ export default async function Dashboard() {
         </main>
       ) : (
         <main className="mx-auto flex h-full w-full flex-col items-center gap-4 border p-10">
-          <h1 className="w-full text-2xl font-bold">
-            Welcome back, {user?.name}!
-          </h1>
+          <h1 className="w-full text-2xl font-bold">Welcome back, {user?.name}!</h1>
 
           <div className="grid w-full grid-cols-2 gap-6 lg:grid-cols-3">
             <Card>
@@ -63,8 +55,8 @@ export default async function Dashboard() {
                 </CardHeader>
                 <CardDescription>
                   <p>
-                    List your car for sale on the marketplace and reach
-                    potential buyers quickly and easily.
+                    List your car for sale on the marketplace and reach potential buyers quickly and
+                    easily.
                   </p>
                 </CardDescription>
                 <Link href="/listacar">
@@ -80,9 +72,7 @@ export default async function Dashboard() {
                 </CardHeader>
                 <CardDescription>
                   <p>You have listed and sold</p>
-                  <h1 className="text-2xl font-bold">
-                    {userListings.length} cars
-                  </h1>
+                  <h1 className="text-2xl font-bold">{userListings.length} cars</h1>
                 </CardDescription>
               </CardContent>
             </Card>
@@ -121,18 +111,16 @@ export default async function Dashboard() {
                     <TableCell>
                       <span
                         className={
-                          (listing.status === "pending" && "text-red-600") ||
-                          (listing.status === "approved" && "text-green-600") ||
-                          (listing.status === "rejected" && "text-gray-600") ||
-                          "text-gray-600"
+                          (listing.status === 'pending' && 'text-red-600') ||
+                          (listing.status === 'approved' && 'text-green-600') ||
+                          (listing.status === 'rejected' && 'text-gray-600') ||
+                          'text-gray-600'
                         }
                       >
                         {listing.status}
                       </span>
                     </TableCell>
-                    <TableCell className="text-right">
-                      ${listing.price}
-                    </TableCell>
+                    <TableCell className="text-right">${listing.price}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

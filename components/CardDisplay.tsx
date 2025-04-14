@@ -1,12 +1,12 @@
-import Image from "next/image";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import type { ListingWithUserAndImages } from "@/app/shared/types";
-import Link from "next/link";
-import { MapPin } from "lucide-react";
-import { getFavoriteStatus } from "@/app/server/favorites";
-import { FavoriteButton } from "./FavoriteButton";
+import Image from 'next/image';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import type { ListingWithUserAndImages } from '@/app/shared/types';
+import Link from 'next/link';
+import { MapPin } from 'lucide-react';
+import { getFavoriteStatus } from '@/app/server/favorites';
+import { FavoriteButton } from './FavoriteButton';
 
 interface CardDisplay {
   listing: ListingWithUserAndImages;
@@ -19,7 +19,7 @@ export async function CardDisplay({ listing }: CardDisplay) {
   const imageUrl =
     listing.images && listing.images.length > 0
       ? listing.images[0].url
-      : "/placeholder.svg?height=200&width=300";
+      : '/placeholder.svg?height=200&width=300';
 
   const features = [
     listing.fuelType,
@@ -34,15 +34,12 @@ export async function CardDisplay({ listing }: CardDisplay) {
       <div>
         <div className="relative aspect-[16/9]">
           <Image
-            src={imageUrl || "/placeholder.svg"}
-            alt={listing.title || "listing listing"}
+            src={imageUrl || '/placeholder.svg'}
+            alt={listing.title || 'listing listing'}
             fill
             className="object-cover"
           />
-          <FavoriteButton
-            listingId={listing.id}
-            initialFavorited={isFavorited}
-          />
+          <FavoriteButton listingId={listing.id} initialFavorited={isFavorited} />
         </div>
       </div>
 
@@ -51,11 +48,10 @@ export async function CardDisplay({ listing }: CardDisplay) {
           <div className="flex items-start justify-between">
             <div>
               <h3 className="text-lg font-semibold">
-                {listing.title ||
-                  `${listing.year} ${listing.carBrand} ${listing.carModel}`}
+                {listing.title || `${listing.year} ${listing.carBrand} ${listing.carModel}`}
               </h3>
               <p className="mt-1 text-2xl font-bold">
-                ${listing.price?.toLocaleString() || "Contact for price"}
+                ${listing.price?.toLocaleString() || 'Contact for price'}
               </p>
             </div>
             {listing.condition && (
