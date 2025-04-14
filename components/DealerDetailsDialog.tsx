@@ -229,7 +229,7 @@ export function DealerDetailsDialog({ listing }: DealerDetailsDialogProps) {
 
         <div className="flex gap-2 p-4">
           <Button asChild className="flex-1">
-            <Link href={`/ratings/${listing.userId}/add`}>
+            <Link href={`/addReview/${listing.userId}`}>
               <Star className="mr-2 h-4 w-4" />
               Add Rating
             </Link>
