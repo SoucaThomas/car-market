@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { ListingWithUserAndImages, DealerInfo } from '@/app/shared/types';
 import { Dialog, DialogContent, DialogHeader, DialogTrigger, DialogTitle } from './ui/dialog';
 import { Separator } from './ui/separator';
-import { Calendar, Mail, MapPin, Package, Star, StarHalf, User } from 'lucide-react';
+import { Calendar, Mail, MapPin, Package, Star, List, User } from 'lucide-react';
 import { getDealerInfo } from '@/app/server/dealer';
 import { Button } from './ui/button';
 import Link from 'next/link';
@@ -32,7 +32,6 @@ export function DealerDetailsDialog({ listing }: DealerDetailsDialogProps) {
             createdAt: new Date(dealerInfo.createdAt).toLocaleDateString(),
             ratings: 4.3,
             totalListings: dealerInfo.listings.length,
-            location: 'New York, NY',
           };
           setDealer(formattedDealerInfo);
         } else {
@@ -213,7 +212,7 @@ export function DealerDetailsDialog({ listing }: DealerDetailsDialogProps) {
           </Button>
           <Button asChild variant="outline" className="flex-1">
             <Link href={`/ratings/${listing.userId}`}>
-              <StarHalf className="mr-2 h-4 w-4" />
+              <List className="mr-2 h-4 w-4" />
               View All Ratings
             </Link>
           </Button>
@@ -233,7 +232,12 @@ function RatingStars({ rating }: { rating: number }) {
       {[...Array(fullStars)].map((_, i) => (
         <Star key={`full-${i}`} className="h-4 w-4 fill-yellow-500 text-yellow-500" />
       ))}
-      {hasHalfStar && <StarHalf key="half" className="h-4 w-4 fill-yellow-500 text-yellow-500" />}
+      {hasHalfStar && (
+        <div className="relative h-4 w-4">
+          <Star className="absolute h-4 w-4 fill-yellow-500 text-yellow-500" />
+          <div className="absolute right-0 top-0 h-4 w-2 bg-white" />
+        </div>
+      )}
       {[...Array(emptyStars)].map((_, i) => (
         <Star key={`empty-${i}`} className="h-4 w-4 text-gray-300" />
       ))}

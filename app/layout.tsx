@@ -34,7 +34,7 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <NuqsAdapter>
           <Navbar />
-          <main className="mx-auto flex h-full max-w-screen-2xl flex-row items-start justify-between gap-2">
+          <main className="container mx-auto flex h-full max-w-screen-2xl flex-row items-start justify-between gap-2 px-4">
             {children}
           </main>
           <Toaster />
