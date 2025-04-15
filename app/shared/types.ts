@@ -1,4 +1,4 @@
-import { Listing, Upload, User } from '@prisma/client';
+import { Listing, Upload, User, Role } from '@prisma/client';
 
 export type ListingWithUser = Listing & { user: User };
 
@@ -83,3 +83,13 @@ export interface searchParams {
   drive?: string;
   condition?: string;
 }
+
+export type UserDetails = {
+  id: string;
+  name: string;
+  email: string;
+  image: string;
+  role: Role;
+  isActive: boolean;
+  location: string;
+};

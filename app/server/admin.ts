@@ -1,10 +1,19 @@
 'use server';
 
 import { prisma } from '@/prisma/prisma';
-import { ApplicationStatus, DealerApplications, ListingStatus, Role, User } from '@prisma/client';
+import {
+  ApplicationStatus,
+  DealerApplications,
+  ListingStatus,
+  Role,
+  User,
+  RatingStatus,
+  Rating,
+} from '@prisma/client';
 import { ListingWithUser } from '../shared/types';
 import { auth } from '@/auth';
 import { headers } from 'next/headers';
+import { UserDetails } from '../shared/types';
 
 const checkAdmin = async () => {
   const session = await auth.api.getSession({
@@ -146,3 +155,102 @@ export const adminToggleUserStatus = async (id: string): Promise<User[] | Error>
     return Promise.reject(error);
   }
 };
+
+export async function adminChangeRatingStatus(
+  id: number,
+  action: RatingStatus
+): Promise<Rating[] | Error> {
+  'use server';
+  try {
+    const rating = await prisma.rating.update({
+      where: { id },
+      data: { status: action },
+    });
+
+    const ratings = await prisma.rating.findMany({
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            image: true,
+          },
+        },
+        dealer: {
+          select: {
+            id: true,
+            name: true,
+            image: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    return ratings;
+  } catch (error) {
+    console.error('Error changing rating status:', error);
+    return Promise.reject(error);
+  }
+}
+
+export async function getAdminRatings() {
+  'use server';
+  try {
+    const ratings = await prisma.rating.findMany({
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            image: true,
+          },
+        },
+        dealer: {
+          select: {
+            id: true,
+            name: true,
+            image: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    return ratings;
+  } catch (error) {
+    console.error('Error fetching admin ratings:', error);
+    throw error;
+  }
+}
+
+export async function getUserDetails(userId: string): Promise<UserDetails> {
+  'use server';
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        image: true,
+        role: true,
+        isActive: true,
+        location: true,
+      },
+    });
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    return user;
+  } catch (error) {
+    console.error('Error fetching user:', error);
+    throw error;
+  }
+}

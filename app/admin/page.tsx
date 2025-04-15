@@ -9,10 +9,12 @@ import {
   Store,
   NotebookTabs,
   Dock,
+  Star,
 } from 'lucide-react';
 import { prisma } from '@/prisma/prisma';
 import { ListingsTable } from '@/components/ListingsTable';
 import { UsersTable } from '@/components/UserListings';
+import { RatingsTable } from '@/components/RatingsTable';
 import {
   adminChangeRole,
   adminChangeStatus,
@@ -21,8 +23,17 @@ import {
   getAdminDealerApplications,
   getAdminListings,
   getAdminUsers,
+  adminChangeRatingStatus,
+  getAdminRatings,
 } from '@/app/server/admin';
-import { ListingStatus, Role, User, DealerApplications, ApplicationStatus } from '@prisma/client';
+import {
+  ListingStatus,
+  Role,
+  User,
+  DealerApplications,
+  ApplicationStatus,
+  RatingStatus,
+} from '@prisma/client';
 import { ListingWithUser } from '../shared/types';
 import { DealershipApplicationsTable } from '@/components/DealershipApplicationsTable';
 
@@ -37,6 +48,7 @@ async function getAdminStats() {
     pendingApplications,
     approvedApplications,
     rejectedApplications,
+    pendingRatings,
   ] = await Promise.all([
     // Users stats
     prisma.user.count(),
@@ -64,6 +76,10 @@ async function getAdminStats() {
     prisma.dealerApplications.count({
       where: { status: 'rejected' },
     }),
+    // Ratings stats
+    prisma.rating.count({
+      where: { status: 'pending' },
+    }),
   ]);
 
   return {
@@ -82,6 +98,9 @@ async function getAdminStats() {
       approved: approvedApplications,
       rejected: rejectedApplications,
     },
+    ratings: {
+      pending: pendingRatings,
+    },
   };
 }
 
@@ -90,6 +109,7 @@ export default async function AdminPage() {
   const stats = await getAdminStats();
   const users = await getAdminUsers();
   const dealerApplications = await getAdminDealerApplications();
+  const ratings = await getAdminRatings();
 
   async function handleListingAction(
     id: number,
@@ -135,6 +155,16 @@ export default async function AdminPage() {
       return response;
     } catch (error: unknown) {
       return Promise.reject(error);
+    }
+  }
+
+  async function handleRatingAction(id: number, action: RatingStatus): Promise<void> {
+    'use server';
+    try {
+      await adminChangeRatingStatus(id, action);
+    } catch (error) {
+      console.error('Error handling rating action:', error);
+      throw error;
     }
   }
 
@@ -207,7 +237,11 @@ export default async function AdminPage() {
         {/* Action Required Card */}
         <Card
           className={
-            stats.listings.pending > 0 || stats.applications.pending > 0 ? 'border-orange-500' : ''
+            stats.listings.pending > 0 ||
+            stats.applications.pending > 0 ||
+            stats.ratings.pending > 0
+              ? 'border-orange-500'
+              : ''
           }
         >
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -216,12 +250,14 @@ export default async function AdminPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {stats.listings.pending + stats.applications.pending}
+              {stats.listings.pending + stats.applications.pending + stats.ratings.pending}
             </div>
             <div className="flex items-center space-x-2 text-xs text-muted-foreground">
               <span>{stats.listings.pending} listings</span>
               <span>•</span>
               <span>{stats.applications.pending} applications</span>
+              <span>•</span>
+              <span>{stats.ratings.pending} ratings</span>
             </div>
           </CardContent>
         </Card>
@@ -229,7 +265,7 @@ export default async function AdminPage() {
 
       {/* Main Content Tabs */}
       <Tabs defaultValue="listings" className="space-y-4">
-        <TabsList className="grid h-full grid-cols-2 gap-4 lg:grid-cols-3 xl:grid-cols-5">
+        <TabsList className="grid h-full grid-cols-2 gap-4 lg:grid-cols-3 xl:grid-cols-6">
           <TabsTrigger value="listings" className="flex items-center gap-2">
             <Clock className="h-4 w-4" />
             Pending Listings
@@ -248,6 +284,11 @@ export default async function AdminPage() {
           <TabsTrigger value="allDealershipApplications" className="flex items-center gap-2">
             <Store className="h-4 w-4" />
             Dealerships
+          </TabsTrigger>
+
+          <TabsTrigger value="ratings" className="flex items-center gap-2">
+            <Star className="h-4 w-4" />
+            Ratings
           </TabsTrigger>
 
           <TabsTrigger value="users" className="flex items-center gap-2">
@@ -332,6 +373,21 @@ export default async function AdminPage() {
                 applications={dealerApplications}
                 handleApplicationDecision={handleApplicationDecision}
               />
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="ratings">
+          <Card>
+            <CardHeader>
+              <CardTitle>Ratings Management</CardTitle>
+              <CardDescription>
+                Review and manage user ratings for dealerships. Currently managing {ratings.length}{' '}
+                ratings.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <RatingsTable ratings={ratings} handleAction={handleRatingAction} />
             </CardContent>
           </Card>
         </TabsContent>
