@@ -135,14 +135,21 @@ enum ApplicationStatus {
 }
 
 model Rating {
-  id        Int      @id @default(autoincrement())
-  dealer    User     @relation("DealerRatings", fields: [dealerId], references: [id], onDelete: Cascade)
+  id        Int          @id @default(autoincrement())
+  dealer    User         @relation("DealerRatings", fields: [dealerId], references: [id], onDelete: Cascade)
   dealerId  String
-  user      User     @relation("UserRatings", fields: [userId], references: [id], onDelete: Cascade)
+  user      User         @relation("UserRatings", fields: [userId], references: [id], onDelete: Cascade)
   userId    String
   rating    Int
   review    String?
-  createdAt DateTime @default(now())
+  status    RatingStatus @default(pending)
+  createdAt DateTime     @default(now())
+}
+
+enum RatingStatus {
+  pending
+  approved
+  rejected
 }
 
 model Session {

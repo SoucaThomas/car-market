@@ -1,13 +1,14 @@
 'use server';
 
 import { prisma } from '@/prisma/prisma';
+import { RatingStatus } from '@prisma/client';
 
 export async function getDealerRatings(dealerId: string) {
   try {
     const dealer = await prisma.user.findUnique({
       where: {
         id: dealerId,
-        role: 'dealer', // Ensure we're only getting dealers
+        // role: "dealer", // Ensure we're only getting dealers
       },
       select: {
         id: true,
@@ -16,6 +17,11 @@ export async function getDealerRatings(dealerId: string) {
         image: true,
         location: true,
         dealerRatings: {
+          where: {
+            status: {
+              notIn: [RatingStatus.pending, RatingStatus.rejected],
+            },
+          },
           include: {
             user: {
               select: {
@@ -57,7 +63,7 @@ export async function getDealer(dealerId: string) {
     const dealer = await prisma.user.findUnique({
       where: {
         id: dealerId,
-        role: 'dealer',
+        // role: 'dealer',
       },
       select: {
         id: true,
@@ -87,7 +93,7 @@ export async function createRating(data: {
     const dealer = await prisma.user.findUnique({
       where: {
         id: data.dealerId,
-        role: 'dealer',
+        // role: 'dealer',
       },
     });
 
@@ -110,6 +116,7 @@ export async function createRating(data: {
         data: {
           rating: data.rating,
           review: data.review,
+          status: RatingStatus.pending,
         },
       });
     }
@@ -121,6 +128,7 @@ export async function createRating(data: {
         userId: data.userId,
         rating: data.rating,
         review: data.review,
+        status: RatingStatus.pending,
       },
     });
   } catch (error) {
