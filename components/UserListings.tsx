@@ -35,6 +35,7 @@ import { UserAvatar } from './ui/userAvatar';
 import { Dialog, DialogContent, DialogHeader, DialogTrigger } from './ui/dialog';
 import { DialogTitle } from '@radix-ui/react-dialog';
 import { toast } from '@/hooks/use-toast';
+import { UserDetailsDialog } from './UserDetailsDialog';
 
 async function handleViewUser(id: string) {
   console.log(`View user ${id}`);
@@ -54,6 +55,7 @@ export function UsersTable({
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [users, setUsers] = useState<User[]>(propUsers);
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
 
   const columns: ColumnDef<User>[] = [
     {
@@ -266,7 +268,7 @@ export function UsersTable({
                 </Dialog>
               </DropdownMenuItem>
 
-              <DropdownMenuItem onClick={() => handleViewUser(user.id)}>
+              <DropdownMenuItem onClick={() => setSelectedUserId(user.id)}>
                 View Details
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -357,6 +359,13 @@ export function UsersTable({
           Next
         </Button>
       </div>
+      {selectedUserId && (
+        <UserDetailsDialog
+          userId={selectedUserId}
+          open={!!selectedUserId}
+          onOpenChange={(open) => !open && setSelectedUserId(null)}
+        />
+      )}
     </div>
   );
 }
