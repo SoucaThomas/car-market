@@ -64,6 +64,7 @@ model Listing {
   description String?
   condition   String?
   mileage     Float?
+  vin         String  @unique
   images      Upload[]
   favoritedBy Favorite[]
 

@@ -33,6 +33,7 @@ export const formSchema = z.object({
   engineSize: z.number().min(0),
   fuelType: z.string().min(1, { message: 'Fuel type must be selected.' }),
   color: z.string().min(1, { message: 'Color must be selected.' }),
+  vin: z.string().min(1, { message: 'VIN must be provided.' }),
   description: z.string().min(10),
   Pictures: z.array(
     z.object({
@@ -61,6 +62,7 @@ export const listingSchema = z.object({
   color: z.string(),
   description: z.string(),
   files: z.any(),
+  vin: z.string(),
 });
 
 export interface searchParams {

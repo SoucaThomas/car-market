@@ -67,6 +67,7 @@ export const createCarListing = async (
         color: data.color,
         description: data.description,
         condition: data.condition,
+        vin: data.vin,
         drive: 'FWD', //! Hardcoded TODO FIX
         createdAt: new Date(),
         images: {
@@ -142,6 +143,16 @@ export const createListing = async (data: z.infer<typeof formSchema>): Promise<L
       return Promise.reject('User not authenticated');
     }
 
+    const existingListing = await prisma.listing.findUnique({
+      where: {
+        vin: data.vin,
+      } as any,
+    });
+
+    if (existingListing) {
+      return Promise.reject('A listing with this VIN already exists');
+    }
+
     const listing = await prisma.listing.create({
       data: {
         title: data.listingTitle,
@@ -158,6 +169,7 @@ export const createListing = async (data: z.infer<typeof formSchema>): Promise<L
         color: data.color,
         description: data.description,
         userId: session.user.id,
+        vin: data.vin,
         images: {},
       },
       include: {

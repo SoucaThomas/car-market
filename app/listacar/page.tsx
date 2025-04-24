@@ -63,6 +63,7 @@ export default function MyForm() {
       mileage: 0,
       description: '',
       carCondtition: 'New',
+      vin: '',
     },
   });
 
@@ -599,6 +600,27 @@ export default function MyForm() {
                     </Command>
                   </PopoverContent>
                 </Popover>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="vin"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Vin</FormLabel>
+                <FormControl>
+                  <Input
+                    type="text"
+                    {...field}
+                    onChange={(e) => {
+                      field.onChange(e);
+                    }}
+                  />
+                </FormControl>
+                <FormDescription>Enter the cars vin</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
