@@ -4,6 +4,7 @@ import './globals.css';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import { Toaster } from '@/components/ui/toaster';
 import { Navbar } from '@/components/Navbar';
+import { Footer } from '@/components/Footer';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -33,10 +34,13 @@ export default function RootLayout({
     >
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <NuqsAdapter>
-          <Navbar />
-          <main className="container mx-auto flex h-full max-w-screen-2xl flex-row items-start justify-between gap-2 px-4">
-            {children}
-          </main>
+          <div className="flex min-h-screen flex-col">
+            <Navbar />
+            <main className="container mx-auto flex h-full max-w-screen-2xl flex-grow flex-row items-start justify-between gap-2 px-4">
+              {children}
+            </main>
+            <Footer />
+          </div>
           <Toaster />
         </NuqsAdapter>
       </body>
