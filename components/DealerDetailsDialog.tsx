@@ -30,7 +30,7 @@ export function DealerDetailsDialog({ listing }: DealerDetailsDialogProps) {
           const formattedDealerInfo = {
             ...dealerInfo,
             createdAt: new Date(dealerInfo.createdAt).toLocaleDateString(),
-            ratings: 4.3,
+            ratings: dealerInfo.ratings,
             totalListings: dealerInfo.listings.length,
           };
           setDealer(formattedDealerInfo);

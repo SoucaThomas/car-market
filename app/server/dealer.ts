@@ -77,6 +77,7 @@ export async function getDealerInfo(dealerId: string): Promise<DealerInfo> {
     const dealerWithLocation = {
       ...dealer,
       location: dealer.location || 'Unknown location',
+      ratings: dealer.ratings.reduce((a, c) => a + c.rating, 0) / dealer.ratings.length,
     } as unknown as DealerInfo;
     return Promise.resolve(dealerWithLocation);
   } catch (error) {
