@@ -165,6 +165,31 @@ export default function MyForm() {
             )}
           />
 
+          {form.watch('carCondtition') === 'Used' && (
+            <FormField
+              control={form.control}
+              name="mileage"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Mileage</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="100 000 km"
+                      type="number"
+                      {...field}
+                      value={field.value === 0 ? '' : field.value} // Conditionally set value
+                      onChange={(e) => {
+                        const parsedValue = Number(e.target.value);
+                        field.onChange(isNaN(parsedValue) ? 0 : parsedValue); // Handle NaN
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
+
           <FormField
             control={form.control}
             name="brand"
@@ -316,30 +341,6 @@ export default function MyForm() {
                 <FormControl>
                   <Input
                     placeholder="$"
-                    type="number"
-                    {...field}
-                    value={field.value === 0 ? '' : field.value} // Conditionally set value
-                    onChange={(e) => {
-                      const parsedValue = Number(e.target.value);
-                      field.onChange(isNaN(parsedValue) ? 0 : parsedValue); // Handle NaN
-                    }}
-                  />
-                </FormControl>
-
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="mileage"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Mileage</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="100 000 km"
                     type="number"
                     {...field}
                     value={field.value === 0 ? '' : field.value} // Conditionally set value
